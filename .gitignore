@@ -1,0 +1,6 @@
+tmp/
+.idea/
+
+node_modules/
+
+config.yml

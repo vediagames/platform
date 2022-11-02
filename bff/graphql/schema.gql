@@ -1,0 +1,327 @@
+type Query {
+    getMostPlayedGames(request: GetMostPlayedGamesRequest!): ListGamesResponse!
+    getFreshGames(request: GetFreshGamesRequest!): ListGamesResponse!
+
+    availableLanguages: [LanguageItem!]!
+    listGames(request: ListGamesRequest!): ListGamesResponse!
+    getGame(request: BaseGetRequest!): GetGameResponse!
+
+    listCategories(request: BaseListRequest!): ListCategoriesResponse!
+    getCategory(request: BaseGetRequest!): GetCategoryResponse!
+
+    listTags(request: ListTagsRequest!): ListTagsResponse!
+    getTag(request: BaseGetRequest!): GetTagResponse!
+
+    listSections(request: BaseListRequest!): ListSectionsResponse!
+    getSection(request: BaseGetRequest!): GetSectionResponse!
+    getWebsiteSectionsPlacement(language: Language!): GetWebsiteSectionsPlacementResponse!
+
+    fetchRandomGame: FetchedGame!
+
+    search(
+        language: Language!
+        query: String!
+        maxGames: Int!
+        maxTags: Int!
+        allowDeleted: Boolean!
+        allowInvisible: Boolean!
+    ): SearchResponse!
+
+    fullSearch(request: FullSearchRequest!): SearchResponse!
+}
+
+type Mutation {
+    sendEmail(request: SendEmailRequest!): Boolean
+    refreshMaterializedViews: Boolean
+}
+
+enum GetByField {
+    id
+    slug
+}
+
+enum Status {
+    invisible
+    published
+    deleted
+}
+
+enum Language {
+    en
+    es
+}
+
+enum SortingMethod {
+    id
+    name
+    random
+    most_popular
+    least_popular
+    newest
+    oldest
+    most_liked
+    least_liked
+    most_disliked
+    least_disliked
+}
+
+enum TagSortingMethod {
+    id
+    name
+    random
+    most_popular
+    least_popular
+    newest
+    oldest
+}
+
+enum SearchItemType {
+    game
+    tag
+}
+
+input FullSearchRequest {
+    language: Language!
+    query: String!
+    page: Int!
+    limit: Int!
+    sort: SortingMethod
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type SearchItem {
+    shortDescription: String!
+    name: String!
+    slug: String!
+    type: SearchItemType!
+    link: String!
+    thumbnail512x384: String!
+}
+
+input SendEmailRequest {
+    from: String!
+    name: String!
+    subject: String!
+    body: String!
+}
+
+type LanguageItem {
+    code: Language!
+    name: String!
+}
+
+type SearchResponse {
+    games: [SearchItem!]!
+    tags: [SearchItem!]!
+    total: Int!
+}
+
+type ListGamesResponse {
+    data: [Game!]!
+    total: Int!
+}
+
+type GetGameResponse {
+    data: Game
+}
+
+type Game {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    status: Status!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    url: String!
+    width: Int!
+    height: Int!
+    shortDescription: String
+    description: String
+    content: String
+    likes: Int!
+    dislikes: Int!
+    plays: Int!
+    weight: Int!
+    player1Controls: String
+    player2Controls: String
+    tags: ComplimentaryTags!
+    categories: ComplimentaryCategories!
+    mobile: Boolean!
+    thumbnail512x384: String!
+    thumbnail512x512: String!
+    link: String!
+}
+
+type GetSectionResponse {
+    data: Section
+}
+
+type Section {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    status: Status!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    shortDescription: String
+    description: String
+    content: String
+    tags: ComplimentaryTags!
+    categories: ComplimentaryCategories!
+    games: ListGamesResponse!
+    link: String!
+}
+
+type ComplimentaryTag {
+    id: Int!
+    slug: String!
+    name: String!
+    description: String
+    thumbnail128x128: String!
+}
+
+type ComplimentaryTags {
+    data: [ComplimentaryTag!]!
+}
+
+type ComplimentaryCategory {
+    id: Int!
+    slug: String!
+    name: String!
+    description: String
+}
+
+type ComplimentaryCategories {
+    data: [ComplimentaryCategory!]!
+}
+
+type GetWebsiteSectionsPlacementResponse{
+    data: [GetWebsiteSectionPlacement!]!
+}
+
+type GetWebsiteSectionPlacement {
+    section: Section!
+    placementNumber: Int!
+}
+
+
+type ListSectionsResponse {
+    data: [Section!]!
+    total: Int!
+}
+
+type ListCategoriesResponse {
+    data: [Category!]!
+    total: Int!
+}
+
+type GetCategoryResponse {
+    data: Category
+}
+
+type Category {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    shortDescription: String
+    description: String
+    content: String
+    status: Status!
+    clicks: Int!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    link: String!
+}
+
+type ListTagsResponse {
+    data: [Tag!]!
+    total: Int!
+}
+
+type GetTagResponse {
+    data: Tag
+}
+
+type Tag {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    shortDescription: String
+    description: String
+    content: String
+    status: Status!
+    clicks: Int!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    thumbnail512x384: String!
+    thumbnail128x128: String!
+    link: String!
+}
+
+
+type FetchedGame {
+    name: String!
+    url: String!
+    description: String!
+    controls: String!
+    mobile: Boolean!
+    height: Int!
+    width: Int!
+    categories: [String!]!
+    tags: [String!]!
+    images: [String!]!
+}
+
+input GetFreshGamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    maxDays: Int!
+}
+
+
+input GetMostPlayedGamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    maxDays: Int!
+}
+
+input ListGamesRequest {
+    base: BaseListRequest!
+    sort: SortingMethod
+    categories: [Int!]
+    tags: [Int!]
+    ids: [Int!]
+    excludedGameIDs: [Int!]
+}
+
+input BaseListRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+input ListTagsRequest {
+    base: BaseListRequest!
+    sort: TagSortingMethod
+}
+
+input BaseGetRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+}
+
+scalar Upload

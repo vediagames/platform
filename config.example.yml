@@ -1,0 +1,29 @@
+environment: "development"
+logLevel: "debug"
+port: 3000
+
+postgresql:
+  connectionString: "host=localhost user=postgres password=postgres dbname=vediagames port=5432 sslmode=disable"
+  path:
+    migration: "db/migrations"
+    stub: "db/stubs"
+
+sendinblue:
+  key: ""
+
+bucket:
+  key: ""
+  secret: ""
+  region: "us-west-004"
+  endpoint: "https://s3.us-west-004.backblazeb2.com"
+  bucket: "vg-images"
+
+cors:
+  allowedOrigins:
+    - "*"
+
+redisAddress: "localhost:6379"
+
+
+# docker run -e "POSTGRES_USER=vedia" -e "POSTGRES_PASSWORD=123" -e "POSTGRES_DB=vediagames" -p 5432:5432 postgres:15.0-alpine
+# docker run -p 6379:6379 redis
