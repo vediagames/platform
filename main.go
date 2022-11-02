@@ -6,6 +6,8 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/vediagames/environment"
+	"github.com/vediagames/vediagames.com/cmd"
+	"github.com/vediagames/vediagames.com/config"
 )
 
 func main() {
@@ -13,28 +15,28 @@ func main() {
 		configFilePathFlag string
 	)
 
-	cmd := &cobra.Command{}
+	rootCmd := &cobra.Command{}
 
-	cmd.PersistentFlags().
+	rootCmd.PersistentFlags().
 		StringVarP(&configFilePathFlag, "config", "c", "config.yml", "Path to the config file")
 
-	cmd.AddCommand(serverCmd())
-	cmd.AddCommand(migrateCmd())
-	cmd.AddCommand(stubCmd())
+	rootCmd.AddCommand(cmd.ServerCmd())
+	rootCmd.AddCommand(cmd.MigrateCmd())
+	rootCmd.AddCommand(cmd.StubCmd())
 
 	logger := environment.InitLogger()
 
 	ctx := logger.WithContext(context.Background())
 
-	cfg, err := NewConfig(configFilePathFlag)
+	cfg, err := config.New(configFilePathFlag)
 	if err != nil {
 		logger.Fatal().Err(fmt.Errorf("failed to load config: %w", err))
 	}
 
-	ctx = context.WithValue(ctx, ConfigKey, cfg)
-	cmd.SetContext(ctx)
+	ctx = context.WithValue(ctx, config.Key, cfg)
+	rootCmd.SetContext(ctx)
 
-	if err := cmd.Execute(); err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		logger.Fatal().Err(fmt.Errorf("failed to execute: %w", err))
 	}
 }

@@ -1,4 +1,4 @@
-package main
+package config
 
 import (
 	"fmt"
@@ -8,7 +8,7 @@ import (
 )
 
 const (
-	ConfigKey = "config"
+	Key = "config"
 )
 
 type Config struct {
@@ -106,7 +106,7 @@ func (c Config) Validate() error {
 	return err.Err()
 }
 
-func NewConfig(path string) (Config, error) {
+func New(path string) (Config, error) {
 	viper.SetConfigFile(path)
 	viper.AutomaticEnv()
 

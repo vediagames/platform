@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"context"
@@ -18,6 +18,7 @@ import (
 	"github.com/vediagames/vediagames.com/bucket/s3"
 	categorypostgresql "github.com/vediagames/vediagames.com/category/postgresql"
 	categoryservice "github.com/vediagames/vediagames.com/category/service"
+	"github.com/vediagames/vediagames.com/config"
 	"github.com/vediagames/vediagames.com/fetcher"
 	fetcherdomain "github.com/vediagames/vediagames.com/fetcher/domain"
 	"github.com/vediagames/vediagames.com/fetcher/gamedistribution"
@@ -34,7 +35,7 @@ import (
 	tagservice "github.com/vediagames/vediagames.com/tag/service"
 )
 
-func serverCmd() *cobra.Command {
+func ServerCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "server",
 		Short: "Run the server",
@@ -45,7 +46,7 @@ func serverCmd() *cobra.Command {
 }
 
 func startServer(ctx context.Context) error {
-	cfg := ctx.Value(ConfigKey).(Config)
+	cfg := ctx.Value(config.Key).(config.Config)
 
 	db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 	if err != nil {

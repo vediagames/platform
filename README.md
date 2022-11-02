@@ -1,10 +1,6 @@
-### vgc - Vedia Games Console
+# THIS IS IN NEED OF A RE-WRITE
 
-CLI tool for all-things vediagames.com.
-
-- Deploy
-- Build
-- And more!
+## Old and not really correct:
 
 ### gateway
 

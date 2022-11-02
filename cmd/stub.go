@@ -1,4 +1,4 @@
-package main
+package cmd
 
 import (
 	"fmt"
@@ -6,14 +6,15 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/cobra"
 	pgmigrator "github.com/vediagames/environment/migrator/postgresql"
+	"github.com/vediagames/vediagames.com/config"
 )
 
-func stubCmd() *cobra.Command {
+func StubCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "stub",
 		Short: "Apply stubs",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg := cmd.Context().Value(ConfigKey).(Config)
+			cfg := cmd.Context().Value(config.Key).(config.Config)
 
 			db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 			if err != nil {
