@@ -33,7 +33,7 @@ func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmai
 		Body:    request.Body,
 	})
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to email: %w", err)
 	}
 
 	return pointerTrue(), nil

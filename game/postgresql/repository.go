@@ -227,7 +227,29 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		{{ if .MobileOnly }}
 			AND mobile = true
 		{{ end }}
-		GROUP BY gv.id, language_code, slug, name, short_description, description, categories, tags, plays, created_at, mobile
+		GROUP BY gv.id, 
+		    language_code,
+		    slug,
+		    name, 
+		    short_description,
+		    description,
+		    categories,
+		    tags,
+		    plays,
+		    created_at,
+		    mobile,
+		    gv.status,
+		    gv.deleted_at,
+		    gv.published_at,
+		    gv.url,
+		    gv.width,
+		    gv.height,
+		    gv.likes,
+		    gv.dislikes,
+		    gv.weight,
+		    gv.content,
+		    gv.player_1_controls,
+		    gv.player_2_controls
 		{{ if .ShouldOrderBy }}
 		ORDER BY {{ .OrderBy }}
 		{{ end }}

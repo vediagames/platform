@@ -222,7 +222,7 @@ func filterParamsInBase64(p filterParams) (string, error) {
 
 func sortingMethodToGame(s *model.SortingMethod) gamedomain.SortingMethod {
 	if s == nil {
-		*s = model.SortingMethodID
+		return gamedomain.SortingMethod(model.SortingMethodID.String())
 	}
 
 	return gamedomain.SortingMethod(s.String())
