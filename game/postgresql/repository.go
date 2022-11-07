@@ -199,7 +199,29 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		tq,
 		`
 		SELECT
-		    *,
+		    gv.id, 
+		    language_code,
+		    slug,
+		    name, 
+		    short_description,
+		    description,
+		    categories,
+		    tags,
+		    plays,
+		    created_at,
+		    mobile,
+		    gv.status,
+		    gv.deleted_at,
+		    gv.published_at,
+		    gv.url,
+		    gv.width,
+		    gv.height,
+		    gv.likes,
+		    gv.dislikes,
+		    gv.weight,
+		    gv.content,
+		    gv.player_1_controls,
+		    gv.player_2_controls,
 			COUNT(*) OVER() AS total_count
 		FROM mat_games_view gv
 			{{ if .ShouldFilterByCategories }}
