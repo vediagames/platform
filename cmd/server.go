@@ -8,6 +8,7 @@ import (
 
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
@@ -196,12 +197,21 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create resolver %w", err)
 	}
 
-	schema := graphql.NewSchema(&resolver)
+	gqlHandler := handler.New(graphql.NewSchema(&resolver))
+	gqlHandler.AddTransport(transport.Websocket{
+		KeepAlivePingInterval: 10 * time.Second,
+	})
+	gqlHandler.AddTransport(transport.Options{})
+	gqlHandler.AddTransport(transport.GET{})
+	gqlHandler.AddTransport(transport.POST{})
+	gqlHandler.AddTransport(transport.MultipartForm{})
+	gqlHandler.Use(extension.Introspection{})
+	gqlHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
 
 	httpCors := cors.New(cors.Options{
 		AllowedOrigins:   cfg.CORS.AllowedOrigins,
 		AllowCredentials: true,
-		Debug:            cfg.Environment == "development" || cfg.LogLevel == "debug",
+		Debug:            cfg.LogLevel == "debug",
 	})
 
 	router := chi.NewRouter()
@@ -211,13 +221,7 @@ func startServer(ctx context.Context) error {
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
 
-	srv := handler.NewDefaultServer(schema)
-
-	srv.Use(extension.AutomaticPersistedQuery{
-		Cache: cache,
-	})
-
-	router.Handle("/graph", srv)
+	router.Handle("/graph", gqlHandler)
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
 		w.WriteHeader(http.StatusOK)
