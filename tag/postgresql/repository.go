@@ -143,7 +143,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		Total: 0,
 	}
 
-	if len(res.Data) > 0 {
+	if len(sqlRes) > 0 {
 		res.Total = sqlRes[0].TotalCount
 
 		for _, tag := range sqlRes {

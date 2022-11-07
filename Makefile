@@ -9,8 +9,8 @@ version = latest
 export $(shell sed 's/=.*//' $(env_file))
 PATH := $(PATH):$(GOPATH)/bin
 
-gqlgen:
-	cd gateway && go get github.com/99designs/gqlgen && go run github.com/99designs/gqlgen generate
+gqlgen/%:
+	cd $* && go get github.com/99designs/gqlgen && go run github.com/99designs/gqlgen generate
 
 postgres:
 	docker run -e "POSTGRES_USER=vedia" -e "POSTGRES_PASSWORD=123" -e "POSTGRES_DB=vediagames" -p 5432:5432 -d postgres:15.0-alpine
