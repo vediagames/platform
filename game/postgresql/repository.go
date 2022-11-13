@@ -157,10 +157,7 @@ var orderByOptions = map[domain.SortingMethod]string{
 }
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	var sqlRes []struct {
-		game
-		TotalCount int `db:"total_count"`
-	}
+	var sqlRes []gameWithTotalCount
 
 	val, shouldOrderBy := orderByOptions[q.Sort]
 
@@ -413,13 +410,36 @@ func templateToSQL(name string, tq templateQuery, tmpl string) (string, error) {
 	return buf.String(), nil
 }
 
+type gameWithTotalCount struct {
+	game
+	TotalCount int `db:"total_count"`
+}
+
 type templateQuery map[string]any
 
-func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.SearchResult, error) {
-	var sqlRes []struct {
-		game
-		TotalCount int `db:"total_count"`
+type searchResult []gameWithTotalCount
+
+func (r *searchResult) RemoveDuplicates(ctx context.Context) {
+	gameMap := make(map[int]gameWithTotalCount)
+
+	for _, g := range *r {
+		gameMap[g.ID] = g
 	}
+
+	*r = make([]gameWithTotalCount, 0, len(gameMap))
+
+	for _, g := range gameMap {
+		*r = append(*r, g)
+	}
+}
+
+type searchQuery struct {
+	query    string
+	language string
+}
+
+func (r repository) search(ctx context.Context, q searchQuery) (searchResult, error) {
+	var sqlRes searchResult
 
 	sqlQuery, err := templateToSQL(
 		"search_game",
@@ -438,13 +458,39 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 		ORDER BY (length(name) - levenshtein($1,name)) DESC;
 	`)
 	if err != nil {
-		return domain.SearchResult{}, fmt.Errorf("failed to template sql: %v", err)
+		return searchResult{}, fmt.Errorf("failed to template sql: %v", err)
 	}
 
-	err = r.db.Select(&sqlRes, sqlQuery, strings.ToLower(q.Query), q.Language)
+	err = r.db.Select(&sqlRes, sqlQuery, strings.ToLower(q.query), q.language)
 	if err != nil {
-		return domain.SearchResult{}, fmt.Errorf("failed to select: %v", err)
+		return searchResult{}, fmt.Errorf("failed to select: %v", err)
 	}
+
+	return sqlRes, nil
+}
+
+func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.SearchResult, error) {
+	sqlRes, err := r.search(ctx, searchQuery{
+		query:    q.Query + "%",
+		language: q.Language.String(),
+	})
+	if err != nil {
+		return domain.SearchResult{}, fmt.Errorf("failed to perform first search: %w", err)
+	}
+
+	if len(sqlRes) < q.Max {
+		sqlResSecond, err := r.search(ctx, searchQuery{
+			query:    "%" + q.Query + "%",
+			language: q.Language.String(),
+		})
+		if err != nil {
+			return domain.SearchResult{}, fmt.Errorf("failed to perform second search: %w", err)
+		}
+
+		sqlRes = append(sqlRes, sqlResSecond...)
+	}
+
+	sqlRes.RemoveDuplicates(ctx)
 
 	res := domain.SearchResult{
 		Data:  make([]domain.Game, 0, len(sqlRes)),
@@ -452,7 +498,11 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Total = sqlRes[len(sqlRes)-1].TotalCount
+	}
+
+	if len(sqlRes) > q.Max {
+		sqlRes = sqlRes[:q.Max]
 	}
 
 	for i, g := range sqlRes {
@@ -468,10 +518,7 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 }
 
 func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (domain.FullSearchResult, error) {
-	var sqlRes []struct {
-		game
-		TotalCount int `db:"total_count"`
-	}
+	var sqlRes []gameWithTotalCount
 
 	val, shouldOrderBy := orderByOptions[q.Sort]
 
