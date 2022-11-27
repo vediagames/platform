@@ -63,6 +63,7 @@ enum SortingMethod {
     least_liked
     most_disliked
     least_disliked
+    most_relevant
 }
 
 enum TagSortingMethod {
@@ -208,7 +209,6 @@ type GetWebsiteSectionPlacement {
     section: Section!
     placementNumber: Int!
 }
-
 
 type ListSectionsResponse {
     data: [Section!]!

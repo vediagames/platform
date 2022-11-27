@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/url"
+	"strings"
 
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
@@ -220,12 +221,14 @@ func filterParamsInBase64(p filterParams) (string, error) {
 	return base64.StdEncoding.EncodeToString(body), nil
 }
 
-func sortingMethodToGame(s *model.SortingMethod) gamedomain.SortingMethod {
+func sortingMethodToDomain[T gamedomain.SortingMethod | searchdomain.SortingMethod](s *model.SortingMethod) T {
 	if s == nil {
-		return gamedomain.SortingMethod(model.SortingMethodID.String())
+		return T(model.SortingMethodID.String())
 	}
 
-	return gamedomain.SortingMethod(s.String())
+	str := strings.Replace(s.String(), "_", "-", -1)
+
+	return T(str)
 }
 
 func gameFromGame(game gamedomain.Game) (model.Game, error) {

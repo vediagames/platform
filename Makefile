@@ -3,10 +3,7 @@
 dc = docker-compose -f docker-compose.yaml
 img_name = eu.gcr.io/vediagames/vg_api
 version = latest
-#env_file = ./.env
 
-#include $(env_file)
-export $(shell sed 's/=.*//' $(env_file))
 PATH := $(PATH):$(GOPATH)/bin
 
 gqlgen/%:

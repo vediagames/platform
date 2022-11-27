@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
 	pgmigrator "github.com/vediagames/environment/migrator/postgresql"
 	"github.com/vediagames/vediagames.com/config"
@@ -32,6 +33,20 @@ func StubCmd() *cobra.Command {
 			if err := migrator.ApplyStubFile(cmd.Context(), cfg.PostgreSQL.Path.Stub); err != nil {
 				return fmt.Errorf("failed to apply stub file: %w", err)
 			}
+
+			_, err = db.Exec(`
+				REFRESH MATERIALIZED VIEW mat_categories_view;
+				REFRESH MATERIALIZED VIEW mat_tags_view;
+				REFRESH MATERIALIZED VIEW mat_json_categories_view;
+				REFRESH MATERIALIZED VIEW mat_json_tags_view;
+				REFRESH MATERIALIZED VIEW mat_games_view;
+				REFRESH MATERIALIZED VIEW mat_sections_view;
+			`)
+			if err != nil {
+				return fmt.Errorf("failed to refresh materialzied views")
+			}
+
+			zerolog.Ctx(cmd.Context()).Info().Msg("refreshed materialized views")
 
 			return nil
 		},
