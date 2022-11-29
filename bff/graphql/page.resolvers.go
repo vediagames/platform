@@ -17,6 +17,7 @@ import (
 // GetHomePage is the resolver for the getHomePage field.
 func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePageRequest) (*model.GetHomePageResponse, error) {
 	totalGamesRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
+		Sort:           gamedomain.SortingMethodID,
 		Language:       gamedomain.LanguageEnglish,
 		Page:           1,
 		Limit:          1,
@@ -44,7 +45,7 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 		MaxDays:  7,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to get most played games: %w", err)
+		return nil, fmt.Errorf("failed to get most played games in last 7 days: %w", err)
 	}
 
 	mostPlayedGames, err := r.ListGames(ctx, model.ListGamesRequest{
@@ -64,13 +65,8 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 		return nil, fmt.Errorf("failed to get website sections placement: %w", err)
 	}
 
-	firstPageSections := make([]*model.FirstPageSection, 0, len(websiteSectionPlacements.Data))
-
 	for _, websitePlacement := range websiteSectionPlacements.Data {
-		var (
-			gamesRes *model.ListGamesResponse
-			err      error
-		)
+		var listGamesReq model.ListGamesRequest
 
 		switch websitePlacement.Section.Slug {
 		case "continue-playing":
@@ -78,23 +74,23 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 				continue
 			}
 
-			gamesRes, err = r.ListGames(ctx, model.ListGamesRequest{
+			listGamesReq = model.ListGamesRequest{
 				Base: &model.BaseListRequest{
 					Language: request.Language,
 					Page:     1,
 					Limit:    10,
 				},
 				Ids: request.LastPlayedGameIDs,
-			})
+			}
 		case "newest":
-			gamesRes, err = r.ListGames(ctx, model.ListGamesRequest{
+			listGamesReq = model.ListGamesRequest{
 				Base: &model.BaseListRequest{
 					Language: request.Language,
 					Page:     1,
 					Limit:    10,
 				},
 				Sort: sortingMethodToPointer[model.SortingMethod](model.SortingMethodNewest),
-			})
+			}
 		default:
 			if len(websitePlacement.Section.Categories.Data) == 0 &&
 				len(websitePlacement.Section.Tags.Data) == 0 &&
@@ -102,7 +98,7 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 				zerolog.Ctx(ctx).Err(fmt.Errorf("invalid section: %s, no elements", websitePlacement.Section.Slug))
 			}
 
-			gamesRes, err = r.ListGames(ctx, model.ListGamesRequest{
+			listGamesReq = model.ListGamesRequest{
 				Base: &model.BaseListRequest{
 					Language: request.Language,
 					Page:     1,
@@ -112,20 +108,16 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 				Categories: websitePlacement.Section.Categories.IDs(),
 				Tags:       websitePlacement.Section.Tags.IDs(),
 				Ids:        websitePlacement.Section.Games.IDs(),
-			})
+			}
 		}
 
+		gamesRes, err := r.ListGames(ctx, listGamesReq)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list games for section %q: %w", websitePlacement.Section.Slug, err)
 		}
 
-		firstPageSections = append(firstPageSections, &model.FirstPageSection{
-			Section: websitePlacement,
-			Games:   gamesRes,
-		})
+		websitePlacement.Section.Games = gamesRes
 	}
-
-	firstPageTags := make([]*model.FirstPageTag, 0, len(websiteSectionPlacements.Data))
 
 	tagsRes, err := r.ListTags(ctx, model.ListTagsRequest{
 		Base: &model.BaseListRequest{
@@ -138,6 +130,8 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 	if err != nil {
 		return nil, fmt.Errorf("failed to list tags: %w", err)
 	}
+
+	tagSections := make([]*model.TagSection, 0, len(tagsRes.Data))
 
 	for _, tag := range tagsRes.Data {
 		gamesRes, err := r.ListGames(ctx, model.ListGamesRequest{
@@ -153,10 +147,9 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 			return nil, fmt.Errorf("failed to list games for tag %q: %w", tag.Name, err)
 		}
 
-		firstPageTags = append(firstPageTags, &model.FirstPageTag{
-			Games:        gamesRes,
-			Tag:          tag,
-			ShowMoreLink: fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
+		tagSections = append(tagSections, &model.TagSection{
+			Games: gamesRes,
+			Tag:   tag,
 		})
 	}
 
@@ -166,8 +159,8 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 		MostPlayedGamesInLast7Days: mostPlayedGamesInLast7Days,
 		GamesAddedInLast7Days:      gamesAddedInLast7Days,
 		MostPlayedGames:            mostPlayedGames,
-		Sections:                   firstPageSections,
-		Tags:                       firstPageTags,
+		Sections:                   websiteSectionPlacements,
+		TagSection:                 tagSections,
 	}, nil
 }
 
@@ -239,9 +232,9 @@ func (r *queryResolver) GetContinuePlayingPage(ctx context.Context, request mode
 	}
 
 	// order by last played game ids
-	orderedGames := make([]model.Game, len(request.LastPlayedGameIDs))
-	for _, game := range gameRes.Data {
-		for i, id := range request.LastPlayedGameIDs {
+	orderedGames := make([]model.Game, len(gameRes.Data))
+	for i, game := range gameRes.Data {
+		for _, id := range request.LastPlayedGameIDs {
 			if game.ID == id {
 				orderedGames[i] = game
 			}
@@ -279,17 +272,17 @@ func (r *queryResolver) GetFilterPage(ctx context.Context, request model.GetFilt
 
 // GetSearchPage is the resolver for the getSearchPage field.
 func (r *queryResolver) GetSearchPage(ctx context.Context, request model.GetSearchPageRequest) (*model.GetSearchPageResponse, error) {
-	req := request.Request
+	req := model.FullSearchRequest{
+		Language:       request.Language,
+		Query:          request.Query,
+		Page:           request.Page,
+		Limit:          15,
+		Sort:           request.Sort,
+		AllowDeleted:   false,
+		AllowInvisible: false,
+	}
 
-	searchRes, err := r.FullSearch(ctx, model.FullSearchRequest{
-		Language:       req.Language,
-		Query:          req.Query,
-		Page:           req.Page,
-		Limit:          req.Limit,
-		Sort:           sortingMethodToPointer[model.SortingMethod](model.SortingMethodMostPopular),
-		AllowDeleted:   req.AllowDeleted,
-		AllowInvisible: req.AllowInvisible,
-	})
+	searchRes, err := r.FullSearch(ctx, req)
 	if err != nil {
 		return nil, fmt.Errorf("failed to full search: %w", err)
 	}
@@ -428,7 +421,7 @@ func (r *queryResolver) GetCategoryPage(ctx context.Context, request model.GetCa
 		return nil, fmt.Errorf("failed to get first section games: %w", err)
 	}
 
-	tagSections := make([]*model.CategoryPageTagSection, 0, len(tagLayout))
+	tagSections := make([]*model.TagSection, 0, len(tagLayout))
 	for _, tag := range tagLayout {
 		tagRes, err := r.GetTag(ctx, model.BaseGetRequest{
 			Field:    model.GetByFieldSlug,
@@ -452,15 +445,9 @@ func (r *queryResolver) GetCategoryPage(ctx context.Context, request model.GetCa
 			return nil, fmt.Errorf("failed to get games for tag %q: %w", tag, err)
 		}
 
-		tagSection := &model.CategoryPageTagSection{
+		tagSection := &model.TagSection{
 			Games: gamesRes,
-			Tag: &model.ComplimentaryTag{
-				ID:               tagRes.Data.ID,
-				Slug:             tagRes.Data.Slug,
-				Name:             tagRes.Data.Name,
-				Description:      tagRes.Data.Description,
-				Thumbnail128x128: tagRes.Data.Thumbnail128x128,
-			},
+			Tag:   tagRes.Data,
 		}
 
 		tagSections = append(tagSections, tagSection)

@@ -59,7 +59,10 @@ type GetSiteMapPageResponse {
 }
 
 input GetSearchPageRequest {
-    request: FullSearchRequest!
+    language: Language!
+    query: String!
+    page: Int!
+    sort: SortingMethod
 }
 
 type GetSearchPageResponse {
@@ -94,14 +97,9 @@ type GetFilterPageResponse {
 type GetCategoryPageResponse {
     category: GetCategoryResponse!
     firstSectionGames: ListGamesResponse!
-    tagSections: [CategoryPageTagSection]!
+    tagSections: [TagSection!]!
     tags: ListTagsResponse!
     otherGames: ListGamesResponse!
-}
-
-type CategoryPageTagSection {
-    games: ListGamesResponse!
-    tag: ComplimentaryTag
 }
 
 type GetHomePageResponse {
@@ -110,8 +108,8 @@ type GetHomePageResponse {
     mostPlayedGamesInLast7Days: ListGamesResponse!
     gamesAddedInLast7Days: ListGamesResponse!
     mostPlayedGames: ListGamesResponse!
-    sections: [FirstPageSection!]!
-    tags: [FirstPageTag!]!
+    sections: GetWebsiteSectionsPlacementResponse!
+    tagSection: [TagSection!]!
 }
 
 type GetGamePageResponse {
@@ -121,17 +119,10 @@ type GetGamePageResponse {
     isDisliked: Boolean!
 }
 
-type FirstPageSection {
-    games: ListGamesResponse!
-    section: GetWebsiteSectionPlacement!
-}
-
-type FirstPageTag {
+type TagSection {
     games: ListGamesResponse
     tag: Tag!
-    showMoreLink: String!
 }
-
 
 input GetHomePageRequest {
     language: Language!

@@ -114,7 +114,7 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 		DateLimit: time.Now().AddDate(0, 0, -req.MaxDays),
 	})
 	if err != nil {
-		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to get most played by days: %w", err)
+		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to find most played ids: %w", err)
 	}
 
 	listRes, err := s.repository.Find(ctx, domain.FindQuery{
@@ -125,7 +125,7 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 		IDs:      repoRes.Data,
 	})
 	if err != nil {
-		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to list most played by days: %w", err)
+		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to find: %w", err)
 	}
 
 	res := domain.GetMostPlayedByDaysResponse{

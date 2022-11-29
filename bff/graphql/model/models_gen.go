@@ -35,12 +35,7 @@ type Category struct {
 	CreatedAt        string   `json:"createdAt"`
 	DeletedAt        *string  `json:"deletedAt"`
 	PublishedAt      *string  `json:"publishedAt"`
-	Link             string   `json:"link"`
-}
-
-type CategoryPageTagSection struct {
-	Games *ListGamesResponse `json:"games"`
-	Tag   *ComplimentaryTag  `json:"tag"`
+	PageURL          string   `json:"pageURL"`
 }
 
 type FetchedGame struct {
@@ -54,17 +49,6 @@ type FetchedGame struct {
 	Categories  []string `json:"categories"`
 	Tags        []string `json:"tags"`
 	Images      []string `json:"images"`
-}
-
-type FirstPageSection struct {
-	Games   *ListGamesResponse          `json:"games"`
-	Section *GetWebsiteSectionPlacement `json:"section"`
-}
-
-type FirstPageTag struct {
-	Games        *ListGamesResponse `json:"games"`
-	Tag          *Tag               `json:"tag"`
-	ShowMoreLink string             `json:"showMoreLink"`
 }
 
 type FullSearchRequest struct {
@@ -92,11 +76,11 @@ type GetCategoryPageRequest struct {
 }
 
 type GetCategoryPageResponse struct {
-	Category          *GetCategoryResponse      `json:"category"`
-	FirstSectionGames *ListGamesResponse        `json:"firstSectionGames"`
-	TagSections       []*CategoryPageTagSection `json:"tagSections"`
-	Tags              *ListTagsResponse         `json:"tags"`
-	OtherGames        *ListGamesResponse        `json:"otherGames"`
+	Category          *GetCategoryResponse `json:"category"`
+	FirstSectionGames *ListGamesResponse   `json:"firstSectionGames"`
+	TagSections       []*TagSection        `json:"tagSections"`
+	Tags              *ListTagsResponse    `json:"tags"`
+	OtherGames        *ListGamesResponse   `json:"otherGames"`
 }
 
 type GetCategoryResponse struct {
@@ -158,13 +142,13 @@ type GetHomePageRequest struct {
 }
 
 type GetHomePageResponse struct {
-	TotalGames                 int                 `json:"totalGames"`
-	TotalGamesAddedInLast7Days int                 `json:"totalGamesAddedInLast7Days"`
-	MostPlayedGamesInLast7Days *ListGamesResponse  `json:"mostPlayedGamesInLast7Days"`
-	GamesAddedInLast7Days      *ListGamesResponse  `json:"gamesAddedInLast7Days"`
-	MostPlayedGames            *ListGamesResponse  `json:"mostPlayedGames"`
-	Sections                   []*FirstPageSection `json:"sections"`
-	Tags                       []*FirstPageTag     `json:"tags"`
+	TotalGames                 int                                  `json:"totalGames"`
+	TotalGamesAddedInLast7Days int                                  `json:"totalGamesAddedInLast7Days"`
+	MostPlayedGamesInLast7Days *ListGamesResponse                   `json:"mostPlayedGamesInLast7Days"`
+	GamesAddedInLast7Days      *ListGamesResponse                   `json:"gamesAddedInLast7Days"`
+	MostPlayedGames            *ListGamesResponse                   `json:"mostPlayedGames"`
+	Sections                   *GetWebsiteSectionsPlacementResponse `json:"sections"`
+	TagSection                 []*TagSection                        `json:"tagSection"`
 }
 
 type GetMostPlayedGamesRequest struct {
@@ -175,7 +159,10 @@ type GetMostPlayedGamesRequest struct {
 }
 
 type GetSearchPageRequest struct {
-	Request *FullSearchRequest `json:"request"`
+	Language Language       `json:"language"`
+	Query    string         `json:"query"`
+	Page     int            `json:"page"`
+	Sort     *SortingMethod `json:"sort"`
 }
 
 type GetSearchPageResponse struct {
@@ -278,7 +265,7 @@ type SearchItem struct {
 	Name             string         `json:"name"`
 	Slug             string         `json:"slug"`
 	Type             SearchItemType `json:"type"`
-	Link             string         `json:"link"`
+	PageURL          string         `json:"pageURL"`
 	Thumbnail512x384 string         `json:"thumbnail512x384"`
 }
 
@@ -303,7 +290,7 @@ type Section struct {
 	Tags             *ComplimentaryTags       `json:"tags"`
 	Categories       *ComplimentaryCategories `json:"categories"`
 	Games            *ListGamesResponse       `json:"games"`
-	Link             string                   `json:"link"`
+	PageURL          string                   `json:"pageURL"`
 }
 
 type SendEmailRequest struct {
@@ -328,7 +315,12 @@ type Tag struct {
 	PublishedAt      *string  `json:"publishedAt"`
 	Thumbnail512x384 string   `json:"thumbnail512x384"`
 	Thumbnail128x128 string   `json:"thumbnail128x128"`
-	Link             string   `json:"link"`
+	PageURL          string   `json:"pageURL"`
+}
+
+type TagSection struct {
+	Games *ListGamesResponse `json:"games"`
+	Tag   *Tag               `json:"tag"`
 }
 
 type GetByField string
@@ -427,6 +419,7 @@ const (
 	SortingMethodLeastLiked    SortingMethod = "least_liked"
 	SortingMethodMostDisliked  SortingMethod = "most_disliked"
 	SortingMethodLeastDisliked SortingMethod = "least_disliked"
+	SortingMethodMostRelevant  SortingMethod = "most_relevant"
 )
 
 var AllSortingMethod = []SortingMethod{
@@ -441,11 +434,12 @@ var AllSortingMethod = []SortingMethod{
 	SortingMethodLeastLiked,
 	SortingMethodMostDisliked,
 	SortingMethodLeastDisliked,
+	SortingMethodMostRelevant,
 }
 
 func (e SortingMethod) IsValid() bool {
 	switch e {
-	case SortingMethodID, SortingMethodName, SortingMethodRandom, SortingMethodMostPopular, SortingMethodLeastPopular, SortingMethodNewest, SortingMethodOldest, SortingMethodMostLiked, SortingMethodLeastLiked, SortingMethodMostDisliked, SortingMethodLeastDisliked:
+	case SortingMethodID, SortingMethodName, SortingMethodRandom, SortingMethodMostPopular, SortingMethodLeastPopular, SortingMethodNewest, SortingMethodOldest, SortingMethodMostLiked, SortingMethodLeastLiked, SortingMethodMostDisliked, SortingMethodLeastDisliked, SortingMethodMostRelevant:
 		return true
 	}
 	return false

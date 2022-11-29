@@ -48,7 +48,3 @@ var CategoryPageLayouts = map[string][]string{
 		"runner",
 	},
 }
-
-type categoryPage struct {
-	Tags []string
-}

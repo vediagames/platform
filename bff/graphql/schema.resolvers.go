@@ -124,7 +124,7 @@ func (r *queryResolver) ListGames(ctx context.Context, request model.ListGamesRe
 		Limit:           request.Base.Limit,
 		AllowDeleted:    request.Base.AllowDeleted,
 		AllowInvisible:  request.Base.AllowInvisible,
-		Sort:            sortingMethodToGame(request.Sort),
+		Sort:            sortingMethodToDomain[gamedomain.SortingMethod](request.Sort),
 		Categories:      request.Categories,
 		Tags:            request.Tags,
 		IDs:             request.Ids,
@@ -397,7 +397,7 @@ func (r *queryResolver) Search(ctx context.Context, language model.Language, que
 // FullSearch is the resolver for the fullSearch field.
 func (r *queryResolver) FullSearch(ctx context.Context, request model.FullSearchRequest) (*model.SearchResponse, error) {
 	if request.Sort == nil {
-		*request.Sort = model.SortingMethodID
+		*request.Sort = model.SortingMethodMostRelevant
 	}
 
 	searchRes, err := r.searchService.FullSearch(ctx, searchdomain.FullSearchRequest{
@@ -406,7 +406,7 @@ func (r *queryResolver) FullSearch(ctx context.Context, request model.FullSearch
 		Limit:          request.Limit,
 		AllowDeleted:   request.AllowDeleted,
 		AllowInvisible: request.AllowInvisible,
-		Sort:           searchdomain.SortingMethod(request.Sort.String()),
+		Sort:           sortingMethodToDomain[searchdomain.SortingMethod](request.Sort),
 		Language:       searchdomain.Language(request.Language),
 	})
 	if err != nil {
