@@ -6,8 +6,7 @@ commands:
       - checkout
       - add_ssh_keys:
           fingerprints:
-            - "9f:ba:c1:5b:ef:7f:f1:73:44:bf:3c:d3:12:0b:bf:ce"
-            - "c3:a9:2f:40:e6:1b:2c:35:bb:57:59:5b:7d:49:13:60"
+            - "cc:a1:f8:74:91:ff:00:d6:9c:84:ce:44:a3:3e:09:30"
       - run: git config --global --add url."ssh://git@github.com/vediagames/".insteadOf "https://github.com/vediagames/"
       - run: go env -w GOPRIVATE="github.com/vediagames"
 
