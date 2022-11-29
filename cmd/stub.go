@@ -43,7 +43,7 @@ func StubCmd() *cobra.Command {
 				REFRESH MATERIALIZED VIEW mat_sections_view;
 			`)
 			if err != nil {
-				return fmt.Errorf("failed to refresh materialzied views")
+				return fmt.Errorf("failed to refresh materialzied views: %w", err)
 			}
 
 			zerolog.Ctx(cmd.Context()).Info().Msg("refreshed materialized views")
