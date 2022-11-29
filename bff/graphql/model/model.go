@@ -88,7 +88,7 @@ type Game struct {
 	Mobile           bool                     `json:"mobile"`
 	Thumbnail512x384 string                   `json:"thumbnail512x384"`
 	Thumbnail512x512 string                   `json:"thumbnail512x512"`
-	Link             string                   `json:"link"`
+	PageURL          string                   `json:"pageURL"`
 }
 
 type Language string

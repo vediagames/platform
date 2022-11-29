@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
@@ -201,7 +200,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		DeletedAt:   stringToPointer(s.DeletedAt.String()),
 		PublishedAt: stringToPointer(s.PublishedAt.String()),
 		Content:     &s.Content,
-		Link:        link,
+		PageURL:     link,
 	}, nil
 }
 
@@ -298,7 +297,7 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 		Mobile:           game.Mobile,
 		Thumbnail512x384: thumb512x384,
 		Thumbnail512x512: thumb512x512,
-		Link:             fmt.Sprintf("/game/%s", game.Slug),
+		PageURL:          fmt.Sprintf("/game/%s", game.Slug),
 	}, nil
 }
 
@@ -316,7 +315,7 @@ func categoryFromCategory(c categorydomain.Category) (model.Category, error) {
 		CreatedAt:        c.CreatedAt.String(),
 		DeletedAt:        stringToPointer(c.DeletedAt.String()),
 		PublishedAt:      stringToPointer(c.PublishedAt.String()),
-		Link:             fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID),
+		PageURL:          fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID),
 	}, nil
 }
 
@@ -354,7 +353,7 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
 		Thumbnail512x384: thumb512x384,
 		Thumbnail128x128: thumb128x128,
-		Link:             fmt.Sprintf("/tag/%d?slug=%s&name=%s", t.ID, t.Slug, t.Name),
+		PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", t.ID, t.Slug, t.Name),
 	}, nil
 }
 
