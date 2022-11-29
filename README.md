@@ -92,3 +92,64 @@ Schema and migrations for the database. Also includes some stub data for stubbin
 
 Search service that provides search functionality for the website.
 This service connects all other services that support search and adds business logic on top of them.
+
+# Go get for private repositories
+
+## Generate your SSH key with the `ssh-keygen` tool
+
+<https://git-scm.com/book/en/v2/Git-on-the-Server-Generating-Your-SSH-Public-Key>
+
+A little advice here, use different keys for different services/accounts. Prefix them with the service/account name. For
+example `id_rsa.github`
+
+## Add the key to your GitHub account
+
+https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account
+
+## Edit your .gitconfig
+
+Simply run this command:
+
+`git config --global --add url."ssh://git@github.com/".insteadOf "https://github.com/"`
+
+### Or if you wish to edit your .gitconfig file directly:
+
+Append this two lines to the end of the document:
+```
+[url "ssh://git@github.com/"]
+    insteadOf = https://github.com/
+```
+## Edit your \~/.ssh/config
+
+Add these 5 lines:
+
+```
+Host github.com
+    User git
+    Hostname github.com
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_rsa_github `**<- MAKE SURE THAT THIS POINTS TO YOUR SSH KEY THAT YOU GENERATED IN STEP #1**
+```
+---
+
+This should now allow you to freely clone repos from github.com/vediagames
+
+You can check whether everything went well by running this command (this clones vediagames.com/category repo)
+
+`git clone git@github.com:vediagames/vediagames.com.git`
+
+## go get
+
+After you've done setting up your SSH authentication which allows you to freely clone repos from GH, you still need to
+do something else to make everything run smoothly on your development machine (as far as `Go` development goes)
+
+Luckily this is very simple, you can just run:
+
+`go env -w GOPRIVATE="github.com/vediagames"`
+
+To test, you can try running this inside any folder that has go.mod file:
+
+`go get github.com/vediagames/zeroerror`
+
+You can also use GoLand to set it up by editing the Environment input box in `File/Settings/Go Modules.` But that will
+only work in the directory you're currently in.
