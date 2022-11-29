@@ -143,7 +143,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		})
 	}
 
-	link := "/continue-playing"
+	pageURL := "/continue-playing"
 
 	if s.Slug != "continue-playing" {
 		var paramsFilter filterParams
@@ -166,7 +166,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 			return model.Section{}, fmt.Errorf("failed to encode filter params: %w", err)
 		}
 
-		link = fmt.Sprintf("/filter?title=%s&params=%s", url.QueryEscape(s.Name), params)
+		pageURL = fmt.Sprintf("/filter?title=%s&params=%s", url.QueryEscape(s.Name), params)
 	}
 
 	gamesRes, err := r.ListGames(ctx, model.ListGamesRequest{
@@ -200,7 +200,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		DeletedAt:   stringToPointer(s.DeletedAt.String()),
 		PublishedAt: stringToPointer(s.PublishedAt.String()),
 		Content:     &s.Content,
-		PageURL:     link,
+		PageURL:     pageURL,
 	}, nil
 }
 
