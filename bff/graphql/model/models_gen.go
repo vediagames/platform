@@ -35,7 +35,7 @@ type Category struct {
 	CreatedAt        string   `json:"createdAt"`
 	DeletedAt        *string  `json:"deletedAt"`
 	PublishedAt      *string  `json:"publishedAt"`
-	Link             string   `json:"link"`
+	PageURL          string   `json:"pageURL"`
 }
 
 type FetchedGame struct {
@@ -290,7 +290,7 @@ type Section struct {
 	Tags             *ComplimentaryTags       `json:"tags"`
 	Categories       *ComplimentaryCategories `json:"categories"`
 	Games            *ListGamesResponse       `json:"games"`
-	Link             string                   `json:"link"`
+	PageURL          string                   `json:"pageURL"`
 }
 
 type SendEmailRequest struct {
@@ -315,7 +315,7 @@ type Tag struct {
 	PublishedAt      *string  `json:"publishedAt"`
 	Thumbnail512x384 string   `json:"thumbnail512x384"`
 	Thumbnail128x128 string   `json:"thumbnail128x128"`
-	Link             string   `json:"link"`
+	PageURL          string   `json:"pageURL"`
 }
 
 type TagSection struct {
