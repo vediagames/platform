@@ -40,6 +40,18 @@ You can pretty much copy the content from config.example.yml to config.yml
 cp config.example.yml config.yml
 ```
 
+## Run migrations
+
+`go run . migrate`
+
+## Run stub - this adds stub data to your development DB
+
+`go run . stub`
+
+## Run server
+
+`go run . server`
+
 # Code architecture/patterns
 
 Quick explanations regarding some decisions and patterns established.
@@ -115,10 +127,12 @@ Simply run this command:
 ### Or if you wish to edit your .gitconfig file directly:
 
 Append this two lines to the end of the document:
+
 ```
 [url "ssh://git@github.com/"]
     insteadOf = https://github.com/
 ```
+
 ## Edit your \~/.ssh/config
 
 Add these 5 lines:
@@ -130,6 +144,7 @@ Host github.com
     IdentitiesOnly yes
     IdentityFile ~/.ssh/id_rsa_github `**<- MAKE SURE THAT THIS POINTS TO YOUR SSH KEY THAT YOU GENERATED IN STEP #1**
 ```
+
 ---
 
 This should now allow you to freely clone repos from github.com/vediagames
