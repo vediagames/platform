@@ -36,7 +36,7 @@ jobs:
     parallelism: 4
     steps:
       - setup-env
-      - run: go test -v -race $(go list ./... | circleci tests split --split-by=timings)
+      - run: go test -v -race
 
 workflows:
   build_lint_test:
