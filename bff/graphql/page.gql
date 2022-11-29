@@ -117,6 +117,7 @@ type GetGamePageResponse {
     otherGames: ListGamesResponse!
     isLiked: Boolean!
     isDisliked: Boolean!
+    fullScreenPageURL: String!
 }
 
 type TagSection {

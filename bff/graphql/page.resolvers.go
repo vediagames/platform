@@ -210,10 +210,11 @@ func (r *queryResolver) GetGamePage(ctx context.Context, request model.GetGamePa
 	}
 
 	return &model.GetGamePageResponse{
-		Game:       gameRes,
-		OtherGames: otherGamesRes,
-		IsLiked:    false,
-		IsDisliked: false,
+		Game:              gameRes,
+		OtherGames:        otherGamesRes,
+		IsLiked:           false,
+		IsDisliked:        false,
+		FullScreenPageURL: fmt.Sprintf("/game/fullscreen?name=%s&url=%s", gameRes.Data.Name, gameRes.Data.URL),
 	}, nil
 }
 

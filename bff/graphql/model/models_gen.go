@@ -126,10 +126,11 @@ type GetGamePageRequest struct {
 }
 
 type GetGamePageResponse struct {
-	Game       *GetGameResponse   `json:"game"`
-	OtherGames *ListGamesResponse `json:"otherGames"`
-	IsLiked    bool               `json:"isLiked"`
-	IsDisliked bool               `json:"isDisliked"`
+	Game              *GetGameResponse   `json:"game"`
+	OtherGames        *ListGamesResponse `json:"otherGames"`
+	IsLiked           bool               `json:"isLiked"`
+	IsDisliked        bool               `json:"isDisliked"`
+	FullScreenPageURL string             `json:"fullScreenPageURL"`
 }
 
 type GetGameResponse struct {
