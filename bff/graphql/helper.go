@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
+
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
@@ -353,7 +354,7 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
 		Thumbnail512x384: thumb512x384,
 		Thumbnail128x128: thumb128x128,
-		PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", t.ID, t.Slug, t.Name),
+		PageURL:          fmt.Sprintf("/tag/%s?id=%d&name=%s", t.Slug, t.ID, t.Name),
 	}, nil
 }
 
