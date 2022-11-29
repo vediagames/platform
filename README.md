@@ -48,6 +48,10 @@ cp config.example.yml config.yml
 
 `go run . stub`
 
+## Run refresh - refreshes data/materialized views
+
+`go run . refresh`
+
 ## Run server
 
 `go run . server`

@@ -23,6 +23,7 @@ func main() {
 	rootCmd.AddCommand(cmd.ServerCmd())
 	rootCmd.AddCommand(cmd.MigrateCmd())
 	rootCmd.AddCommand(cmd.StubCmd())
+	rootCmd.AddCommand(cmd.RefreshCmd())
 
 	logger := environment.InitLogger()
 
