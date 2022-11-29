@@ -96,7 +96,7 @@ type SearchItem {
     name: String!
     slug: String!
     type: SearchItemType!
-    link: String!
+    pageURL: String!
     thumbnail512x384: String!
 }
 
@@ -153,7 +153,7 @@ type Game {
     mobile: Boolean!
     thumbnail512x384: String!
     thumbnail512x512: String!
-    link: String!
+    pageURL: String!
 }
 
 type GetSectionResponse {
@@ -175,7 +175,7 @@ type Section {
     tags: ComplimentaryTags!
     categories: ComplimentaryCategories!
     games: ListGamesResponse!
-    link: String!
+    pageURL: String!
 }
 
 type ComplimentaryTag {
@@ -237,7 +237,7 @@ type Category {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    link: String!
+    pageURL: String!
 }
 
 type ListTagsResponse {
@@ -264,7 +264,7 @@ type Tag {
     publishedAt: String
     thumbnail512x384: String!
     thumbnail128x128: String!
-    link: String!
+    pageURL: String!
 }
 
 

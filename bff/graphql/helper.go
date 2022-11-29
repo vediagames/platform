@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"net/url"
 	"strings"
-
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
@@ -79,7 +78,7 @@ func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.Searc
 			Name:             game.Name,
 			Slug:             game.Slug,
 			Type:             model.SearchItemTypeGame,
-			Link:             fmt.Sprintf("/games/%s", game.Slug),
+			PageURL:          fmt.Sprintf("/games/%s", game.Slug),
 			Thumbnail512x384: gameThumbnailPath,
 		})
 	}
@@ -100,7 +99,7 @@ func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.Searc
 			Name:             tag.Name,
 			Slug:             tag.Slug,
 			Type:             model.SearchItemTypeTag,
-			Link:             fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
+			PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
 			Thumbnail512x384: tagThumbnailPath,
 		})
 	}
@@ -144,7 +143,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		})
 	}
 
-	link := "/continue-playing"
+	pageURL := "/continue-playing"
 
 	if s.Slug != "continue-playing" {
 		var paramsFilter filterParams
@@ -167,7 +166,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 			return model.Section{}, fmt.Errorf("failed to encode filter params: %w", err)
 		}
 
-		link = fmt.Sprintf("/filter?title=%s&params=%s", url.QueryEscape(s.Name), params)
+		pageURL = fmt.Sprintf("/filter?title=%s&params=%s", url.QueryEscape(s.Name), params)
 	}
 
 	gamesRes, err := r.ListGames(ctx, model.ListGamesRequest{
@@ -201,7 +200,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		DeletedAt:   stringToPointer(s.DeletedAt.String()),
 		PublishedAt: stringToPointer(s.PublishedAt.String()),
 		Content:     &s.Content,
-		Link:        link,
+		PageURL:     pageURL,
 	}, nil
 }
 
@@ -298,7 +297,7 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 		Mobile:           game.Mobile,
 		Thumbnail512x384: thumb512x384,
 		Thumbnail512x512: thumb512x512,
-		Link:             fmt.Sprintf("/game/%s", game.Slug),
+		PageURL:          fmt.Sprintf("/game/%s", game.Slug),
 	}, nil
 }
 
@@ -316,7 +315,7 @@ func categoryFromCategory(c categorydomain.Category) (model.Category, error) {
 		CreatedAt:        c.CreatedAt.String(),
 		DeletedAt:        stringToPointer(c.DeletedAt.String()),
 		PublishedAt:      stringToPointer(c.PublishedAt.String()),
-		Link:             fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID),
+		PageURL:          fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID),
 	}, nil
 }
 
@@ -354,7 +353,7 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
 		Thumbnail512x384: thumb512x384,
 		Thumbnail128x128: thumb128x128,
-		Link:             fmt.Sprintf("/tag/%d?slug=%s&name=%s", t.ID, t.Slug, t.Name),
+		PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", t.ID, t.Slug, t.Name),
 	}, nil
 }
 
