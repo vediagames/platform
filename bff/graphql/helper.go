@@ -78,7 +78,7 @@ func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.Searc
 			Name:             game.Name,
 			Slug:             game.Slug,
 			Type:             model.SearchItemTypeGame,
-			Link:             fmt.Sprintf("/games/%s", game.Slug),
+			PageURL:          fmt.Sprintf("/games/%s", game.Slug),
 			Thumbnail512x384: gameThumbnailPath,
 		})
 	}
@@ -99,7 +99,7 @@ func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.Searc
 			Name:             tag.Name,
 			Slug:             tag.Slug,
 			Type:             model.SearchItemTypeTag,
-			Link:             fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
+			PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
 			Thumbnail512x384: tagThumbnailPath,
 		})
 	}

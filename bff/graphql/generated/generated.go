@@ -273,8 +273,8 @@ type ComplexityRoot struct {
 	}
 
 	SearchItem struct {
-		Link             func(childComplexity int) int
 		Name             func(childComplexity int) int
+		PageURL          func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail512x384 func(childComplexity int) int
@@ -1444,19 +1444,19 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve__service(childComplexity), true
 
-	case "SearchItem.link":
-		if e.complexity.SearchItem.Link == nil {
-			break
-		}
-
-		return e.complexity.SearchItem.Link(childComplexity), true
-
 	case "SearchItem.name":
 		if e.complexity.SearchItem.Name == nil {
 			break
 		}
 
 		return e.complexity.SearchItem.Name(childComplexity), true
+
+	case "SearchItem.pageURL":
+		if e.complexity.SearchItem.PageURL == nil {
+			break
+		}
+
+		return e.complexity.SearchItem.PageURL(childComplexity), true
 
 	case "SearchItem.shortDescription":
 		if e.complexity.SearchItem.ShortDescription == nil {
@@ -2068,7 +2068,7 @@ type SearchItem {
     name: String!
     slug: String!
     type: SearchItemType!
-    link: String!
+    pageURL: String!
     thumbnail512x384: String!
 }
 
@@ -6554,8 +6554,8 @@ func (ec *executionContext) fieldContext_GetSearchPageResponse_items(ctx context
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "link":
-				return ec.fieldContext_SearchItem_link(ctx, field)
+			case "pageURL":
+				return ec.fieldContext_SearchItem_pageURL(ctx, field)
 			case "thumbnail512x384":
 				return ec.fieldContext_SearchItem_thumbnail512x384(ctx, field)
 			}
@@ -9885,8 +9885,8 @@ func (ec *executionContext) fieldContext_SearchItem_type(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _SearchItem_link(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SearchItem_link(ctx, field)
+func (ec *executionContext) _SearchItem_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SearchItem_pageURL(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -9899,7 +9899,7 @@ func (ec *executionContext) _SearchItem_link(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.Link, nil
+		return obj.PageURL, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9916,7 +9916,7 @@ func (ec *executionContext) _SearchItem_link(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SearchItem_link(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SearchItem_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SearchItem",
 		Field:      field,
@@ -10020,8 +10020,8 @@ func (ec *executionContext) fieldContext_SearchResponse_games(ctx context.Contex
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "link":
-				return ec.fieldContext_SearchItem_link(ctx, field)
+			case "pageURL":
+				return ec.fieldContext_SearchItem_pageURL(ctx, field)
 			case "thumbnail512x384":
 				return ec.fieldContext_SearchItem_thumbnail512x384(ctx, field)
 			}
@@ -10078,8 +10078,8 @@ func (ec *executionContext) fieldContext_SearchResponse_tags(ctx context.Context
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "link":
-				return ec.fieldContext_SearchItem_link(ctx, field)
+			case "pageURL":
+				return ec.fieldContext_SearchItem_pageURL(ctx, field)
 			case "thumbnail512x384":
 				return ec.fieldContext_SearchItem_thumbnail512x384(ctx, field)
 			}
@@ -16328,9 +16328,9 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "link":
+		case "pageURL":
 
-			out.Values[i] = ec._SearchItem_link(ctx, field, obj)
+			out.Values[i] = ec._SearchItem_pageURL(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

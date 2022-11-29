@@ -265,7 +265,7 @@ type SearchItem struct {
 	Name             string         `json:"name"`
 	Slug             string         `json:"slug"`
 	Type             SearchItemType `json:"type"`
-	Link             string         `json:"link"`
+	PageURL          string         `json:"pageURL"`
 	Thumbnail512x384 string         `json:"thumbnail512x384"`
 }
 

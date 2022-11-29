@@ -96,7 +96,7 @@ type SearchItem {
     name: String!
     slug: String!
     type: SearchItemType!
-    link: String!
+    pageURL: String!
     thumbnail512x384: String!
 }
 
