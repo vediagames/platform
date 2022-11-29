@@ -1,26 +1,46 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/2.0/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/2.0/configuration-reference/#jobs
-jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Dockerhub or use one of our Convenience Images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/2.0/configuration-reference/#docker-machine-macos-windows-executor
-    docker:
-      - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/2.0/configuration-reference/#steps
+commands:
+  setup-env:
     steps:
       - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
+      - add_ssh_keys:
+          fingerprints:
+            - "c3:a9:2f:40:e6:1b:2c:35:bb:57:59:5b:7d:49:13:60"
+            - "9f:ba:c1:5b:ef:7f:f1:73:44:bf:3c:d3:12:0b:bf:ce"
+      - run: git config --global --add url."ssh://git@github.com/vediagames/".insteadOf "https://github.com/vediagames/"
+      - run: go env -w GOPRIVATE="github.com/vediagames"
 
-# Invoke jobs via workflows
-# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+jobs:
+  build:
+    docker:
+      - image: cimg/go:1.19.3
+    working_directory: ~/vediagames.com
+    environment:
+      CGO_ENABLED: 0
+    steps:
+      - setup-env
+      - run: go build -a -ldflags '-w -extldflags "-static"'  ./...
+
+  lint:
+    docker:
+      - image: golangci/golangci-lint:v1.50.1
+    steps:
+      - setup-env
+      - run: golangci-lint run -v
+
+  test:
+    docker:
+      - image: cimg/go:1.19.3
+    working_directory: ~/vediagames.com
+    parallelism: 4
+    steps:
+      - setup-env
+      - run: go test -v -race $(go list ./... | circleci tests split --split-by=timings)
+
 workflows:
-  say-hello-workflow:
+  build_lint_test:
     jobs:
-      - say-hello
+      - build
+      - lint
+      - test
