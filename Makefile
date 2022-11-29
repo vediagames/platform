@@ -14,3 +14,9 @@ postgres:
 
 redis:
 	docker run -p 6379:6379 -d redis
+
+dev:
+	docker-compose up -d
+
+down:
+	docker-compose down
