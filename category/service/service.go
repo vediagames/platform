@@ -44,8 +44,11 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 	}
 
 	res := domain.ListResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.ListResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResponse, error) {
@@ -59,6 +62,9 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 	}
 
 	res := domain.GetResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.GetResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
 	return res, res.Validate()
 }

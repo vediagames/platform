@@ -44,8 +44,11 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 	}
 
 	res := domain.ListResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.ListResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResponse, error) {
@@ -59,8 +62,11 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 	}
 
 	res := domain.GetResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.GetResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) IncreaseClick(ctx context.Context, req domain.IncreaseClickRequest) error {
@@ -91,8 +97,11 @@ func (s service) Search(ctx context.Context, req domain.SearchRequest) (domain.S
 	}
 
 	res := domain.SearchResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.SearchResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) FullSearch(ctx context.Context, req domain.FullSearchRequest) (domain.FullSearchResponse, error) {
@@ -106,6 +115,9 @@ func (s service) FullSearch(ctx context.Context, req domain.FullSearchRequest) (
 	}
 
 	res := domain.FullSearchResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.FullSearchResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }

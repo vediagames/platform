@@ -71,8 +71,11 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 	}
 
 	res := domain.ListResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.ListResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResponse, error) {
@@ -86,8 +89,11 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 	}
 
 	res := domain.GetResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.GetResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlayedByDaysRequest) (domain.GetMostPlayedByDaysResponse, error) {
@@ -118,9 +124,8 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 	res := domain.GetMostPlayedByDaysResponse{
 		Data: domain.ListResponse(listRes),
 	}
-
-	if ve := res.Validate(); ve != nil {
-		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("invalid response: %w", ve)
+	if err := res.Validate(); err != nil {
+		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
@@ -147,9 +152,8 @@ func (s service) GetFresh(ctx context.Context, req domain.GetFreshRequest) (doma
 	res := domain.GetFreshResponse{
 		Data: domain.ListResponse(repoRes),
 	}
-
-	if ve := res.Validate(); ve != nil {
-		return domain.GetFreshResponse{}, fmt.Errorf("invalid response: %w", ve)
+	if err := res.Validate(); err != nil {
+		return domain.GetFreshResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
@@ -179,8 +183,11 @@ func (s service) Search(ctx context.Context, request domain.SearchRequest) (doma
 	}
 
 	res := domain.SearchResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.SearchResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, request.Validate()
+	return res, nil
 }
 
 func (s service) FullSearch(ctx context.Context, request domain.FullSearchRequest) (domain.FullSearchResponse, error) {
@@ -194,6 +201,9 @@ func (s service) FullSearch(ctx context.Context, request domain.FullSearchReques
 	}
 
 	res := domain.FullSearchResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.FullSearchResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
 
-	return res, res.Validate()
+	return res, nil
 }
