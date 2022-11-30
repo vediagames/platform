@@ -1,3 +1,6 @@
+// go generate can be run by: go generate ./...
+//go:generate go run github.com/99designs/gqlgen generate
+
 package graphql
 
 // This file will not be regenerated automatically.
