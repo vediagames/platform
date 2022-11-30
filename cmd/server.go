@@ -167,7 +167,7 @@ func startServer(ctx context.Context) error {
 		},
 	})
 	if err != nil {
-		return fmt.Errorf("failed to create new game fetcher clients: %w", err)
+		return fmt.Errorf("failed to new fetcher: %w", err)
 	}
 
 	bucketClient, err := s3.New(s3.Config{
