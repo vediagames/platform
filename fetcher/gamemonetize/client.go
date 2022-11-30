@@ -100,13 +100,13 @@ func (s client) getUrl() string {
 
 func getImages(thumb string) []string {
 	var (
-		images      []string
-		resolutions []string
+		images []string
+		// resolutions []string
 	)
 
 	images = append(images, thumb)
 
-	resolutions = append(resolutions, primaryResolution)
+	// resolutions = append(resolutions, primaryResolution)
 
 	for _, resolution := range imgResolutions {
 		if resolution != primaryResolution {
@@ -114,7 +114,7 @@ func getImages(thumb string) []string {
 			r, err := http.Get(url)
 			if err == nil && r.Header.Get("content-type") == "image/jpeg" {
 				images = append(images, url)
-				resolutions = append(resolutions, resolution)
+				// resolutions = append(resolutions, resolution)
 			}
 		}
 	}
