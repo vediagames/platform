@@ -66,7 +66,7 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 		return domain.GetResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
-	return res, res.Validate()
+	return res, nil
 }
 
 func (s service) IncreaseClick(ctx context.Context, req domain.IncreaseClickRequest) error {
