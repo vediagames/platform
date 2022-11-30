@@ -35,7 +35,8 @@ func New(cfg Config) (domain.Service, error) {
 	}
 
 	return &service{
-		repository: cfg.Repository,
+		repository:             cfg.Repository,
+		webPlacementRepository: cfg.WebsitePlacementRepository,
 	}, nil
 }
 
