@@ -10,6 +10,7 @@ type ComplimentaryCategory struct {
 	ID          int     `json:"id"`
 	Slug        string  `json:"slug"`
 	Name        string  `json:"name"`
+	PageURL     string  `json:"pageURL"`
 	Description *string `json:"description"`
 }
 
@@ -17,6 +18,7 @@ type ComplimentaryTag struct {
 	ID               int     `json:"id"`
 	Slug             string  `json:"slug"`
 	Name             string  `json:"name"`
+	PageURL          string  `json:"pageURL"`
 	Description      *string `json:"description"`
 	Thumbnail128x128 string  `json:"thumbnail_128x128"`
 }
