@@ -16,47 +16,7 @@ import (
 	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
 )
 
-type path string
-
-const (
-	pathGame path = "games"
-	pathTag  path = "tags"
-)
-
-func (p path) Path(slug string, file string) string {
-	return fmt.Sprintf("%s/%s/%s", p, slug, file)
-}
-
-func (p path) Thumbnail(slug string, t thumbnail) (string, error) {
-	switch p {
-	case pathGame:
-		if t == thumbnail128x128 {
-			return "", fmt.Errorf("thumbnail 128x128 not available for games")
-		}
-	case pathTag:
-		if t == thumbnail512x512 {
-			return "", fmt.Errorf("thumbnail 512x512 not available for tags")
-		}
-	default:
-		return "", fmt.Errorf("thumbnails not available for %s", p)
-	}
-
-	return fmt.Sprintf("https://images.vediagames.com/file/vg-images/%s", p.Path(slug, t.JPG())), nil
-}
-
-type thumbnail string
-
-func (t thumbnail) JPG() string {
-	return fmt.Sprintf("%s.jpg", t)
-}
-
-const (
-	thumbnail128x128 thumbnail = "thumb128x128"
-	thumbnail512x384 thumbnail = "thumb512x384"
-	thumbnail512x512 thumbnail = "thumb512x512"
-)
-
-func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.SearchItem, total int, fullSearch bool) (model.SearchResponse, error) {
+func searchFromSearch(games, tags []searchdomain.SearchItem, total int, fullSearch bool) (model.SearchResponse, error) {
 	res := model.SearchResponse{
 		Games: make([]*model.SearchItem, 0, len(games)),
 		Tags:  make([]*model.SearchItem, 0, len(tags)),
@@ -79,7 +39,7 @@ func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.Searc
 			Name:             game.Name,
 			Slug:             game.Slug,
 			Type:             model.SearchItemTypeGame,
-			PageURL:          fmt.Sprintf("/games/%s", game.Slug),
+			PageUrl:          gamePageUrl(game.Slug),
 			Thumbnail512x384: gameThumbnailPath,
 		})
 	}
@@ -100,7 +60,7 @@ func searchFromSearch(games []searchdomain.SearchItem, tags []searchdomain.Searc
 			Name:             tag.Name,
 			Slug:             tag.Slug,
 			Type:             model.SearchItemTypeTag,
-			PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
+			PageUrl:          tagUrl(tag.ID, tag.Slug, tag.Name),
 			Thumbnail512x384: tagThumbnailPath,
 		})
 	}
@@ -201,7 +161,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		DeletedAt:   stringToPointer(s.DeletedAt.String()),
 		PublishedAt: stringToPointer(s.PublishedAt.String()),
 		Content:     &s.Content,
-		PageURL:     pageURL,
+		PageUrl:     pageURL,
 	}, nil
 }
 
@@ -298,8 +258,8 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 		Mobile:            game.Mobile,
 		Thumbnail512x384:  thumb512x384,
 		Thumbnail512x512:  thumb512x512,
-		PageURL:           fmt.Sprintf("/game/%s", game.Slug),
-		FullScreenPageUrl: fmt.Sprintf("/game/fullscreen?name=%s&url=%s", game.Name, game.URL),
+		PageUrl:           gamePageUrl(game.Slug),
+		FullScreenPageUrl: fullScreenPageUrl(game.Name, game.URL),
 	}, nil
 }
 
@@ -317,7 +277,7 @@ func categoryFromCategory(c categorydomain.Category) (model.Category, error) {
 		CreatedAt:        c.CreatedAt.String(),
 		DeletedAt:        stringToPointer(c.DeletedAt.String()),
 		PublishedAt:      stringToPointer(c.PublishedAt.String()),
-		PageURL:          fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID),
+		PageUrl:          cateogryPageUrl(c.ID, c.Slug),
 	}, nil
 }
 
@@ -355,7 +315,7 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
 		Thumbnail512x384: thumb512x384,
 		Thumbnail128x128: thumb128x128,
-		PageURL:          fmt.Sprintf("/tag/%s?id=%d&name=%s", t.Slug, t.ID, t.Name),
+		PageUrl:          tagUrl(t.ID, t.Slug, t.Name),
 	}, nil
 }
 

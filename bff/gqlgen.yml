@@ -56,6 +56,12 @@ models:
     model: github.com/vediagames/vediagames.com/bff/graphql/model.ListGamesResponse
   Status:
     model: github.com/vediagames/vediagames.com/bff/graphql/model.Status
+  Category:
+    model: github.com/vediagames/vediagames.com/bff/graphql/model.Category
+  SearchItem:
+    model: github.com/vediagames/vediagames.com/bff/graphql/model.SearchItem
+  Tag:
+    model: github.com/vediagames/vediagames.com/bff/graphql/model.Tag
   Game:
     model: github.com/vediagames/vediagames.com/bff/graphql/model.Game
   Language:

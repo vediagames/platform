@@ -54,7 +54,7 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Language         func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
+		PageUrl          func(childComplexity int) int
 		PublishedAt      func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -111,7 +111,7 @@ type ComplexityRoot struct {
 		Likes             func(childComplexity int) int
 		Mobile            func(childComplexity int) int
 		Name              func(childComplexity int) int
-		PageURL           func(childComplexity int) int
+		PageUrl           func(childComplexity int) int
 		Player1Controls   func(childComplexity int) int
 		Player2Controls   func(childComplexity int) int
 		Plays             func(childComplexity int) int
@@ -275,7 +275,7 @@ type ComplexityRoot struct {
 
 	SearchItem struct {
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
+		PageUrl          func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail512x384 func(childComplexity int) int
@@ -298,7 +298,7 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Language         func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
+		PageUrl          func(childComplexity int) int
 		PublishedAt      func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -315,7 +315,7 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Language         func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
+		PageUrl          func(childComplexity int) int
 		PublishedAt      func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -438,12 +438,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Category.Name(childComplexity), true
 
-	case "Category.pageURL":
-		if e.complexity.Category.PageURL == nil {
+	case "Category.pageUrl":
+		if e.complexity.Category.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.Category.PageURL(childComplexity), true
+		return e.complexity.Category.PageUrl(childComplexity), true
 
 	case "Category.publishedAt":
 		if e.complexity.Category.PublishedAt == nil {
@@ -662,7 +662,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Game.Dislikes(childComplexity), true
 
-	case "Game.fullScreenPageURL":
+	case "Game.fullScreenPageUrl":
 		if e.complexity.Game.FullScreenPageUrl == nil {
 			break
 		}
@@ -711,12 +711,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Game.Name(childComplexity), true
 
-	case "Game.pageURL":
-		if e.complexity.Game.PageURL == nil {
+	case "Game.pageUrl":
+		if e.complexity.Game.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.Game.PageURL(childComplexity), true
+		return e.complexity.Game.PageUrl(childComplexity), true
 
 	case "Game.player1Controls":
 		if e.complexity.Game.Player1Controls == nil {
@@ -1459,12 +1459,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SearchItem.Name(childComplexity), true
 
-	case "SearchItem.pageURL":
-		if e.complexity.SearchItem.PageURL == nil {
+	case "SearchItem.pageUrl":
+		if e.complexity.SearchItem.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.SearchItem.PageURL(childComplexity), true
+		return e.complexity.SearchItem.PageUrl(childComplexity), true
 
 	case "SearchItem.shortDescription":
 		if e.complexity.SearchItem.ShortDescription == nil {
@@ -1578,12 +1578,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Section.Name(childComplexity), true
 
-	case "Section.pageURL":
-		if e.complexity.Section.PageURL == nil {
+	case "Section.pageUrl":
+		if e.complexity.Section.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.Section.PageURL(childComplexity), true
+		return e.complexity.Section.PageUrl(childComplexity), true
 
 	case "Section.publishedAt":
 		if e.complexity.Section.PublishedAt == nil {
@@ -1676,12 +1676,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Tag.Name(childComplexity), true
 
-	case "Tag.pageURL":
-		if e.complexity.Tag.PageURL == nil {
+	case "Tag.pageUrl":
+		if e.complexity.Tag.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.Tag.PageURL(childComplexity), true
+		return e.complexity.Tag.PageUrl(childComplexity), true
 
 	case "Tag.publishedAt":
 		if e.complexity.Tag.PublishedAt == nil {
@@ -2076,7 +2076,7 @@ type SearchItem {
     name: String!
     slug: String!
     type: SearchItemType!
-    pageURL: String!
+    pageUrl: String!
     thumbnail512x384: String!
 }
 
@@ -2133,8 +2133,8 @@ type Game {
     mobile: Boolean!
     thumbnail512x384: String!
     thumbnail512x512: String!
-    pageURL: String!
-    fullScreenPageURL: String!
+    pageUrl: String!
+    fullScreenPageUrl: String!
 }
 
 type GetSectionResponse {
@@ -2156,7 +2156,7 @@ type Section {
     tags: ComplimentaryTags!
     categories: ComplimentaryCategories!
     games: ListGamesResponse!
-    pageURL: String!
+    pageUrl: String!
 }
 
 type ComplimentaryTag {
@@ -2218,7 +2218,7 @@ type Category {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    pageURL: String!
+    pageUrl: String!
 }
 
 type ListTagsResponse {
@@ -2245,7 +2245,7 @@ type Tag {
     publishedAt: String
     thumbnail512x384: String!
     thumbnail128x128: String!
-    pageURL: String!
+    pageUrl: String!
 }
 
 
@@ -3320,8 +3320,8 @@ func (ec *executionContext) fieldContext_Category_publishedAt(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Category_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Category_pageURL(ctx, field)
+func (ec *executionContext) _Category_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Category_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3334,7 +3334,7 @@ func (ec *executionContext) _Category_pageURL(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3351,7 +3351,7 @@ func (ec *executionContext) _Category_pageURL(ctx context.Context, field graphql
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Category_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Category_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Category",
 		Field:      field,
@@ -5391,8 +5391,8 @@ func (ec *executionContext) fieldContext_Game_thumbnail512x512(ctx context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _Game_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Game_pageURL(ctx, field)
+func (ec *executionContext) _Game_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Game_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5405,7 +5405,7 @@ func (ec *executionContext) _Game_pageURL(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5422,7 +5422,7 @@ func (ec *executionContext) _Game_pageURL(ctx context.Context, field graphql.Col
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Game_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Game_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Game",
 		Field:      field,
@@ -5435,8 +5435,8 @@ func (ec *executionContext) fieldContext_Game_pageURL(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Game_fullScreenPageURL(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Game_fullScreenPageURL(ctx, field)
+func (ec *executionContext) _Game_fullScreenPageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -5466,7 +5466,7 @@ func (ec *executionContext) _Game_fullScreenPageURL(ctx context.Context, field g
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Game_fullScreenPageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Game_fullScreenPageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Game",
 		Field:      field,
@@ -5837,8 +5837,8 @@ func (ec *executionContext) fieldContext_GetCategoryResponse_data(ctx context.Co
 				return ec.fieldContext_Category_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Category_publishedAt(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Category_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Category_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
@@ -6218,10 +6218,10 @@ func (ec *executionContext) fieldContext_GetGameResponse_data(ctx context.Contex
 				return ec.fieldContext_Game_thumbnail512x384(ctx, field)
 			case "thumbnail512x512":
 				return ec.fieldContext_Game_thumbnail512x512(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Game_pageURL(ctx, field)
-			case "fullScreenPageURL":
-				return ec.fieldContext_Game_fullScreenPageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Game_pageUrl(ctx, field)
+			case "fullScreenPageUrl":
+				return ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
 		},
@@ -6609,8 +6609,8 @@ func (ec *executionContext) fieldContext_GetSearchPageResponse_items(ctx context
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_SearchItem_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_SearchItem_pageUrl(ctx, field)
 			case "thumbnail512x384":
 				return ec.fieldContext_SearchItem_thumbnail512x384(ctx, field)
 			}
@@ -6772,8 +6772,8 @@ func (ec *executionContext) fieldContext_GetSectionResponse_data(ctx context.Con
 				return ec.fieldContext_Section_categories(ctx, field)
 			case "games":
 				return ec.fieldContext_Section_games(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Section_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Section_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Section", field.Name)
 		},
@@ -6993,8 +6993,8 @@ func (ec *executionContext) fieldContext_GetTagResponse_data(ctx context.Context
 				return ec.fieldContext_Tag_thumbnail512x384(ctx, field)
 			case "thumbnail128x128":
 				return ec.fieldContext_Tag_thumbnail128x128(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Tag_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
 		},
@@ -7119,8 +7119,8 @@ func (ec *executionContext) fieldContext_GetWebsiteSectionPlacement_section(ctx 
 				return ec.fieldContext_Section_categories(ctx, field)
 			case "games":
 				return ec.fieldContext_Section_games(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Section_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Section_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Section", field.Name)
 		},
@@ -7473,8 +7473,8 @@ func (ec *executionContext) fieldContext_ListCategoriesResponse_data(ctx context
 				return ec.fieldContext_Category_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Category_publishedAt(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Category_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Category_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
@@ -7615,10 +7615,10 @@ func (ec *executionContext) fieldContext_ListGamesResponse_data(ctx context.Cont
 				return ec.fieldContext_Game_thumbnail512x384(ctx, field)
 			case "thumbnail512x512":
 				return ec.fieldContext_Game_thumbnail512x512(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Game_pageURL(ctx, field)
-			case "fullScreenPageURL":
-				return ec.fieldContext_Game_fullScreenPageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Game_pageUrl(ctx, field)
+			case "fullScreenPageUrl":
+				return ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
 		},
@@ -7737,8 +7737,8 @@ func (ec *executionContext) fieldContext_ListSectionsResponse_data(ctx context.C
 				return ec.fieldContext_Section_categories(ctx, field)
 			case "games":
 				return ec.fieldContext_Section_games(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Section_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Section_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Section", field.Name)
 		},
@@ -7857,8 +7857,8 @@ func (ec *executionContext) fieldContext_ListTagsResponse_data(ctx context.Conte
 				return ec.fieldContext_Tag_thumbnail512x384(ctx, field)
 			case "thumbnail128x128":
 				return ec.fieldContext_Tag_thumbnail128x128(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Tag_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
 		},
@@ -9942,8 +9942,8 @@ func (ec *executionContext) fieldContext_SearchItem_type(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _SearchItem_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SearchItem_pageURL(ctx, field)
+func (ec *executionContext) _SearchItem_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SearchItem_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -9956,7 +9956,7 @@ func (ec *executionContext) _SearchItem_pageURL(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9973,7 +9973,7 @@ func (ec *executionContext) _SearchItem_pageURL(ctx context.Context, field graph
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_SearchItem_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_SearchItem_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "SearchItem",
 		Field:      field,
@@ -10077,8 +10077,8 @@ func (ec *executionContext) fieldContext_SearchResponse_games(ctx context.Contex
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_SearchItem_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_SearchItem_pageUrl(ctx, field)
 			case "thumbnail512x384":
 				return ec.fieldContext_SearchItem_thumbnail512x384(ctx, field)
 			}
@@ -10135,8 +10135,8 @@ func (ec *executionContext) fieldContext_SearchResponse_tags(ctx context.Context
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_SearchItem_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_SearchItem_pageUrl(ctx, field)
 			case "thumbnail512x384":
 				return ec.fieldContext_SearchItem_thumbnail512x384(ctx, field)
 			}
@@ -10805,8 +10805,8 @@ func (ec *executionContext) fieldContext_Section_games(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Section_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.Section) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Section_pageURL(ctx, field)
+func (ec *executionContext) _Section_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Section) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Section_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -10819,7 +10819,7 @@ func (ec *executionContext) _Section_pageURL(ctx context.Context, field graphql.
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -10836,7 +10836,7 @@ func (ec *executionContext) _Section_pageURL(ctx context.Context, field graphql.
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Section_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Section_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Section",
 		Field:      field,
@@ -11450,8 +11450,8 @@ func (ec *executionContext) fieldContext_Tag_thumbnail128x128(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Tag_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.Tag) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Tag_pageURL(ctx, field)
+func (ec *executionContext) _Tag_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Tag) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Tag_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -11464,7 +11464,7 @@ func (ec *executionContext) _Tag_pageURL(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11481,7 +11481,7 @@ func (ec *executionContext) _Tag_pageURL(ctx context.Context, field graphql.Coll
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Tag_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Tag_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Tag",
 		Field:      field,
@@ -11608,8 +11608,8 @@ func (ec *executionContext) fieldContext_TagSection_tag(ctx context.Context, fie
 				return ec.fieldContext_Tag_thumbnail512x384(ctx, field)
 			case "thumbnail128x128":
 				return ec.fieldContext_Tag_thumbnail128x128(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_Tag_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
 		},
@@ -14434,9 +14434,9 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 
 			out.Values[i] = ec._Category_publishedAt(ctx, field, obj)
 
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._Category_pageURL(ctx, field, obj)
+			out.Values[i] = ec._Category_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -14862,16 +14862,16 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._Game_pageURL(ctx, field, obj)
+			out.Values[i] = ec._Game_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "fullScreenPageURL":
+		case "fullScreenPageUrl":
 
-			out.Values[i] = ec._Game_fullScreenPageURL(ctx, field, obj)
+			out.Values[i] = ec._Game_fullScreenPageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -16392,9 +16392,9 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._SearchItem_pageURL(ctx, field, obj)
+			out.Values[i] = ec._SearchItem_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -16552,9 +16552,9 @@ func (ec *executionContext) _Section(ctx context.Context, sel ast.SelectionSet, 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._Section_pageURL(ctx, field, obj)
+			out.Values[i] = ec._Section_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -16663,9 +16663,9 @@ func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj 
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._Tag_pageURL(ctx, field, obj)
+			out.Values[i] = ec._Tag_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

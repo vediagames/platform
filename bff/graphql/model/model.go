@@ -21,6 +21,51 @@ type ComplimentaryTag struct {
 	Thumbnail128x128 string  `json:"thumbnail_128x128"`
 }
 
+type Section struct {
+	ID               int                      `json:"id"`
+	Language         Language                 `json:"language"`
+	Slug             string                   `json:"slug"`
+	Name             string                   `json:"name"`
+	Status           Status                   `json:"status"`
+	CreatedAt        string                   `json:"createdAt"`
+	DeletedAt        *string                  `json:"deletedAt"`
+	PublishedAt      *string                  `json:"publishedAt"`
+	ShortDescription *string                  `json:"shortDescription"`
+	Description      *string                  `json:"description"`
+	Content          *string                  `json:"content"`
+	Tags             *ComplimentaryTags       `json:"tags"`
+	Categories       *ComplimentaryCategories `json:"categories"`
+	Games            *ListGamesResponse       `json:"games"`
+	PageUrl          string                   `json:"pageUrl"`
+}
+
+type SearchItem struct {
+	ShortDescription string         `json:"shortDescription"`
+	Name             string         `json:"name"`
+	Slug             string         `json:"slug"`
+	Type             SearchItemType `json:"type"`
+	PageUrl          string         `json:"pageUrl"`
+	Thumbnail512x384 string         `json:"thumbnail512x384"`
+}
+
+type Tag struct {
+	ID               int      `json:"id"`
+	Language         Language `json:"language"`
+	Slug             string   `json:"slug"`
+	Name             string   `json:"name"`
+	ShortDescription *string  `json:"shortDescription"`
+	Description      *string  `json:"description"`
+	Content          *string  `json:"content"`
+	Status           Status   `json:"status"`
+	Clicks           int      `json:"clicks"`
+	CreatedAt        string   `json:"createdAt"`
+	DeletedAt        *string  `json:"deletedAt"`
+	PublishedAt      *string  `json:"publishedAt"`
+	Thumbnail512x384 string   `json:"thumbnail512x384"`
+	Thumbnail128x128 string   `json:"thumbnail128x128"`
+	PageUrl          string   `json:"pageUrl"`
+}
+
 type ComplimentaryCategories struct {
 	Data []ComplimentaryCategory `json:"data"`
 }
@@ -88,8 +133,24 @@ type Game struct {
 	Mobile            bool                     `json:"mobile"`
 	Thumbnail512x384  string                   `json:"thumbnail512x384"`
 	Thumbnail512x512  string                   `json:"thumbnail512x512"`
-	PageURL           string                   `json:"pageURL"`
-	FullScreenPageUrl string                   `json:"fullScreenPageURL"`
+	PageUrl           string                   `json:"pageUrl"`
+	FullScreenPageUrl string                   `json:"fullScreenPageUrl"`
+}
+
+type Category struct {
+	ID               int      `json:"id"`
+	Language         Language `json:"language"`
+	Slug             string   `json:"slug"`
+	Name             string   `json:"name"`
+	ShortDescription *string  `json:"shortDescription"`
+	Description      *string  `json:"description"`
+	Content          *string  `json:"content"`
+	Status           Status   `json:"status"`
+	Clicks           int      `json:"clicks"`
+	CreatedAt        string   `json:"createdAt"`
+	DeletedAt        *string  `json:"deletedAt"`
+	PublishedAt      *string  `json:"publishedAt"`
+	PageUrl          string   `json:"pageUrl"`
 }
 
 type Language string
