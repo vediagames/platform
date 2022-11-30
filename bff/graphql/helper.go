@@ -295,10 +295,11 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 		Categories: &model.ComplimentaryCategories{
 			Data: categories,
 		},
-		Mobile:           game.Mobile,
-		Thumbnail512x384: thumb512x384,
-		Thumbnail512x512: thumb512x512,
-		PageURL:          fmt.Sprintf("/game/%s", game.Slug),
+		Mobile:            game.Mobile,
+		Thumbnail512x384:  thumb512x384,
+		Thumbnail512x512:  thumb512x512,
+		PageURL:           fmt.Sprintf("/game/%s", game.Slug),
+		FullScreenPageUrl: fmt.Sprintf("/game/fullscreen?name=%s&url=%s", game.Name, game.URL),
 	}, nil
 }
 

@@ -154,6 +154,7 @@ type Game {
     thumbnail512x384: String!
     thumbnail512x512: String!
     pageURL: String!
+    fullScreenPageURL: String!
 }
 
 type GetSectionResponse {

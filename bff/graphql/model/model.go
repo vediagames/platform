@@ -63,32 +63,33 @@ func (t ListGamesResponse) IDs() []int {
 }
 
 type Game struct {
-	ID               int                      `json:"id"`
-	Language         Language                 `json:"language"`
-	Slug             string                   `json:"slug"`
-	Name             string                   `json:"name"`
-	Status           Status                   `json:"status"`
-	CreatedAt        string                   `json:"createdAt"`
-	DeletedAt        *string                  `json:"deletedAt"`
-	PublishedAt      *string                  `json:"publishedAt"`
-	URL              string                   `json:"url"`
-	Width            int                      `json:"width"`
-	Height           int                      `json:"height"`
-	ShortDescription *string                  `json:"shortDescription"`
-	Description      *string                  `json:"description"`
-	Content          *string                  `json:"content"`
-	Likes            int                      `json:"likes"`
-	Dislikes         int                      `json:"dislikes"`
-	Plays            int                      `json:"plays"`
-	Weight           int                      `json:"weight"`
-	Player1Controls  *string                  `json:"player1Controls"`
-	Player2Controls  *string                  `json:"player2Controls"`
-	Tags             *ComplimentaryTags       `json:"tags"`
-	Categories       *ComplimentaryCategories `json:"categories"`
-	Mobile           bool                     `json:"mobile"`
-	Thumbnail512x384 string                   `json:"thumbnail512x384"`
-	Thumbnail512x512 string                   `json:"thumbnail512x512"`
-	PageURL          string                   `json:"pageURL"`
+	ID                int                      `json:"id"`
+	Language          Language                 `json:"language"`
+	Slug              string                   `json:"slug"`
+	Name              string                   `json:"name"`
+	Status            Status                   `json:"status"`
+	CreatedAt         string                   `json:"createdAt"`
+	DeletedAt         *string                  `json:"deletedAt"`
+	PublishedAt       *string                  `json:"publishedAt"`
+	URL               string                   `json:"url"`
+	Width             int                      `json:"width"`
+	Height            int                      `json:"height"`
+	ShortDescription  *string                  `json:"shortDescription"`
+	Description       *string                  `json:"description"`
+	Content           *string                  `json:"content"`
+	Likes             int                      `json:"likes"`
+	Dislikes          int                      `json:"dislikes"`
+	Plays             int                      `json:"plays"`
+	Weight            int                      `json:"weight"`
+	Player1Controls   *string                  `json:"player1Controls"`
+	Player2Controls   *string                  `json:"player2Controls"`
+	Tags              *ComplimentaryTags       `json:"tags"`
+	Categories        *ComplimentaryCategories `json:"categories"`
+	Mobile            bool                     `json:"mobile"`
+	Thumbnail512x384  string                   `json:"thumbnail512x384"`
+	Thumbnail512x512  string                   `json:"thumbnail512x512"`
+	PageURL           string                   `json:"pageURL"`
+	FullScreenPageUrl string                   `json:"fullScreenPageURL"`
 }
 
 type Language string
