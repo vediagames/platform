@@ -77,13 +77,6 @@ func (c tag) toDomain() domain.Tag {
 	}
 }
 
-type listTagsTemplateQuery struct {
-	AllowDeleted   bool
-	AllowInvisible bool
-	ShouldOrderBy  bool
-	OrderBy        string
-}
-
 var orderByOptions = map[domain.SortingMethod]string{
 	domain.SortingMethodRandom:       "RANDOM()",
 	domain.SortingMethodID:           "id ASC",
