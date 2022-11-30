@@ -47,7 +47,7 @@ func ServerCmd() *cobra.Command {
 }
 
 func startServer(ctx context.Context) error {
-	cfg := ctx.Value(config.Key).(config.Config)
+	cfg := ctx.Value(config.ContextKeyRequestID).(config.Config)
 
 	db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 	if err != nil {
@@ -166,6 +166,9 @@ func startServer(ctx context.Context) error {
 			gamemonetize.New(10),
 		},
 	})
+	if err != nil {
+		return fmt.Errorf("failed to create new game fetcher clients: %w", err)
+	}
 
 	bucketClient, err := s3.New(s3.Config{
 		Key:      cfg.Bucket.Key,
@@ -267,7 +270,7 @@ func loggerMiddleware(logger *zerolog.Logger) func(h http.Handler) http.Handler 
 			if ctx.Err() != nil {
 				l.Error().
 					Err(ctx.Err()).
-					Msgf("failed request: %w", ctx.Err())
+					Msgf("failed request: %e", ctx.Err())
 			}
 
 			l.Info().TimeDiff("latency", time.Now(), start).Msg("finished request")
