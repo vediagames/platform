@@ -294,12 +294,14 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 
 	query, args, err := sqlx.Named(sqlQuery, params)
 	if err != nil {
-		return domain.FindResult{}, fmt.Errorf("failed to generate a new query %w", err)
+		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
 	}
+
 	query, args, err = sqlx.In(query, args...)
 	if err != nil {
-		return domain.FindResult{}, fmt.Errorf("failed to expand the query %w", err)
+		return domain.FindResult{}, fmt.Errorf("failed to expand %w", err)
 	}
+
 	query = r.db.Rebind(query)
 
 	if err := r.db.Select(&sqlRes, query, args...); err != nil {
