@@ -397,7 +397,8 @@ func (r *queryResolver) Search(ctx context.Context, language model.Language, que
 // FullSearch is the resolver for the fullSearch field.
 func (r *queryResolver) FullSearch(ctx context.Context, request model.FullSearchRequest) (*model.SearchResponse, error) {
 	if request.Sort == nil {
-		*request.Sort = model.SortingMethodMostRelevant
+		sort := model.SortingMethodMostRelevant
+		request.Sort = &sort
 	}
 
 	searchRes, err := r.searchService.FullSearch(ctx, searchdomain.FullSearchRequest{
