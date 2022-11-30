@@ -9,14 +9,14 @@ PATH := $(PATH):$(GOPATH)/bin
 gqlgen/%:
 	cd $* && go get github.com/99designs/gqlgen && go run github.com/99designs/gqlgen generate
 
-postgres:
-	docker run -e "POSTGRES_USER=vedia" -e "POSTGRES_PASSWORD=123" -e "POSTGRES_DB=vediagames" -p 5432:5432 -d postgres:15.0-alpine
-
-redis:
-	docker run -p 6379:6379 -d redis
-
 dev:
+	echo "Starting database environment in docker"
 	docker-compose up -d
 
 down:
+	echo "Shutting the environment down"
 	docker-compose down
+
+generate:
+	echo "Regenerating graphql schemas"
+	go generate ./...
