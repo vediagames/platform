@@ -40,11 +40,7 @@ func (g game) domain() domain.FetchedGame {
 		Description: g.Description,
 		Controls:    g.Instructions,
 		Mobile: func() bool {
-			if g.Mobile == "true" {
-				return true
-			}
-
-			return false
+			return g.Mobile == "true"
 		}(),
 		Height:     g.Height,
 		Width:      g.Width,
