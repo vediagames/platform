@@ -35,11 +35,11 @@ func searchFromSearch(games, tags []searchdomain.SearchItem, total int, fullSear
 		}
 
 		res.Games = append(res.Games, &model.SearchItem{
+			ID:               game.ID,
 			ShortDescription: game.ShortDescription,
 			Name:             game.Name,
 			Slug:             game.Slug,
 			Type:             model.SearchItemTypeGame,
-			PageUrl:          gamePageUrl(game.Slug),
 			Thumbnail512x384: gameThumbnailPath,
 		})
 	}
@@ -56,11 +56,11 @@ func searchFromSearch(games, tags []searchdomain.SearchItem, total int, fullSear
 		}
 
 		res.Tags = append(res.Tags, &model.SearchItem{
+			ID:               tag.ID,
 			ShortDescription: tag.ShortDescription,
 			Name:             tag.Name,
 			Slug:             tag.Slug,
 			Type:             model.SearchItemTypeTag,
-			PageUrl:          tagUrl(tag.ID, tag.Slug, tag.Name),
 			Thumbnail512x384: tagThumbnailPath,
 		})
 	}
@@ -255,11 +255,9 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 		Categories: &model.ComplimentaryCategories{
 			Data: categories,
 		},
-		Mobile:            game.Mobile,
-		Thumbnail512x384:  thumb512x384,
-		Thumbnail512x512:  thumb512x512,
-		PageUrl:           gamePageUrl(game.Slug),
-		FullScreenPageUrl: fullScreenPageUrl(game.Name, game.URL),
+		Mobile:           game.Mobile,
+		Thumbnail512x384: thumb512x384,
+		Thumbnail512x512: thumb512x512,
 	}, nil
 }
 
@@ -277,7 +275,6 @@ func categoryFromCategory(c categorydomain.Category) (model.Category, error) {
 		CreatedAt:        c.CreatedAt.String(),
 		DeletedAt:        stringToPointer(c.DeletedAt.String()),
 		PublishedAt:      stringToPointer(c.PublishedAt.String()),
-		PageUrl:          cateogryPageUrl(c.ID, c.Slug),
 	}, nil
 }
 
@@ -315,7 +312,6 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
 		Thumbnail512x384: thumb512x384,
 		Thumbnail128x128: thumb128x128,
-		PageUrl:          tagUrl(t.ID, t.Slug, t.Name),
 	}, nil
 }
 

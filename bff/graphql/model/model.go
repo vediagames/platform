@@ -40,12 +40,23 @@ type Section struct {
 }
 
 type SearchItem struct {
+	ID               int            `json:"id"`
 	ShortDescription string         `json:"shortDescription"`
 	Name             string         `json:"name"`
 	Slug             string         `json:"slug"`
 	Type             SearchItemType `json:"type"`
-	PageUrl          string         `json:"pageUrl"`
 	Thumbnail512x384 string         `json:"thumbnail512x384"`
+}
+
+func (s *SearchItem) PageUrl() string {
+	switch s.Type {
+	case SearchItemTypeGame:
+		return fmt.Sprintf("/game/%s", s.Slug)
+	case SearchItemTypeTag:
+		return fmt.Sprintf("/tag/%s?id=%d&name=%s", s.Slug, s.ID, s.Name)
+	}
+
+	return ""
 }
 
 type Tag struct {
@@ -63,7 +74,10 @@ type Tag struct {
 	PublishedAt      *string  `json:"publishedAt"`
 	Thumbnail512x384 string   `json:"thumbnail512x384"`
 	Thumbnail128x128 string   `json:"thumbnail128x128"`
-	PageUrl          string   `json:"pageUrl"`
+}
+
+func (t *Tag) PageUrl() string {
+	return fmt.Sprintf("/tag/%s?id=%d&name=%s", t.Slug, t.ID, t.Name)
 }
 
 type ComplimentaryCategories struct {
@@ -108,33 +122,39 @@ func (t ListGamesResponse) IDs() []int {
 }
 
 type Game struct {
-	ID                int                      `json:"id"`
-	Language          Language                 `json:"language"`
-	Slug              string                   `json:"slug"`
-	Name              string                   `json:"name"`
-	Status            Status                   `json:"status"`
-	CreatedAt         string                   `json:"createdAt"`
-	DeletedAt         *string                  `json:"deletedAt"`
-	PublishedAt       *string                  `json:"publishedAt"`
-	URL               string                   `json:"url"`
-	Width             int                      `json:"width"`
-	Height            int                      `json:"height"`
-	ShortDescription  *string                  `json:"shortDescription"`
-	Description       *string                  `json:"description"`
-	Content           *string                  `json:"content"`
-	Likes             int                      `json:"likes"`
-	Dislikes          int                      `json:"dislikes"`
-	Plays             int                      `json:"plays"`
-	Weight            int                      `json:"weight"`
-	Player1Controls   *string                  `json:"player1Controls"`
-	Player2Controls   *string                  `json:"player2Controls"`
-	Tags              *ComplimentaryTags       `json:"tags"`
-	Categories        *ComplimentaryCategories `json:"categories"`
-	Mobile            bool                     `json:"mobile"`
-	Thumbnail512x384  string                   `json:"thumbnail512x384"`
-	Thumbnail512x512  string                   `json:"thumbnail512x512"`
-	PageUrl           string                   `json:"pageUrl"`
-	FullScreenPageUrl string                   `json:"fullScreenPageUrl"`
+	ID               int                      `json:"id"`
+	Language         Language                 `json:"language"`
+	Slug             string                   `json:"slug"`
+	Name             string                   `json:"name"`
+	Status           Status                   `json:"status"`
+	CreatedAt        string                   `json:"createdAt"`
+	DeletedAt        *string                  `json:"deletedAt"`
+	PublishedAt      *string                  `json:"publishedAt"`
+	URL              string                   `json:"url"`
+	Width            int                      `json:"width"`
+	Height           int                      `json:"height"`
+	ShortDescription *string                  `json:"shortDescription"`
+	Description      *string                  `json:"description"`
+	Content          *string                  `json:"content"`
+	Likes            int                      `json:"likes"`
+	Dislikes         int                      `json:"dislikes"`
+	Plays            int                      `json:"plays"`
+	Weight           int                      `json:"weight"`
+	Player1Controls  *string                  `json:"player1Controls"`
+	Player2Controls  *string                  `json:"player2Controls"`
+	Tags             *ComplimentaryTags       `json:"tags"`
+	Categories       *ComplimentaryCategories `json:"categories"`
+	Mobile           bool                     `json:"mobile"`
+	Thumbnail512x384 string                   `json:"thumbnail512x384"`
+	Thumbnail512x512 string                   `json:"thumbnail512x512"`
+}
+
+func (g *Game) PageUrl() string {
+	return fmt.Sprintf("/game/%s", g.Slug)
+}
+
+func (g *Game) FullScreenPageUrl() string {
+	return fmt.Sprintf("/game/fullscreen?name=%s&url=%s", g.Name, g.URL)
 }
 
 type Category struct {
@@ -150,7 +170,10 @@ type Category struct {
 	CreatedAt        string   `json:"createdAt"`
 	DeletedAt        *string  `json:"deletedAt"`
 	PublishedAt      *string  `json:"publishedAt"`
-	PageUrl          string   `json:"pageUrl"`
+}
+
+func (c *Category) PageUrl() string {
+	return fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID)
 }
 
 type Language string

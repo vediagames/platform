@@ -2,19 +2,6 @@ package graphql
 
 import "fmt"
 
-func cateogryPageUrl(ID int, slug string) string {
-	return fmt.Sprintf("/category/%s?id=%d", slug, ID)
-}
-func gamePageUrl(slug string) string {
-	return fmt.Sprintf("/game/%s", slug)
-}
-func tagUrl(ID int, slug, name string) string {
-	return fmt.Sprintf("/tag/%s?id=%d&name=%s", slug, ID, name)
-}
-func fullScreenPageUrl(name, url string) string {
-	return fmt.Sprintf("/game/fullscreen?name=%s&url=%s", name, url)
-}
-
 type path string
 type thumbnail string
 

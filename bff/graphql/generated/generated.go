@@ -3334,7 +3334,7 @@ func (ec *executionContext) _Category_pageUrl(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageUrl, nil
+		return obj.PageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3355,7 +3355,7 @@ func (ec *executionContext) fieldContext_Category_pageUrl(ctx context.Context, f
 	fc = &graphql.FieldContext{
 		Object:     "Category",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
@@ -5405,7 +5405,7 @@ func (ec *executionContext) _Game_pageUrl(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageUrl, nil
+		return obj.PageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5426,7 +5426,7 @@ func (ec *executionContext) fieldContext_Game_pageUrl(ctx context.Context, field
 	fc = &graphql.FieldContext{
 		Object:     "Game",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
@@ -5449,7 +5449,7 @@ func (ec *executionContext) _Game_fullScreenPageUrl(ctx context.Context, field g
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.FullScreenPageUrl, nil
+		return obj.FullScreenPageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5470,7 +5470,7 @@ func (ec *executionContext) fieldContext_Game_fullScreenPageUrl(ctx context.Cont
 	fc = &graphql.FieldContext{
 		Object:     "Game",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
@@ -9956,7 +9956,7 @@ func (ec *executionContext) _SearchItem_pageUrl(ctx context.Context, field graph
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageUrl, nil
+		return obj.PageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -9977,7 +9977,7 @@ func (ec *executionContext) fieldContext_SearchItem_pageUrl(ctx context.Context,
 	fc = &graphql.FieldContext{
 		Object:     "SearchItem",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
@@ -11464,7 +11464,7 @@ func (ec *executionContext) _Tag_pageUrl(ctx context.Context, field graphql.Coll
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageUrl, nil
+		return obj.PageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11485,7 +11485,7 @@ func (ec *executionContext) fieldContext_Tag_pageUrl(ctx context.Context, field 
 	fc = &graphql.FieldContext{
 		Object:     "Tag",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
