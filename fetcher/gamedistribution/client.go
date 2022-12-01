@@ -39,14 +39,12 @@ func (g game) domain() domain.FetchedGame {
 		URL:         fmt.Sprintf("%s?gd_sdk_referrer_url=https://vediagames.com/game/REPLACE-ME", g.URL),
 		Description: g.Description,
 		Controls:    g.Instructions,
-		Mobile: func() bool {
-			return g.Mobile == "true"
-		}(),
-		Height:     g.Height,
-		Width:      g.Width,
-		Categories: g.Category,
-		Tags:       g.Tag,
-		Images:     g.Asset,
+		Mobile:      g.Mobile == "true",
+		Height:      g.Height,
+		Width:       g.Width,
+		Categories:  g.Category,
+		Tags:        g.Tag,
+		Images:      g.Asset,
 	}
 }
 
