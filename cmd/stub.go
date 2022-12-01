@@ -14,7 +14,7 @@ func StubCmd() *cobra.Command {
 		Use:   "stub",
 		Short: "Apply stubs",
 		RunE: func(cmd *cobra.Command, args []string) error {
-			cfg := cmd.Context().Value(config.ContextKeyRequestID).(config.Config)
+			cfg := cmd.Context().Value(config.ContextKey).(config.Config)
 
 			db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 			if err != nil {

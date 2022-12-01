@@ -47,7 +47,7 @@ func ServerCmd() *cobra.Command {
 }
 
 func startServer(ctx context.Context) error {
-	cfg := ctx.Value(config.ContextKeyRequestID).(config.Config)
+	cfg := ctx.Value(config.ContextKey).(config.Config)
 
 	db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 	if err != nil {

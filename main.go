@@ -34,7 +34,7 @@ func main() {
 		logger.Fatal().Err(fmt.Errorf("failed to load config: %w", err))
 	}
 
-	ctx = context.WithValue(ctx, config.ContextKeyRequestID, cfg)
+	ctx = context.WithValue(ctx, config.ContextKey, cfg)
 	rootCmd.SetContext(ctx)
 
 	if err := rootCmd.Execute(); err != nil {
