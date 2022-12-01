@@ -1,0 +1,45 @@
+version: 2.1
+
+commands:
+  setup-env:
+    steps:
+      - checkout
+      - add_ssh_keys:
+          fingerprints:
+            - "cc:a1:f8:74:91:ff:00:d6:9c:84:ce:44:a3:3e:09:30"
+      - run: git config --global --add url."ssh://git@github.com/vediagames/".insteadOf "https://github.com/vediagames/"
+      - run: go env -w GOPRIVATE="github.com/vediagames"
+
+jobs:
+  build:
+    docker:
+      - image: cimg/go:1.19.3
+    working_directory: ~/vediagames.com
+    environment:
+      CGO_ENABLED: 0
+    steps:
+      - setup-env
+      - run: go build -a -ldflags '-w -extldflags "-static"'  ./...
+
+  lint:
+    docker:
+      - image: golangci/golangci-lint:v1.50.1
+    steps:
+      - setup-env
+      - run: golangci-lint run -v
+
+  test:
+    docker:
+      - image: cimg/go:1.19.3
+    working_directory: ~/vediagames.com
+    parallelism: 4
+    steps:
+      - setup-env
+      - run: go test -v -race
+
+workflows:
+  build_lint_test:
+    jobs:
+      - build
+      - lint
+      - test

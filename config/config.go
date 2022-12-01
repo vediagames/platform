@@ -7,8 +7,10 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
+type contextKey string
+
 const (
-	Key = "config"
+	ContextKey contextKey = "config_context_key"
 )
 
 type Config struct {
