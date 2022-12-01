@@ -181,11 +181,6 @@ func (r repository) IncreaseField(ctx context.Context, q domain.IncreaseFieldQue
 	return handleModificationResults(sqlRes)
 }
 
-var languageIDs = map[domain.Language]int{
-	domain.LanguageEnglish: 1,
-	domain.LanguageEspanol: 2,
-}
-
 func handleModificationResults(res sql.Result) error {
 	rows, err := res.RowsAffected()
 	if err != nil {

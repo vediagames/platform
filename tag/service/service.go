@@ -43,11 +43,7 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 		return domain.ListResponse{}, fmt.Errorf("failed to find: %w", err)
 	}
 
-	res := domain.ListResponse{
-		Data:  repoRes.Data,
-		Total: repoRes.Total,
-	}
-
+	res := domain.ListResponse(repoRes)
 	if err := res.Validate(); err != nil {
 		return domain.ListResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
@@ -65,10 +61,7 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 		return domain.GetResponse{}, fmt.Errorf("failed to find one: %w", err)
 	}
 
-	res := domain.GetResponse{
-		Data: repoRes.Data,
-	}
-
+	res := domain.GetResponse(repoRes)
 	if err := res.Validate(); err != nil {
 		return domain.GetResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
@@ -103,11 +96,7 @@ func (s service) Search(ctx context.Context, req domain.SearchRequest) (domain.S
 		return domain.SearchResponse{}, fmt.Errorf("failed to search: %w", err)
 	}
 
-	res := domain.SearchResponse{
-		Data:  repoRes.Data,
-		Total: repoRes.Total,
-	}
-
+	res := domain.SearchResponse(repoRes)
 	if err := res.Validate(); err != nil {
 		return domain.SearchResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
@@ -125,11 +114,7 @@ func (s service) FullSearch(ctx context.Context, req domain.FullSearchRequest) (
 		return domain.FullSearchResponse{}, fmt.Errorf("failed to full search: %w", err)
 	}
 
-	res := domain.FullSearchResponse{
-		Data:  repoRes.Data,
-		Total: repoRes.Total,
-	}
-
+	res := domain.FullSearchResponse(repoRes)
 	if err := res.Validate(); err != nil {
 		return domain.FullSearchResponse{}, fmt.Errorf("invalid response: %w", err)
 	}

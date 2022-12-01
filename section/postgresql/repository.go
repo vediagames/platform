@@ -219,19 +219,6 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}, nil
 }
 
-func handleModificationResults(res sql.Result) error {
-	rows, err := res.RowsAffected()
-	if err != nil {
-		return fmt.Errorf("failed to get affected rows: %w", err)
-	}
-
-	if rows == 0 {
-		return domain.ErrNoData
-	}
-
-	return nil
-}
-
 func templateToSQL(name string, tq templateQuery, tmpl string) (string, error) {
 	parsedTmpl, err := template.New(name).Parse(tmpl)
 	if err != nil {
