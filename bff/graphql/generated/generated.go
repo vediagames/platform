@@ -69,7 +69,7 @@ type ComplexityRoot struct {
 		Description func(childComplexity int) int
 		ID          func(childComplexity int) int
 		Name        func(childComplexity int) int
-		PageURL     func(childComplexity int) int
+		PageUrl     func(childComplexity int) int
 		Slug        func(childComplexity int) int
 	}
 
@@ -77,7 +77,7 @@ type ComplexityRoot struct {
 		Description      func(childComplexity int) int
 		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
+		PageUrl          func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail128x128 func(childComplexity int) int
 	}
@@ -503,12 +503,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ComplimentaryCategory.Name(childComplexity), true
 
-	case "ComplimentaryCategory.pageURL":
-		if e.complexity.ComplimentaryCategory.PageURL == nil {
+	case "ComplimentaryCategory.pageUrl":
+		if e.complexity.ComplimentaryCategory.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.ComplimentaryCategory.PageURL(childComplexity), true
+		return e.complexity.ComplimentaryCategory.PageUrl(childComplexity), true
 
 	case "ComplimentaryCategory.slug":
 		if e.complexity.ComplimentaryCategory.Slug == nil {
@@ -538,12 +538,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.ComplimentaryTag.Name(childComplexity), true
 
-	case "ComplimentaryTag.pageURL":
-		if e.complexity.ComplimentaryTag.PageURL == nil {
+	case "ComplimentaryTag.pageUrl":
+		if e.complexity.ComplimentaryTag.PageUrl == nil {
 			break
 		}
 
-		return e.complexity.ComplimentaryTag.PageURL(childComplexity), true
+		return e.complexity.ComplimentaryTag.PageUrl(childComplexity), true
 
 	case "ComplimentaryTag.slug":
 		if e.complexity.ComplimentaryTag.Slug == nil {
@@ -2179,7 +2179,7 @@ type ComplimentaryTag {
     id: Int!
     slug: String!
     name: String!
-    pageURL: String!
+    pageUrl: String!
     description: String
     thumbnail128x128: String!
 }
@@ -2192,7 +2192,7 @@ type ComplimentaryCategory {
     id: Int!
     slug: String!
     name: String!
-    pageURL: String!
+    pageUrl: String!
     description: String
 }
 
@@ -3427,8 +3427,8 @@ func (ec *executionContext) fieldContext_ComplimentaryCategories_data(ctx contex
 				return ec.fieldContext_ComplimentaryCategory_slug(ctx, field)
 			case "name":
 				return ec.fieldContext_ComplimentaryCategory_name(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_ComplimentaryCategory_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_ComplimentaryCategory_pageUrl(ctx, field)
 			case "description":
 				return ec.fieldContext_ComplimentaryCategory_description(ctx, field)
 			}
@@ -3570,8 +3570,8 @@ func (ec *executionContext) fieldContext_ComplimentaryCategory_name(ctx context.
 	return fc, nil
 }
 
-func (ec *executionContext) _ComplimentaryCategory_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.ComplimentaryCategory) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ComplimentaryCategory_pageURL(ctx, field)
+func (ec *executionContext) _ComplimentaryCategory_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.ComplimentaryCategory) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ComplimentaryCategory_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3584,7 +3584,7 @@ func (ec *executionContext) _ComplimentaryCategory_pageURL(ctx context.Context, 
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3601,11 +3601,11 @@ func (ec *executionContext) _ComplimentaryCategory_pageURL(ctx context.Context, 
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_ComplimentaryCategory_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_ComplimentaryCategory_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ComplimentaryCategory",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
@@ -3787,8 +3787,8 @@ func (ec *executionContext) fieldContext_ComplimentaryTag_name(ctx context.Conte
 	return fc, nil
 }
 
-func (ec *executionContext) _ComplimentaryTag_pageURL(ctx context.Context, field graphql.CollectedField, obj *model.ComplimentaryTag) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_ComplimentaryTag_pageURL(ctx, field)
+func (ec *executionContext) _ComplimentaryTag_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.ComplimentaryTag) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ComplimentaryTag_pageUrl(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -3801,7 +3801,7 @@ func (ec *executionContext) _ComplimentaryTag_pageURL(ctx context.Context, field
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
+		return obj.PageUrl(), nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -3818,11 +3818,11 @@ func (ec *executionContext) _ComplimentaryTag_pageURL(ctx context.Context, field
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_ComplimentaryTag_pageURL(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_ComplimentaryTag_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "ComplimentaryTag",
 		Field:      field,
-		IsMethod:   false,
+		IsMethod:   true,
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
@@ -3961,8 +3961,8 @@ func (ec *executionContext) fieldContext_ComplimentaryTags_data(ctx context.Cont
 				return ec.fieldContext_ComplimentaryTag_slug(ctx, field)
 			case "name":
 				return ec.fieldContext_ComplimentaryTag_name(ctx, field)
-			case "pageURL":
-				return ec.fieldContext_ComplimentaryTag_pageURL(ctx, field)
+			case "pageUrl":
+				return ec.fieldContext_ComplimentaryTag_pageUrl(ctx, field)
 			case "description":
 				return ec.fieldContext_ComplimentaryTag_description(ctx, field)
 			case "thumbnail128x128":
@@ -14621,9 +14621,9 @@ func (ec *executionContext) _ComplimentaryCategory(ctx context.Context, sel ast.
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._ComplimentaryCategory_pageURL(ctx, field, obj)
+			out.Values[i] = ec._ComplimentaryCategory_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -14674,9 +14674,9 @@ func (ec *executionContext) _ComplimentaryTag(ctx context.Context, sel ast.Selec
 			if out.Values[i] == graphql.Null {
 				invalids++
 			}
-		case "pageURL":
+		case "pageUrl":
 
-			out.Values[i] = ec._ComplimentaryTag_pageURL(ctx, field, obj)
+			out.Values[i] = ec._ComplimentaryTag_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++

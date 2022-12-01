@@ -183,7 +183,7 @@ type ComplimentaryTag {
     id: Int!
     slug: String!
     name: String!
-    pageURL: String!
+    pageUrl: String!
     description: String
     thumbnail128x128: String!
 }
@@ -196,7 +196,7 @@ type ComplimentaryCategory {
     id: Int!
     slug: String!
     name: String!
-    pageURL: String!
+    pageUrl: String!
     description: String
 }
 

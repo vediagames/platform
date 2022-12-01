@@ -91,7 +91,6 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 			Name:             tag.Name,
 			Description:      &tag.Description,
 			Thumbnail128x128: thumb,
-			PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
 		})
 	}
 
@@ -102,7 +101,6 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 			Slug:        category.Slug,
 			Name:        category.Name,
 			Description: &category.Description,
-			PageURL:     fmt.Sprintf("/category/%s?id=%d", category.Slug, category.ID),
 		})
 	}
 
@@ -217,7 +215,6 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 			Name:             tag.Name,
 			Description:      &tag.Description,
 			Thumbnail128x128: tagThumb128x128,
-			PageURL:          fmt.Sprintf("/tag/%d?slug=%s&name=%s", tag.ID, tag.Slug, tag.Name),
 		})
 	}
 
@@ -228,7 +225,6 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 			Slug:        category.Slug,
 			Name:        category.Name,
 			Description: &category.Description,
-			PageURL:     fmt.Sprintf("/category/%s?id=%d", category.Slug, category.ID),
 		})
 	}
 
