@@ -22,22 +22,6 @@ type BaseListRequest struct {
 	AllowInvisible bool     `json:"allowInvisible"`
 }
 
-type Category struct {
-	ID               int      `json:"id"`
-	Language         Language `json:"language"`
-	Slug             string   `json:"slug"`
-	Name             string   `json:"name"`
-	ShortDescription *string  `json:"shortDescription"`
-	Description      *string  `json:"description"`
-	Content          *string  `json:"content"`
-	Status           Status   `json:"status"`
-	Clicks           int      `json:"clicks"`
-	CreatedAt        string   `json:"createdAt"`
-	DeletedAt        *string  `json:"deletedAt"`
-	PublishedAt      *string  `json:"publishedAt"`
-	PageURL          string   `json:"pageURL"`
-}
-
 type FetchedGame struct {
 	Name        string   `json:"name"`
 	URL         string   `json:"url"`
@@ -260,37 +244,10 @@ type ListTagsResponse struct {
 	Total int    `json:"total"`
 }
 
-type SearchItem struct {
-	ShortDescription string         `json:"shortDescription"`
-	Name             string         `json:"name"`
-	Slug             string         `json:"slug"`
-	Type             SearchItemType `json:"type"`
-	PageURL          string         `json:"pageURL"`
-	Thumbnail512x384 string         `json:"thumbnail512x384"`
-}
-
 type SearchResponse struct {
 	Games []*SearchItem `json:"games"`
 	Tags  []*SearchItem `json:"tags"`
 	Total int           `json:"total"`
-}
-
-type Section struct {
-	ID               int                      `json:"id"`
-	Language         Language                 `json:"language"`
-	Slug             string                   `json:"slug"`
-	Name             string                   `json:"name"`
-	Status           Status                   `json:"status"`
-	CreatedAt        string                   `json:"createdAt"`
-	DeletedAt        *string                  `json:"deletedAt"`
-	PublishedAt      *string                  `json:"publishedAt"`
-	ShortDescription *string                  `json:"shortDescription"`
-	Description      *string                  `json:"description"`
-	Content          *string                  `json:"content"`
-	Tags             *ComplimentaryTags       `json:"tags"`
-	Categories       *ComplimentaryCategories `json:"categories"`
-	Games            *ListGamesResponse       `json:"games"`
-	PageURL          string                   `json:"pageURL"`
 }
 
 type SendEmailRequest struct {
@@ -298,24 +255,6 @@ type SendEmailRequest struct {
 	Name    string `json:"name"`
 	Subject string `json:"subject"`
 	Body    string `json:"body"`
-}
-
-type Tag struct {
-	ID               int      `json:"id"`
-	Language         Language `json:"language"`
-	Slug             string   `json:"slug"`
-	Name             string   `json:"name"`
-	ShortDescription *string  `json:"shortDescription"`
-	Description      *string  `json:"description"`
-	Content          *string  `json:"content"`
-	Status           Status   `json:"status"`
-	Clicks           int      `json:"clicks"`
-	CreatedAt        string   `json:"createdAt"`
-	DeletedAt        *string  `json:"deletedAt"`
-	PublishedAt      *string  `json:"publishedAt"`
-	Thumbnail512x384 string   `json:"thumbnail512x384"`
-	Thumbnail128x128 string   `json:"thumbnail128x128"`
-	PageURL          string   `json:"pageURL"`
 }
 
 type TagSection struct {
