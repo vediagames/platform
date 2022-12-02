@@ -13,12 +13,20 @@ type ComplimentaryCategory struct {
 	Description *string `json:"description"`
 }
 
+func (c *ComplimentaryCategory) PageUrl() string {
+	return fmt.Sprintf("/category/%s?id=%d", c.Slug, c.ID)
+}
+
 type ComplimentaryTag struct {
 	ID               int     `json:"id"`
 	Slug             string  `json:"slug"`
 	Name             string  `json:"name"`
 	Description      *string `json:"description"`
 	Thumbnail128x128 string  `json:"thumbnail_128x128"`
+}
+
+func (t *ComplimentaryTag) PageUrl() string {
+	return fmt.Sprintf("/tag/%s?id=%d&name=%s", t.Slug, t.ID, t.Name)
 }
 
 type Section struct {
