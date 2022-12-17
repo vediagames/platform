@@ -1,5 +1,5 @@
 {
-  "$id": "vediagames",
+  "$id": "https://vediagames.com/user/schema",
   "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Person",
   "type": "object",
