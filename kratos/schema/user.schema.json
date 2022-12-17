@@ -1,6 +1,6 @@
 {
   "$id": "vediagames",
-  "$schema": "vediagames",
+  "$schema": "http://json-schema.org/draft-07/schema#",
   "title": "Person",
   "type": "object",
   "properties": {
@@ -26,22 +26,16 @@
             }
           }
         },
-        "name": {
-          "type": "object",
-          "properties": {
-            "first": {
-              "title": "First Name",
-              "type": "string"
-            },
-            "last": {
-              "title": "Last Name",
-              "type": "string"
-            }
-          }
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "minLength": 2,
+          "maxLength": 12
         }
       },
       "required": [
-        "email"
+        "email",
+        "username"
       ],
       "additionalProperties": false
     }
