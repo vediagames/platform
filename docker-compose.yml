@@ -23,8 +23,19 @@ services:
     volumes:
       - "redis-data:/var/lib/redis/data"
 
+  kratos-migrate:
+    depends_on:
+      - postgres
+    container_name: kratos-migrate
+    image: oryd/kratos:v0.11.0
+    environment:
+      - DSN=postgres://vedia:123@postgres:5432/auth?sslmode=disable&max_conns=20&max_idle_conns=4
+    command: migrate sql -e --yes
+
   kratos:
     container_name: kratos
+    depends_on:
+      - kratos-migrate
     image: oryd/kratos:v0.11.0
     command: serve -c /etc/kratos/local.config.yml --dev --watch-courier
     volumes:
