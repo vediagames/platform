@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/vediagames/vediagames.com/auth"
 	"github.com/vediagames/vediagames.com/bff/graphql/generated"
 	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
@@ -31,6 +32,7 @@ type Resolver struct {
 	emailClient     notificationdomain.EmailClient
 	bucketClient    bucketdomain.Client
 	fetcherClient   fetcherdomain.Client
+	authService     auth.Service
 }
 
 type Config struct {
@@ -42,6 +44,7 @@ type Config struct {
 	EmailClient     notificationdomain.EmailClient
 	BucketClient    bucketdomain.Client
 	FetcherClient   fetcherdomain.Client
+	AuthService     auth.Service
 }
 
 func (c Config) Validate() error {
@@ -94,6 +97,7 @@ func NewResolver(cfg Config) (Resolver, error) {
 		emailClient:     cfg.EmailClient,
 		bucketClient:    cfg.BucketClient,
 		fetcherClient:   cfg.FetcherClient,
+		authService:     cfg.AuthService,
 	}, nil
 }
 

@@ -15,6 +15,7 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
+	"github.com/vediagames/vediagames.com/auth"
 	"github.com/vediagames/vediagames.com/bff/graphql"
 	"github.com/vediagames/vediagames.com/bucket/s3"
 	categorypostgresql "github.com/vediagames/vediagames.com/category/postgresql"
@@ -186,6 +187,8 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create cache")
 	}
 
+	authService := auth.New("localhost:4433")
+
 	resolver, err := graphql.NewResolver(graphql.Config{
 		GameService:     gameService,
 		CategoryService: categoryService,
@@ -195,6 +198,7 @@ func startServer(ctx context.Context) error {
 		EmailClient:     emailClient,
 		BucketClient:    bucketClient,
 		FetcherClient:   fetcherClient,
+		AuthService:     authService,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create resolver %w", err)
@@ -223,6 +227,7 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
+	router.Use(authService.Middleware())
 
 	router.Handle("/graph", gqlHandler)
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
