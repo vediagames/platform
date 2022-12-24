@@ -28,7 +28,6 @@ func New(url string) Service {
 	}
 }
 
-// save the session to display it on the dashboard
 func withUser(ctx context.Context, u User) context.Context {
 	return context.WithValue(ctx, contextKeyUser, u)
 }
