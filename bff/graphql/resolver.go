@@ -16,6 +16,7 @@ import (
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
 	fetcherdomain "github.com/vediagames/vediagames.com/fetcher/domain"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
+	imagedomain "github.com/vediagames/vediagames.com/image/domain"
 	notificationdomain "github.com/vediagames/vediagames.com/notification/domain"
 	searchdomain "github.com/vediagames/vediagames.com/search/domain"
 	sectiondomain "github.com/vediagames/vediagames.com/section/domain"
@@ -28,6 +29,7 @@ type Resolver struct {
 	sectionService  sectiondomain.Service
 	tagService      tagdomain.Service
 	searchService   searchdomain.Service
+	imageService    imagedomain.Service
 	emailClient     notificationdomain.EmailClient
 	bucketClient    bucketdomain.Client
 	fetcherClient   fetcherdomain.Client
@@ -39,6 +41,7 @@ type Config struct {
 	SectionService  sectiondomain.Service
 	TagService      tagdomain.Service
 	SearchService   searchdomain.Service
+	ImageService    imagedomain.Service
 	EmailClient     notificationdomain.EmailClient
 	BucketClient    bucketdomain.Client
 	FetcherClient   fetcherdomain.Client
@@ -63,6 +66,10 @@ func (c Config) Validate() error {
 
 	if c.SearchService == nil {
 		return fmt.Errorf("search service is required")
+	}
+
+	if c.ImageService == nil {
+		return fmt.Errorf("image service is required")
 	}
 
 	if c.EmailClient == nil {
@@ -91,6 +98,7 @@ func NewResolver(cfg Config) (Resolver, error) {
 		sectionService:  cfg.SectionService,
 		tagService:      cfg.TagService,
 		searchService:   cfg.SearchService,
+		imageService:    cfg.ImageService,
 		emailClient:     cfg.EmailClient,
 		bucketClient:    cfg.BucketClient,
 		fetcherClient:   cfg.FetcherClient,
