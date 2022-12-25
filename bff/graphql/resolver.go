@@ -80,6 +80,10 @@ func (c Config) Validate() error {
 		return fmt.Errorf("fetcher client is required")
 	}
 
+	if c.AuthService == (auth.Service{}) {
+		return fmt.Errorf("auth client is required")
+	}
+
 	return nil
 }
 

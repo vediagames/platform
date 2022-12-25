@@ -30,7 +30,11 @@ type User struct {
 
 func New(url string) Service {
 	c := ory.NewConfiguration()
-	c.Servers = ory.ServerConfigurations{{URL: url}}
+	c.Servers = ory.ServerConfigurations{
+		{
+			URL: url,
+		},
+	}
 
 	return Service{
 		ory: ory.NewAPIClient(c),
