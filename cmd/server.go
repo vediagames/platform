@@ -187,7 +187,7 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create cache")
 	}
 
-	authService := auth.New("http://localhost:4433")
+	authService := auth.New(cfg.Auth.KratosURL)
 
 	resolver, err := graphql.NewResolver(graphql.Config{
 		GameService:     gameService,

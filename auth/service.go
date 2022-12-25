@@ -11,17 +11,26 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
+type contextKey string
+
+const contextKeyUser contextKey = "user"
+
 type Service struct {
 	ory *ory.APIClient
 }
 
+type User struct {
+	ID        string
+	SessionID string
+	Username  string
+	Email     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 func New(url string) Service {
 	c := ory.NewConfiguration()
-	c.Servers = ory.ServerConfigurations{
-		{
-			URL: url,
-		},
-	}
+	c.Servers = ory.ServerConfigurations{{URL: url}}
 
 	return Service{
 		ory: ory.NewAPIClient(c),
@@ -62,19 +71,6 @@ func (s *Service) Middleware() func(http.Handler) http.Handler {
 	}
 }
 
-type contextKey string
-
-const contextKeyUser contextKey = "user"
-
-type User struct {
-	ID        string
-	SessionID string
-	Username  string
-	Email     string
-	CreatedAt time.Time
-	UpdatedAt time.Time
-}
-
 func (u User) Validate() error {
 	var err zeroerror.Error
 
@@ -87,6 +83,10 @@ func (u User) Validate() error {
 	}
 
 	if u.Username == "" {
+		err.Add(fmt.Errorf("empty username"))
+	}
+
+	if u.Email == "" {
 		err.Add(fmt.Errorf("empty email"))
 	}
 
