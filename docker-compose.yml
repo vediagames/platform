@@ -22,7 +22,7 @@ services:
       - "6379:6379"
     volumes:
       - "redis-data:/var/lib/redis/data"
-  # Main image 
+
   kratos:
     container_name: kratos
     depends_on:
@@ -36,7 +36,7 @@ services:
     ports:
       - "4433:4433" # public
       - "4434:4434" # admin
-  # migration
+
   kratos-migrate:
     depends_on:
       - postgres
@@ -46,7 +46,6 @@ services:
       - DSN=postgres://vedia:123@postgres:5432/auth?sslmode=disable&max_conns=20&max_idle_conns=4
     command: migrate sql -e --yes
 
-# Mailslurper is used to send emails, kratos uses it
   mailslurper:
     image: oryd/mailslurper:latest-smtps
     ports:
