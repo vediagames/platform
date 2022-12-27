@@ -11,7 +11,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
-	"github.com/vediagames/vediagames.com/auth"
+	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	"github.com/vediagames/vediagames.com/bff/graphql/generated"
 	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
@@ -32,7 +32,7 @@ type Resolver struct {
 	emailClient     notificationdomain.EmailClient
 	bucketClient    bucketdomain.Client
 	fetcherClient   fetcherdomain.Client
-	authService     auth.Service
+	authService     authdomain.Service
 }
 
 type Config struct {
@@ -44,7 +44,7 @@ type Config struct {
 	EmailClient     notificationdomain.EmailClient
 	BucketClient    bucketdomain.Client
 	FetcherClient   fetcherdomain.Client
-	AuthService     auth.Service
+	AuthService     authdomain.Service
 }
 
 func (c Config) Validate() error {
@@ -80,7 +80,7 @@ func (c Config) Validate() error {
 		return fmt.Errorf("fetcher client is required")
 	}
 
-	if c.AuthService == (auth.Service{}) {
+	if c.AuthService == nil {
 		return fmt.Errorf("auth client is required")
 	}
 
