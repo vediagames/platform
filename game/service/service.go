@@ -38,7 +38,7 @@ func (c Config) Validate() error {
 
 func New(config Config) (domain.Service, error) {
 	if err := config.Validate(); err != nil {
-		return nil, err
+		return nil, fmt.Errorf("invalid config: %w", err)
 	}
 
 	return &service{
