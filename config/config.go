@@ -111,7 +111,7 @@ func (c Config) Validate() error {
 	if c.Auth.KratosURL == "" {
 		err.Add(fmt.Errorf("kratos auth url is not set"))
 	}
-	
+
 	return err.Err()
 }
 

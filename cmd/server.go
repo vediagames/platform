@@ -10,12 +10,13 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
+	ory "github.com/ory/kratos-client-go"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	"github.com/vediagames/vediagames.com/auth"
+	authdomain "github.com/vediagames/vediagames.com/auth/domain"
+	authservice "github.com/vediagames/vediagames.com/auth/service"
 	"github.com/vediagames/vediagames.com/bff/graphql"
 	"github.com/vediagames/vediagames.com/bucket/s3"
 	categorypostgresql "github.com/vediagames/vediagames.com/category/postgresql"
@@ -182,12 +183,24 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create bucket client: %w", err)
 	}
 
-	cache, err := NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
+	cache, err := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 	if err != nil {
 		return fmt.Errorf("failed to create cache")
 	}
 
-	authService := auth.New(cfg.Auth.KratosURL)
+	c := ory.NewConfiguration()
+	c.Servers = ory.ServerConfigurations{
+		{
+			URL: cfg.Auth.KratosURL,
+		},
+	}
+
+	authService, err := authservice.NewOry(authservice.OryConfig{
+		Client: ory.NewAPIClient(c),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create auth service")
+	}
 
 	resolver, err := graphql.NewResolver(graphql.Config{
 		GameService:     gameService,
@@ -213,7 +226,9 @@ func startServer(ctx context.Context) error {
 	gqlHandler.AddTransport(transport.POST{})
 	gqlHandler.AddTransport(transport.MultipartForm{})
 	gqlHandler.Use(extension.Introspection{})
-	gqlHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
+	gqlHandler.Use(extension.AutomaticPersistedQuery{
+		Cache: cache,
+	})
 
 	httpCors := cors.New(cors.Options{
 		AllowedOrigins:   cfg.CORS.AllowedOrigins,
@@ -227,7 +242,7 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
-	router.Use(authService.Middleware())
+	router.Use(authMiddleware(authService))
 
 	router.Handle("/graph", gqlHandler)
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -283,42 +298,22 @@ func loggerMiddleware(logger *zerolog.Logger) func(h http.Handler) http.Handler 
 	}
 }
 
-type Cache struct {
-	client    redis.UniversalClient
-	ttl       time.Duration
-	apqPrefix string
-}
+func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			cookies := r.Header.Get("Cookie")
 
-func NewCache(ctx context.Context, redisAddress string, ttl time.Duration) (*Cache, error) {
-	client := redis.NewClient(&redis.Options{
-		Addr: redisAddress,
-	})
+			res, err := s.Authenticate(r.Context(), authdomain.AuthenticateRequest{
+				Cookies: cookies,
+			})
+			if err != nil {
+				zerolog.Ctx(r.Context()).Error().Msgf("failed to authenticate: %s", err)
+				next.ServeHTTP(w, r)
+			}
 
-	err := client.Ping(ctx).Err()
-	if err != nil {
-		return nil, fmt.Errorf("could not create cache: %w", err)
+			next.ServeHTTP(w, r.WithContext(
+				s.ToContext(r.Context(), res.User),
+			))
+		})
 	}
-
-	return &Cache{client: client, ttl: ttl}, nil
-}
-
-func (c Cache) Add(ctx context.Context, key string, value interface{}) {
-	key = fmt.Sprintf("%s:%s", c.apqPrefix, key)
-
-	_, err := c.client.Set(ctx, key, value, c.ttl).Result()
-	if err != nil {
-		zerolog.Ctx(ctx).Err(fmt.Errorf("failed to set cache for key %q: %w", key, err))
-	}
-}
-
-func (c Cache) Get(ctx context.Context, key string) (interface{}, bool) {
-	key = fmt.Sprintf("%s:%s", c.apqPrefix, key)
-
-	s, err := c.client.Get(ctx, key).Result()
-	if err != nil {
-		zerolog.Ctx(ctx).Err(fmt.Errorf("failed to get cache for key %q: %w", key, err))
-		return nil, false
-	}
-
-	return s, true
 }
