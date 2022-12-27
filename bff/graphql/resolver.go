@@ -82,7 +82,7 @@ func (c Config) Validate() error {
 
 func NewResolver(cfg Config) (Resolver, error) {
 	if err := cfg.Validate(); err != nil {
-		return Resolver{}, err
+		return Resolver{}, fmt.Errorf("invalid config: %w", err)
 	}
 
 	return Resolver{
