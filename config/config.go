@@ -2,9 +2,7 @@ package config
 
 import (
 	"fmt"
-	"log"
 
-	validator "github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 	"github.com/vediagames/zeroerror"
 )
@@ -16,42 +14,42 @@ const (
 )
 
 type Imagor struct {
-	URL    string `mapstructure:"URL" validate:"required"`
-	Secret string `mapstructure:"secret" validate:"required"`
+	URL    string `mapstructure:"URL"`
+	Secret string `mapstructure:"secret"`
 }
 type BunnyStorage struct {
-	URL       string `mapstructure:"URL" validate:"required"`
-	Zone      string `mapstructure:"zone" validate:"required"`
-	AccessKey string `mapstructure:"accessKey" validate:"required"`
+	URL       string `mapstructure:"URL"`
+	Zone      string `mapstructure:"zone"`
+	AccessKey string `mapstructure:"accessKey"`
 }
 
 type Config struct {
-	Environment string `mapstructure:"environment" validate:"required"`
-	LogLevel    string `mapstructure:"logLevel" validate:"required"`
-	Port        int    `mapstructure:"port" validate:"required"`
+	Environment string `mapstructure:"environment"`
+	LogLevel    string `mapstructure:"logLevel"`
+	Port        int    `mapstructure:"port"`
 	PostgreSQL  struct {
-		ConnectionString string `mapstructure:"connectionString" validate:"required"`
+		ConnectionString string `mapstructure:"connectionString"`
 		Path             struct {
-			Migration string `mapstructure:"migration" validate:"required"`
-			Stub      string `mapstructure:"stub" validate:"required"`
-		} `mapstructure:"path" validate:"required"`
-	} `mapstructure:"postgresql" validate:"required"`
+			Migration string `mapstructure:"migration"`
+			Stub      string `mapstructure:"stub"`
+		} `mapstructure:"path"`
+	} `mapstructure:"postgresql"`
 	SendInBlue struct {
-		Key string `mapstructure:"key" validate:"required"`
-	} `mapstructure:"sendinblue" validate:"required"`
+		Key string `mapstructure:"key"`
+	} `mapstructure:"sendinblue"`
 	Bucket struct {
-		Key      string `mapstructure:"key" validate:"required"`
-		Secret   string `mapstructure:"secret" validate:"required"`
-		Region   string `mapstructure:"region" validate:"required"`
-		EndPoint string `mapstructure:"endpoint" validate:"required"`
-		Bucket   string `mapstructure:"bucket" validate:"required"`
-	} `mapstructure:"bucket" validate:"required"`
+		Key      string `mapstructure:"key"`
+		Secret   string `mapstructure:"secret"`
+		Region   string `mapstructure:"region"`
+		EndPoint string `mapstructure:"endpoint"`
+		Bucket   string `mapstructure:"bucket"`
+	} `mapstructure:"bucket"`
 	CORS struct {
-		AllowedOrigins []string `mapstructure:"allowedOrigins" validate:"required"`
-	} `mapstructure:"cors" validate:"required"`
-	RedisAddress string       `mapstructure:"redisAddress" validate:"required"`
-	Imagor       Imagor       `mapstructure:"imagor" validate:"required"`
-	BunnyStorage BunnyStorage `mapstructure:"bunnyStorage" validate:"required"`
+		AllowedOrigins []string `mapstructure:"allowedOrigins"`
+	} `mapstructure:"cors"`
+	RedisAddress string       `mapstructure:"redisAddress"`
+	Imagor       Imagor       `mapstructure:"imagor"`
+	BunnyStorage BunnyStorage `mapstructure:"bunnyStorage"`
 }
 
 func (c Config) Validate() error {
@@ -119,7 +117,25 @@ func (c Config) Validate() error {
 		err.Add(fmt.Errorf("redis address is not set"))
 	}
 
-	// TODO: add validation
+	if c.BunnyStorage.URL == "" {
+		err.Add(fmt.Errorf("bunny storage url key is not set"))
+	}
+
+	if c.BunnyStorage.AccessKey == "" {
+		err.Add(fmt.Errorf("bunny storage access key is not set"))
+	}
+
+	if c.BunnyStorage.AccessKey == "" {
+		err.Add(fmt.Errorf("bunny storage access key is not set"))
+	}
+
+	if c.Imagor.URL == "" {
+		err.Add(fmt.Errorf("imagor url key is not set"))
+	}
+
+	if c.Imagor.Secret == "" {
+		err.Add(fmt.Errorf("imagor secret key is not set"))
+	}
 	return err.Err()
 }
 
@@ -134,11 +150,6 @@ func New(path string) (Config, error) {
 	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
 		return Config{}, fmt.Errorf("failed to unmarshal config: %w", err)
-	}
-
-	var validate = validator.New()
-	if err := validate.Struct(&config); err != nil {
-		log.Fatalf("Missing required config variables %v\n", err)
 	}
 
 	return config, nil
