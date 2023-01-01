@@ -21,6 +21,15 @@ services:
       - "6379:6379"
     volumes:
       - "redis-data:/var/lib/redis/data"
+  imagor:
+    image: shumc/imagor:latest
+    environment:
+      PORT: 8000
+      IMAGOR_SECRET: vediagames
+      IMAGOR_SIGNER_TYPE: sha256
+      IMAGOR_SIGNER_TRUNCATE: 40
+    ports:
+      - "8000:8000"
 
 volumes:
   database-data:

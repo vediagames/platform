@@ -4,20 +4,25 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/vediagames/vediagames.com/config"
 	"github.com/vediagames/vediagames.com/image/domain"
 )
 
 type service struct {
-	repository domain.Repository
+	processor domain.Processor
 }
 
 type Config struct {
-	Repository domain.Repository
+	Processor domain.Processor
+	Cfg       config.Imagor
 }
 
 func (c Config) Validate() error {
-	if c.Repository == nil {
-		return fmt.Errorf("repository is required")
+	if c.Cfg.Secret == "" {
+		return fmt.Errorf("secret required")
+	}
+	if c.Cfg.URL == "" {
+		return fmt.Errorf("url required")
 	}
 
 	return nil
@@ -29,7 +34,7 @@ func New(config Config) (domain.Service, error) {
 	}
 
 	return &service{
-		repository: config.Repository,
+		processor: config.Processor,
 	}, nil
 }
 
