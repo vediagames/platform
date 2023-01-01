@@ -2,7 +2,9 @@ package config
 
 import (
 	"fmt"
+	"log"
 
+	validator "github.com/go-playground/validator/v10"
 	"github.com/spf13/viper"
 	"github.com/vediagames/zeroerror"
 )
@@ -13,31 +15,43 @@ const (
 	ContextKey contextKey = "config_context_key"
 )
 
+type Imagor struct {
+	URL    string `mapstructure:"URL" validate:"required"`
+	Secret string `mapstructure:"secret" validate:"required"`
+}
+type BunnyStorage struct {
+	URL       string `mapstructure:"URL" validate:"required"`
+	Zone      string `mapstructure:"zone" validate:"required"`
+	AccessKey string `mapstructure:"accessKey" validate:"required"`
+}
+
 type Config struct {
-	Environment string `mapstructure:"environment"`
-	LogLevel    string `mapstructure:"logLevel"`
-	Port        int    `mapstructure:"port"`
+	Environment string `mapstructure:"environment" validate:"required"`
+	LogLevel    string `mapstructure:"logLevel" validate:"required"`
+	Port        int    `mapstructure:"port" validate:"required"`
 	PostgreSQL  struct {
-		ConnectionString string `mapstructure:"connectionString"`
+		ConnectionString string `mapstructure:"connectionString" validate:"required"`
 		Path             struct {
-			Migration string `mapstructure:"migration"`
-			Stub      string `mapstructure:"stub"`
-		} `mapstructure:"path"`
-	} `mapstructure:"postgresql"`
+			Migration string `mapstructure:"migration" validate:"required"`
+			Stub      string `mapstructure:"stub" validate:"required"`
+		} `mapstructure:"path" validate:"required"`
+	} `mapstructure:"postgresql" validate:"required"`
 	SendInBlue struct {
-		Key string `mapstructure:"key"`
-	} `mapstructure:"sendinblue"`
+		Key string `mapstructure:"key" validate:"required"`
+	} `mapstructure:"sendinblue" validate:"required"`
 	Bucket struct {
-		Key      string `mapstructure:"key"`
-		Secret   string `mapstructure:"secret"`
-		Region   string `mapstructure:"region"`
-		EndPoint string `mapstructure:"endpoint"`
-		Bucket   string `mapstructure:"bucket"`
-	} `mapstructure:"bucket"`
+		Key      string `mapstructure:"key" validate:"required"`
+		Secret   string `mapstructure:"secret" validate:"required"`
+		Region   string `mapstructure:"region" validate:"required"`
+		EndPoint string `mapstructure:"endpoint" validate:"required"`
+		Bucket   string `mapstructure:"bucket" validate:"required"`
+	} `mapstructure:"bucket" validate:"required"`
 	CORS struct {
-		AllowedOrigins []string `mapstructure:"allowedOrigins"`
-	} `mapstructure:"cors"`
-	RedisAddress string `mapstructure:"redisAddress"`
+		AllowedOrigins []string `mapstructure:"allowedOrigins" validate:"required"`
+	} `mapstructure:"cors" validate:"required"`
+	RedisAddress string       `mapstructure:"redisAddress" validate:"required"`
+	Imagor       Imagor       `mapstructure:"imagor" validate:"required"`
+	BunnyStorage BunnyStorage `mapstructure:"bunnyStorage" validate:"required"`
 }
 
 func (c Config) Validate() error {
@@ -105,6 +119,7 @@ func (c Config) Validate() error {
 		err.Add(fmt.Errorf("redis address is not set"))
 	}
 
+	// TODO: add validation
 	return err.Err()
 }
 
@@ -119,6 +134,11 @@ func New(path string) (Config, error) {
 	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
 		return Config{}, fmt.Errorf("failed to unmarshal config: %w", err)
+	}
+
+	var validate = validator.New()
+	if err := validate.Struct(&config); err != nil {
+		log.Fatalf("Missing required config variables %v\n", err)
 	}
 
 	return config, nil
