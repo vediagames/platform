@@ -102,11 +102,12 @@ type GetFreshGamesRequest struct {
 }
 
 type GetGamePageRequest struct {
-	Language          Language `json:"language"`
-	Slug              string   `json:"slug"`
-	LastPlayedGameIDs []*int   `json:"lastPlayedGameIDs"`
-	LikedGameIDs      []*int   `json:"likedGameIDs"`
-	DislikedGameIDs   []*int   `json:"dislikedGameIDs"`
+	Language          Language   `json:"language"`
+	Slug              string     `json:"slug"`
+	LastPlayedGameIDs []*int     `json:"lastPlayedGameIDs"`
+	LikedGameIDs      []*int     `json:"likedGameIDs"`
+	DislikedGameIDs   []*int     `json:"dislikedGameIDs"`
+	Thumbnail         *Thumbnail `json:"thumbnail"`
 }
 
 type GetGamePageResponse struct {
@@ -118,6 +119,13 @@ type GetGamePageResponse struct {
 
 type GetGameResponse struct {
 	Data *Game `json:"data"`
+}
+
+type GetGameTagRequest struct {
+	Field     GetByField `json:"field"`
+	Value     string     `json:"value"`
+	Language  Language   `json:"language"`
+	Thumbnail *Thumbnail `json:"thumbnail"`
 }
 
 type GetHomePageRequest struct {
@@ -168,9 +176,10 @@ type GetSiteMapPageResponse struct {
 }
 
 type GetTagPageRequest struct {
-	Language Language `json:"language"`
-	TagID    int      `json:"tagID"`
-	Page     int      `json:"page"`
+	Language  Language   `json:"language"`
+	TagID     int        `json:"tagID"`
+	Page      int        `json:"page"`
+	Thumbnail *Thumbnail `json:"thumbnail"`
 }
 
 type GetTagPageResponse struct {
@@ -183,8 +192,9 @@ type GetTagResponse struct {
 }
 
 type GetTagsPageRequest struct {
-	Language Language `json:"language"`
-	Page     int      `json:"page"`
+	Language  Language   `json:"language"`
+	Page      int        `json:"page"`
+	Thumbnail *Thumbnail `json:"thumbnail"`
 }
 
 type GetTagsPageResponse struct {
@@ -260,6 +270,13 @@ type SendEmailRequest struct {
 type TagSection struct {
 	Games *ListGamesResponse `json:"games"`
 	Tag   *Tag               `json:"tag"`
+}
+
+type Thumbnail struct {
+	Original *string `json:"original"`
+	Width    *int    `json:"width"`
+	Height   *int    `json:"height"`
+	Format   *string `json:"format"`
 }
 
 type GetByField string

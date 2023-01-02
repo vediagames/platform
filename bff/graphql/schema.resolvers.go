@@ -17,6 +17,11 @@ import (
 	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
 )
 
+// Thumbnail is the resolver for the thumbnail field.
+func (r *gameResolver) Thumbnail(ctx context.Context, obj *model.Game) (string, error) {
+	panic(fmt.Errorf("not implemented: Thumbnail - thumbnail"))
+}
+
 // SendEmail is the resolver for the sendEmail field.
 func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmailRequest) (*bool, error) {
 	err := r.emailClient.Email(ctx, notificationdomain.EmailRequest{
@@ -152,7 +157,7 @@ func (r *queryResolver) ListGames(ctx context.Context, request model.ListGamesRe
 }
 
 // GetGame is the resolver for the getGame field.
-func (r *queryResolver) GetGame(ctx context.Context, request model.BaseGetRequest) (*model.GetGameResponse, error) {
+func (r *queryResolver) GetGame(ctx context.Context, request model.GetGameTagRequest) (*model.GetGameResponse, error) {
 	gameRes, err := r.gameService.Get(ctx, gamedomain.GetRequest{
 		Field:    gamedomain.GetByField(request.Field),
 		Value:    request.Value,
@@ -261,7 +266,7 @@ func (r *queryResolver) ListTags(ctx context.Context, request model.ListTagsRequ
 }
 
 // GetTag is the resolver for the getTag field.
-func (r *queryResolver) GetTag(ctx context.Context, request model.BaseGetRequest) (*model.GetTagResponse, error) {
+func (r *queryResolver) GetTag(ctx context.Context, request model.GetGameTagRequest) (*model.GetTagResponse, error) {
 	tagRes, err := r.tagService.Get(ctx, tagdomain.GetRequest{
 		Field:    tagdomain.GetByField(request.Field),
 		Value:    request.Value,
@@ -422,11 +427,24 @@ func (r *queryResolver) FullSearch(ctx context.Context, request model.FullSearch
 	return &res, nil
 }
 
+// Thumbnail is the resolver for the thumbnail field.
+func (r *tagResolver) Thumbnail(ctx context.Context, obj *model.Tag) (string, error) {
+	panic(fmt.Errorf("not implemented: Thumbnail - thumbnail"))
+}
+
+// Game returns generated.GameResolver implementation.
+func (r *Resolver) Game() generated.GameResolver { return &gameResolver{r} }
+
 // Mutation returns generated.MutationResolver implementation.
 func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
+// Tag returns generated.TagResolver implementation.
+func (r *Resolver) Tag() generated.TagResolver { return &tagResolver{r} }
+
+type gameResolver struct{ *Resolver }
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+type tagResolver struct{ *Resolver }
