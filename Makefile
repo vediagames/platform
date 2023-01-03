@@ -3,6 +3,8 @@
 dc = docker-compose -f docker-compose.yaml
 img_name = eu.gcr.io/vediagames/vg_api
 version = latest
+include .env
+export $(shell sed 's/=.*//' .env)
 
 PATH := $(PATH):$(GOPATH)/bin
 
@@ -20,3 +22,7 @@ down:
 generate:
 	echo "Regenerating code"
 	go generate ./...
+
+terraform/plan:
+	cd deploy/terraform && terraform plan -out
+
