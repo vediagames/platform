@@ -5,4 +5,4 @@ config.yml
 secret/
 .env
 deploy/terraform/.terraform
-.infracost
+deploy/terraform/.infracost
