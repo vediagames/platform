@@ -23,6 +23,6 @@ generate:
 	echo "Regenerating code"
 	go generate ./...
 
-terraform/plan:
-	cd deploy/terraform && terraform plan -out
+terraform/%:
+	cd deploy/terraform && terraform $*
 

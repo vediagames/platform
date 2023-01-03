@@ -18,10 +18,6 @@ variable "project" {
   description = "Project name (not necessarily related to GCP)"
 }
 
-variable "project_number" {
-  description = "GCP project number"
-}
-
 variable "billing_account" {
   description = "GCP billing Account"
 }

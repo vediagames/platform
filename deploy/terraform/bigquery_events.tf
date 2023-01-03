@@ -1,7 +1,7 @@
 resource "google_bigquery_dataset" "events" {
   dataset_id  = "events"
   description = "Dataset for platform analytics and events."
-  location    = var.zone
+  location    = var.region
   project     = var.project_id
 
   labels = {

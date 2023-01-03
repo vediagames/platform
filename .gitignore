@@ -6,3 +6,5 @@ secret/
 .env
 deploy/terraform/.terraform
 deploy/terraform/.infracost
+*.tfstate
+*.tfstate.backup
