@@ -1,5 +1,5 @@
 resource "google_container_cluster" "primary" {
-  name     = "primary-gke"
+  name     = "primary"
   location = var.zone
   project  = var.project_id
 
@@ -7,7 +7,16 @@ resource "google_container_cluster" "primary" {
   initial_node_count       = 1
 
   network    = google_compute_network.primary.name
-  subnetwork = google_compute_subnetwork.primary.name
+  subnetwork = google_compute_subnetwork.gke_primary.name
+
+  master_authorized_networks_config {
+    dynamic "cidr_blocks" {
+      for_each = var.authorized_source_ranges
+      content {
+        cidr_block = cidr_blocks.value
+      }
+    }
+  }
 }
 
 resource "google_container_node_pool" "primary_nodes" {

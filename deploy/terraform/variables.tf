@@ -31,11 +31,6 @@ variable "gke_num_nodes" {
   description = "Amount of worker nodes"
 }
 
-variable "gke_node_type" {
-  default     = "e2-small"
-  description = "GKE node machine type"
-}
-
 variable "bigquery_events_plays_schema_path" {
   description = "File path for BigQuery schema for events.plays (JSON)"
 }
@@ -50,4 +45,9 @@ variable "bigquery_events_dislikes_schema_path" {
 
 variable "pubsub_example_schema_path" {
   description = "File path for Pub/Sub message schema for 'example' topic (JSON)"
+}
+
+variable "authorized_source_ranges" {
+  type = list(string)
+  description = "A list of CIDR addresses that are authorized to connect to GKE"
 }
