@@ -1,0 +1,92 @@
+version: v0.11.0
+
+identity:
+  default_schema_id: user
+  schemas:
+    - id: user
+      url: file:///etc/kratos/schema/user.schema.json
+
+dsn: postgres://vedia:123@postgres:5432/auth?sslmode=disable&max_conns=20&max_idle_conns=4
+
+selfservice:
+  default_browser_return_url: http://127.0.0.1:4455/
+  allowed_return_urls:
+    - http://127.0.0.1:4455
+
+  methods:
+    password:
+      enabled: true
+    link:
+      enabled: true
+      config:
+        lifespan: 15m
+
+  flows:
+    logout:
+      after:
+        default_browser_return_url: http://127.0.0.1:4455/login
+
+    registration:
+      lifespan: 1h
+      ui_url: http://127.0.0.1:4455/registration
+      after:
+        password:
+          hooks:
+            - hook: session
+
+    login:
+      ui_url: http://127.0.0.1:4455/login
+      lifespan: 1h
+
+    verification:
+      enabled: true
+      ui_url: http://127.0.0.1:4455/verification
+      use: code
+      lifespan: 1h
+      after:
+        default_browser_return_url: http://127.0.0.1:4455/
+
+    recovery:
+      enabled: true
+      ui_url: http://127.0.0.1:4455/recovery
+      use: code
+      lifespan: 1h
+
+    error:
+      ui_url: http://127.0.0.1:4455/error
+
+    settings:
+      ui_url: http://127.0.0.1:4455/settings
+      privileged_session_max_age: 15m
+      lifespan: 1h
+
+serve:
+  public:
+    base_url: http://127.0.0.1:4433/
+    cors:
+      enabled: true
+  admin:
+    base_url: http://kratos:4434/
+
+log:
+  level: debug
+  format: text
+  leak_sensitive_values: true
+
+secrets:
+  cookie:
+    - PLEASE-CHANGE-ME-I-AM-VERY-INSECURE
+  cipher:
+    - 32-LONG-SECRET-NOT-SECURE-AT-ALL
+
+ciphers:
+  algorithm: xchacha20-poly1305
+
+hashers:
+  algorithm: bcrypt
+  bcrypt:
+    cost: 8
+
+courier:
+  smtp:
+    connection_uri: smtps://test:test@mailslurper:1025/?skip_ssl_verify=true

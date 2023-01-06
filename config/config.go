@@ -37,6 +37,9 @@ type Config struct {
 	CORS struct {
 		AllowedOrigins []string `mapstructure:"allowedOrigins"`
 	} `mapstructure:"cors"`
+	Auth struct {
+		KratosURL string `mapstructure:"kratosURL"`
+	} `mapstructure:"auth"`
 	RedisAddress string `mapstructure:"redisAddress"`
 }
 
@@ -103,6 +106,10 @@ func (c Config) Validate() error {
 
 	if c.RedisAddress == "" {
 		err.Add(fmt.Errorf("redis address is not set"))
+	}
+
+	if c.Auth.KratosURL == "" {
+		err.Add(fmt.Errorf("kratos auth url is not set"))
 	}
 
 	return err.Err()

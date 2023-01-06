@@ -1,0 +1,43 @@
+{
+  "$id": "https://vediagames.com/user/schema",
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Person",
+  "type": "object",
+  "properties": {
+    "traits": {
+      "type": "object",
+      "properties": {
+        "email": {
+          "type": "string",
+          "format": "email",
+          "title": "E-Mail",
+          "minLength": 3,
+          "ory.sh/kratos": {
+            "credentials": {
+              "password": {
+                "identifier": true
+              }
+            },
+            "verification": {
+              "via": "email"
+            },
+            "recovery": {
+              "via": "email"
+            }
+          }
+        },
+        "username": {
+          "type": "string",
+          "title": "Username",
+          "minLength": 2,
+          "maxLength": 12
+        }
+      },
+      "required": [
+        "email",
+        "username"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
