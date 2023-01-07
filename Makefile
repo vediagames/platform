@@ -1,8 +1,6 @@
 .PHONY: gqlgen up build
 
 dc = docker-compose -f docker-compose.yaml
-img_name = eu.gcr.io/vediagames/vg_api
-version = latest
 
 PATH := $(PATH):$(GOPATH)/bin
 
