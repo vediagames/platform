@@ -1,0 +1,7 @@
+syntax = "proto3";
+message Results {
+  string message_request = 1;
+  string message_response = 2;
+  string timestamp_request = 3;
+  string timestamp_response = 4;
+}
