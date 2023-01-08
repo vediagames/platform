@@ -18,8 +18,8 @@ type client struct {
 }
 
 type Config struct {
-	Client   http.Client
-	BunnyCfg config.BunnyStorage
+	HTTPClient http.Client
+	BunnyCfg   config.BunnyStorage
 }
 
 func (c Config) Validate() error {
@@ -40,7 +40,7 @@ func New(cfg Config) (domain.Client, error) {
 	}
 
 	return &client{
-		client:    cfg.Client,
+		client:    cfg.HTTPClient,
 		accessKey: cfg.BunnyCfg.AccessKey,
 		url:       cfg.BunnyCfg.URL,
 	}, nil

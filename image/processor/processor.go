@@ -20,19 +20,25 @@ type processor struct {
 	secret    string
 }
 
-func New(client http.Client, cfg config.Imagor) domain.Processor {
+type Config struct {
+	HTTPClient http.Client
+	ImagorCfg  config.Imagor
+}
+
+func New(cfg Config) domain.Processor {
+
 	return processor{
-		client:    client,
-		imagorURL: cfg.URL,
-		secret:    cfg.Secret,
+		client:    cfg.HTTPClient,
+		imagorURL: cfg.ImagorCfg.URL,
+		secret:    cfg.ImagorCfg.Secret,
 	}
 }
 
-func (p processor) Process(ctx context.Context, imageURL string) (io.Reader, error) {
-	// TODO: Generate URL with thumbnail.go
-	// TODO: Get format and resolution
-	_ = p.generateUrl("", p.secret)
-	res, err := http.Get("url")
+func (p processor) Process(ctx context.Context, req domain.GetThumbnailRequest, imageURL string) (io.Reader, error) {
+	reqImageURL := fmt.Sprintf("fit-in/%dx%d/filters:format(%s)/%s", req.Thumbnail.Width, req.Thumbnail.Height, req.Thumbnail.Format, imageURL)
+
+	encryptedURL := p.generateUrl(reqImageURL, p.secret)
+	res, err := p.client.Get(encryptedURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to process the image: %w", err)
 	}

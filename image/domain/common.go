@@ -1,8 +1,6 @@
 package domain
 
-import (
-	"fmt"
-)
+import "fmt"
 
 type path string
 type thumbnail string
@@ -38,4 +36,22 @@ func (p path) Thumbnail(slug string, t thumbnail) (string, error) {
 	}
 
 	return fmt.Sprintf("https://images.vediagames.com/file/vg-images/%s", p.Path(slug, t.JPG())), nil
+}
+
+func GetExistingThumbnail(req GetThumbnailRequest) (string, bool, error) {
+	imageName := thumbnail(fmt.Sprintf("thumb%dx%d", req.Thumbnail.Width, req.Thumbnail.Height))
+	var p path = PathGame
+	if path(req.Path) == PathTag {
+		p = PathTag
+	}
+
+	imageURL, err := p.Thumbnail(req.Slug, thumbnail(imageName))
+
+	if req.Thumbnail.Format == FormatJpeg {
+		switch imageName {
+		case Thumbnail128x128, Thumbnail512x384, Thumbnail512x512:
+			return imageURL, true, err
+		}
+	}
+	return imageURL, false, err
 }

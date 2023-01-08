@@ -37,10 +37,8 @@ type Config struct {
 }
 
 type ResolverRoot interface {
-	Game() GameResolver
 	Mutation() MutationResolver
 	Query() QueryResolver
-	Tag() TagResolver
 }
 
 type DirectiveRoot struct {
@@ -125,8 +123,6 @@ type ComplexityRoot struct {
 		Status            func(childComplexity int) int
 		Tags              func(childComplexity int) int
 		Thumbnail         func(childComplexity int) int
-		Thumbnail512x384  func(childComplexity int) int
-		Thumbnail512x512  func(childComplexity int) int
 		URL               func(childComplexity int) int
 		Weight            func(childComplexity int) int
 		Width             func(childComplexity int) int
@@ -258,14 +254,14 @@ type ComplexityRoot struct {
 		GetContinuePlayingPage      func(childComplexity int, request model.GetContinuePlayingPageRequest) int
 		GetFilterPage               func(childComplexity int, request model.GetFilterPageRequest) int
 		GetFreshGames               func(childComplexity int, request model.GetFreshGamesRequest) int
-		GetGame                     func(childComplexity int, request model.GetGameTagRequest) int
+		GetGame                     func(childComplexity int, request model.GetGameRequest) int
 		GetGamePage                 func(childComplexity int, request model.GetGamePageRequest) int
 		GetHomePage                 func(childComplexity int, request model.GetHomePageRequest) int
 		GetMostPlayedGames          func(childComplexity int, request model.GetMostPlayedGamesRequest) int
 		GetSearchPage               func(childComplexity int, request model.GetSearchPageRequest) int
 		GetSection                  func(childComplexity int, request model.BaseGetRequest) int
 		GetSiteMapPage              func(childComplexity int, request model.GetSiteMapPageRequest) int
-		GetTag                      func(childComplexity int, request model.GetGameTagRequest) int
+		GetTag                      func(childComplexity int, request model.GetTagRequest) int
 		GetTagPage                  func(childComplexity int, request model.GetTagPageRequest) int
 		GetTagsPage                 func(childComplexity int, request model.GetTagsPageRequest) int
 		GetWebsiteSectionsPlacement func(childComplexity int, language model.Language) int
@@ -326,8 +322,6 @@ type ComplexityRoot struct {
 		Slug             func(childComplexity int) int
 		Status           func(childComplexity int) int
 		Thumbnail        func(childComplexity int) int
-		Thumbnail128x128 func(childComplexity int) int
-		Thumbnail512x384 func(childComplexity int) int
 	}
 
 	TagSection struct {
@@ -340,9 +334,6 @@ type ComplexityRoot struct {
 	}
 }
 
-type GameResolver interface {
-	Thumbnail(ctx context.Context, obj *model.Game) (string, error)
-}
 type MutationResolver interface {
 	SendEmail(ctx context.Context, request model.SendEmailRequest) (*bool, error)
 	RefreshMaterializedViews(ctx context.Context) (*bool, error)
@@ -352,11 +343,11 @@ type QueryResolver interface {
 	GetFreshGames(ctx context.Context, request model.GetFreshGamesRequest) (*model.ListGamesResponse, error)
 	AvailableLanguages(ctx context.Context) ([]*model.LanguageItem, error)
 	ListGames(ctx context.Context, request model.ListGamesRequest) (*model.ListGamesResponse, error)
-	GetGame(ctx context.Context, request model.GetGameTagRequest) (*model.GetGameResponse, error)
+	GetGame(ctx context.Context, request model.GetGameRequest) (*model.GetGameResponse, error)
 	ListCategories(ctx context.Context, request model.BaseListRequest) (*model.ListCategoriesResponse, error)
 	GetCategory(ctx context.Context, request model.BaseGetRequest) (*model.GetCategoryResponse, error)
 	ListTags(ctx context.Context, request model.ListTagsRequest) (*model.ListTagsResponse, error)
-	GetTag(ctx context.Context, request model.GetGameTagRequest) (*model.GetTagResponse, error)
+	GetTag(ctx context.Context, request model.GetTagRequest) (*model.GetTagResponse, error)
 	ListSections(ctx context.Context, request model.BaseListRequest) (*model.ListSectionsResponse, error)
 	GetSection(ctx context.Context, request model.BaseGetRequest) (*model.GetSectionResponse, error)
 	GetWebsiteSectionsPlacement(ctx context.Context, language model.Language) (*model.GetWebsiteSectionsPlacementResponse, error)
@@ -374,9 +365,6 @@ type QueryResolver interface {
 	GetTagsPage(ctx context.Context, request model.GetTagsPageRequest) (*model.GetTagsPageResponse, error)
 	GetCategoryPage(ctx context.Context, request model.GetCategoryPageRequest) (*model.GetCategoryPageResponse, error)
 	GetCategoriesPage(ctx context.Context, request model.GetCategoriesPageRequest) (*model.GetCategoriesPageResponse, error)
-}
-type TagResolver interface {
-	Thumbnail(ctx context.Context, obj *model.Tag) (string, error)
 }
 
 type executableSchema struct {
@@ -806,20 +794,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Game.Thumbnail(childComplexity), true
-
-	case "Game.thumbnail512x384":
-		if e.complexity.Game.Thumbnail512x384 == nil {
-			break
-		}
-
-		return e.complexity.Game.Thumbnail512x384(childComplexity), true
-
-	case "Game.thumbnail512x512":
-		if e.complexity.Game.Thumbnail512x512 == nil {
-			break
-		}
-
-		return e.complexity.Game.Thumbnail512x512(childComplexity), true
 
 	case "Game.url":
 		if e.complexity.Game.URL == nil {
@@ -1284,7 +1258,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetGame(childComplexity, args["request"].(model.GetGameTagRequest)), true
+		return e.complexity.Query.GetGame(childComplexity, args["request"].(model.GetGameRequest)), true
 
 	case "Query.getGamePage":
 		if e.complexity.Query.GetGamePage == nil {
@@ -1368,7 +1342,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.GetTag(childComplexity, args["request"].(model.GetGameTagRequest)), true
+		return e.complexity.Query.GetTag(childComplexity, args["request"].(model.GetTagRequest)), true
 
 	case "Query.getTagPage":
 		if e.complexity.Query.GetTagPage == nil {
@@ -1751,20 +1725,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Tag.Thumbnail(childComplexity), true
 
-	case "Tag.thumbnail128x128":
-		if e.complexity.Tag.Thumbnail128x128 == nil {
-			break
-		}
-
-		return e.complexity.Tag.Thumbnail128x128(childComplexity), true
-
-	case "Tag.thumbnail512x384":
-		if e.complexity.Tag.Thumbnail512x384 == nil {
-			break
-		}
-
-		return e.complexity.Tag.Thumbnail512x384(childComplexity), true
-
 	case "TagSection.games":
 		if e.complexity.TagSection.Games == nil {
 			break
@@ -1803,12 +1763,13 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputGetFilterPageRequest,
 		ec.unmarshalInputGetFreshGamesRequest,
 		ec.unmarshalInputGetGamePageRequest,
-		ec.unmarshalInputGetGameTagRequest,
+		ec.unmarshalInputGetGameRequest,
 		ec.unmarshalInputGetHomePageRequest,
 		ec.unmarshalInputGetMostPlayedGamesRequest,
 		ec.unmarshalInputGetSearchPageRequest,
 		ec.unmarshalInputGetSiteMapPageRequest,
 		ec.unmarshalInputGetTagPageRequest,
+		ec.unmarshalInputGetTagRequest,
 		ec.unmarshalInputGetTagsPageRequest,
 		ec.unmarshalInputGetWizardPageRequest,
 		ec.unmarshalInputListGamesRequest,
@@ -2021,20 +1982,21 @@ input GetGamePageRequest {
     likedGameIDs: [Int]
     dislikedGameIDs: [Int]
     thumbnail: Thumbnail!
-}`, BuiltIn: false},
+}
+`, BuiltIn: false},
 	{Name: "../schema.gql", Input: `type Query {
     getMostPlayedGames(request: GetMostPlayedGamesRequest!): ListGamesResponse!
     getFreshGames(request: GetFreshGamesRequest!): ListGamesResponse!
 
     availableLanguages: [LanguageItem!]!
     listGames(request: ListGamesRequest!): ListGamesResponse!
-    getGame(request: GetGameTagRequest!): GetGameResponse!
+    getGame(request: GetGameRequest!): GetGameResponse!
 
     listCategories(request: BaseListRequest!): ListCategoriesResponse!
     getCategory(request: BaseGetRequest!): GetCategoryResponse!
 
     listTags(request: ListTagsRequest!): ListTagsResponse!
-    getTag(request: GetGameTagRequest!): GetTagResponse!
+    getTag(request: GetTagRequest!): GetTagResponse!
 
     listSections(request: BaseListRequest!): ListSectionsResponse!
     getSection(request: BaseGetRequest!): GetSectionResponse!
@@ -2175,8 +2137,6 @@ type Game {
     tags: ComplimentaryTags!
     categories: ComplimentaryCategories!
     mobile: Boolean!
-    thumbnail512x384: String!
-    thumbnail512x512: String!
     pageUrl: String!
     fullScreenPageUrl: String!
     thumbnail: String!
@@ -2290,8 +2250,6 @@ type Tag {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    thumbnail512x384: String!
-    thumbnail128x128: String!
     pageUrl: String!
     thumbnail: String!
 }
@@ -2353,18 +2311,38 @@ input BaseGetRequest {
     language: Language!
 }
 
-input GetGameTagRequest {
+input GetTagRequest {
     field: GetByField!
     value: String!
     language: Language!
     thumbnail: Thumbnail!
 }
 
+input GetGameRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+    thumbnail: Thumbnail!
+}
+
+
+enum Original {
+    thumbnail512x512
+    thumbnail512x384
+    thumbnail128x128
+}
+
+enum Format {
+    webp
+    jpeg
+    png
+}
+
 input Thumbnail {
-    original: String
-    width: Int
-    height: Int
-    format: String # webp, jpeg, png
+    original: Original!
+    width: Int!
+    height: Int!
+    format: Format!
 }
 
 scalar Upload
@@ -2549,10 +2527,10 @@ func (ec *executionContext) field_Query_getGamePage_args(ctx context.Context, ra
 func (ec *executionContext) field_Query_getGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.GetGameTagRequest
+	var arg0 model.GetGameRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetGameTagRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameTagRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetGameRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2654,10 +2632,10 @@ func (ec *executionContext) field_Query_getTagPage_args(ctx context.Context, raw
 func (ec *executionContext) field_Query_getTag_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 model.GetGameTagRequest
+	var arg0 model.GetTagRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetGameTagRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameTagRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetTagRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -5457,94 +5435,6 @@ func (ec *executionContext) fieldContext_Game_mobile(ctx context.Context, field 
 	return fc, nil
 }
 
-func (ec *executionContext) _Game_thumbnail512x384(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Game_thumbnail512x384(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail512x384, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Game_thumbnail512x384(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Game",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Game_thumbnail512x512(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Game_thumbnail512x512(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail512x512, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Game_thumbnail512x512(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Game",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Game_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Game_pageUrl(ctx, field)
 	if err != nil {
@@ -5647,7 +5537,7 @@ func (ec *executionContext) _Game_thumbnail(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Game().Thumbnail(rctx, obj)
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -5668,8 +5558,8 @@ func (ec *executionContext) fieldContext_Game_thumbnail(ctx context.Context, fie
 	fc = &graphql.FieldContext{
 		Object:     "Game",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -6412,10 +6302,6 @@ func (ec *executionContext) fieldContext_GetGameResponse_data(ctx context.Contex
 				return ec.fieldContext_Game_categories(ctx, field)
 			case "mobile":
 				return ec.fieldContext_Game_mobile(ctx, field)
-			case "thumbnail512x384":
-				return ec.fieldContext_Game_thumbnail512x384(ctx, field)
-			case "thumbnail512x512":
-				return ec.fieldContext_Game_thumbnail512x512(ctx, field)
 			case "pageUrl":
 				return ec.fieldContext_Game_pageUrl(ctx, field)
 			case "fullScreenPageUrl":
@@ -7189,10 +7075,6 @@ func (ec *executionContext) fieldContext_GetTagResponse_data(ctx context.Context
 				return ec.fieldContext_Tag_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Tag_publishedAt(ctx, field)
-			case "thumbnail512x384":
-				return ec.fieldContext_Tag_thumbnail512x384(ctx, field)
-			case "thumbnail128x128":
-				return ec.fieldContext_Tag_thumbnail128x128(ctx, field)
 			case "pageUrl":
 				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			case "thumbnail":
@@ -7813,10 +7695,6 @@ func (ec *executionContext) fieldContext_ListGamesResponse_data(ctx context.Cont
 				return ec.fieldContext_Game_categories(ctx, field)
 			case "mobile":
 				return ec.fieldContext_Game_mobile(ctx, field)
-			case "thumbnail512x384":
-				return ec.fieldContext_Game_thumbnail512x384(ctx, field)
-			case "thumbnail512x512":
-				return ec.fieldContext_Game_thumbnail512x512(ctx, field)
 			case "pageUrl":
 				return ec.fieldContext_Game_pageUrl(ctx, field)
 			case "fullScreenPageUrl":
@@ -8057,10 +7935,6 @@ func (ec *executionContext) fieldContext_ListTagsResponse_data(ctx context.Conte
 				return ec.fieldContext_Tag_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Tag_publishedAt(ctx, field)
-			case "thumbnail512x384":
-				return ec.fieldContext_Tag_thumbnail512x384(ctx, field)
-			case "thumbnail128x128":
-				return ec.fieldContext_Tag_thumbnail128x128(ctx, field)
 			case "pageUrl":
 				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			case "thumbnail":
@@ -8456,7 +8330,7 @@ func (ec *executionContext) _Query_getGame(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetGame(rctx, fc.Args["request"].(model.GetGameTagRequest))
+		return ec.resolvers.Query().GetGame(rctx, fc.Args["request"].(model.GetGameRequest))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -8696,7 +8570,7 @@ func (ec *executionContext) _Query_getTag(ctx context.Context, field graphql.Col
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().GetTag(rctx, fc.Args["request"].(model.GetGameTagRequest))
+		return ec.resolvers.Query().GetTag(rctx, fc.Args["request"].(model.GetTagRequest))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11568,94 +11442,6 @@ func (ec *executionContext) fieldContext_Tag_publishedAt(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _Tag_thumbnail512x384(ctx context.Context, field graphql.CollectedField, obj *model.Tag) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Tag_thumbnail512x384(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail512x384, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Tag_thumbnail512x384(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Tag",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Tag_thumbnail128x128(ctx context.Context, field graphql.CollectedField, obj *model.Tag) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Tag_thumbnail128x128(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.Thumbnail128x128, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Tag_thumbnail128x128(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Tag",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Tag_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Tag) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Tag_pageUrl(ctx, field)
 	if err != nil {
@@ -11714,7 +11500,7 @@ func (ec *executionContext) _Tag_thumbnail(ctx context.Context, field graphql.Co
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Tag().Thumbnail(rctx, obj)
+		return obj.Thumbnail, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -11726,17 +11512,17 @@ func (ec *executionContext) _Tag_thumbnail(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(string)
+	res := resTmp.(*string)
 	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
+	return ec.marshalNString2ᚖstring(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Tag_thumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Tag",
 		Field:      field,
-		IsMethod:   true,
-		IsResolver: true,
+		IsMethod:   false,
+		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			return nil, errors.New("field of type String does not have child fields")
 		},
@@ -11854,10 +11640,6 @@ func (ec *executionContext) fieldContext_TagSection_tag(ctx context.Context, fie
 				return ec.fieldContext_Tag_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Tag_publishedAt(ctx, field)
-			case "thumbnail512x384":
-				return ec.fieldContext_Tag_thumbnail512x384(ctx, field)
-			case "thumbnail128x128":
-				return ec.fieldContext_Tag_thumbnail128x128(ctx, field)
 			case "pageUrl":
 				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			case "thumbnail":
@@ -14167,8 +13949,8 @@ func (ec *executionContext) unmarshalInputGetGamePageRequest(ctx context.Context
 	return it, nil
 }
 
-func (ec *executionContext) unmarshalInputGetGameTagRequest(ctx context.Context, obj interface{}) (model.GetGameTagRequest, error) {
-	var it model.GetGameTagRequest
+func (ec *executionContext) unmarshalInputGetGameRequest(ctx context.Context, obj interface{}) (model.GetGameRequest, error) {
+	var it model.GetGameRequest
 	asMap := map[string]interface{}{}
 	for k, v := range obj.(map[string]interface{}) {
 		asMap[k] = v
@@ -14422,6 +14204,58 @@ func (ec *executionContext) unmarshalInputGetTagPageRequest(ctx context.Context,
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("page"))
 			it.Page, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNThumbnail2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐThumbnail(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputGetTagRequest(ctx context.Context, obj interface{}) (model.GetTagRequest, error) {
+	var it model.GetTagRequest
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"field", "value", "language", "thumbnail"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "field":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
+			it.Field, err = ec.unmarshalNGetByField2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "value":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("value"))
+			it.Value, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "language":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14693,7 +14527,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("original"))
-			it.Original, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.Original, err = ec.unmarshalNOriginal2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐOriginal(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14701,7 +14535,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("width"))
-			it.Width, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			it.Width, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14709,7 +14543,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
-			it.Height, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			it.Height, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14717,7 +14551,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("format"))
-			it.Format, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			it.Format, err = ec.unmarshalNFormat2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15107,42 +14941,42 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Game_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "language":
 
 			out.Values[i] = ec._Game_language(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "slug":
 
 			out.Values[i] = ec._Game_slug(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "name":
 
 			out.Values[i] = ec._Game_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "status":
 
 			out.Values[i] = ec._Game_status(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._Game_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "deletedAt":
 
@@ -15157,21 +14991,21 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Game_url(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "width":
 
 			out.Values[i] = ec._Game_width(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "height":
 
 			out.Values[i] = ec._Game_height(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "shortDescription":
 
@@ -15190,28 +15024,28 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Game_likes(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "dislikes":
 
 			out.Values[i] = ec._Game_dislikes(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "plays":
 
 			out.Values[i] = ec._Game_plays(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "weight":
 
 			out.Values[i] = ec._Game_weight(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "player1Controls":
 
@@ -15226,70 +15060,43 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			out.Values[i] = ec._Game_tags(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "categories":
 
 			out.Values[i] = ec._Game_categories(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "mobile":
 
 			out.Values[i] = ec._Game_mobile(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "thumbnail512x384":
-
-			out.Values[i] = ec._Game_thumbnail512x384(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "thumbnail512x512":
-
-			out.Values[i] = ec._Game_thumbnail512x512(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "pageUrl":
 
 			out.Values[i] = ec._Game_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "fullScreenPageUrl":
 
 			out.Values[i] = ec._Game_fullScreenPageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "thumbnail":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Game_thumbnail(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._Game_thumbnail(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -16999,28 +16806,28 @@ func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj 
 			out.Values[i] = ec._Tag_id(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "language":
 
 			out.Values[i] = ec._Tag_language(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "slug":
 
 			out.Values[i] = ec._Tag_slug(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "name":
 
 			out.Values[i] = ec._Tag_name(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "shortDescription":
 
@@ -17039,21 +16846,21 @@ func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj 
 			out.Values[i] = ec._Tag_status(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "clicks":
 
 			out.Values[i] = ec._Tag_clicks(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "createdAt":
 
 			out.Values[i] = ec._Tag_createdAt(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "deletedAt":
 
@@ -17063,47 +16870,20 @@ func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj 
 
 			out.Values[i] = ec._Tag_publishedAt(ctx, field, obj)
 
-		case "thumbnail512x384":
-
-			out.Values[i] = ec._Tag_thumbnail512x384(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "thumbnail128x128":
-
-			out.Values[i] = ec._Tag_thumbnail128x128(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "pageUrl":
 
 			out.Values[i] = ec._Tag_pageUrl(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
+				invalids++
 			}
 		case "thumbnail":
-			field := field
 
-			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
-				defer func() {
-					if r := recover(); r != nil {
-						ec.Error(ctx, ec.Recover(ctx, r))
-					}
-				}()
-				res = ec._Tag_thumbnail(ctx, field, obj)
-				if res == graphql.Null {
-					atomic.AddUint32(&invalids, 1)
-				}
-				return res
+			out.Values[i] = ec._Tag_thumbnail(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
 			}
-
-			out.Concurrently(i, func() graphql.Marshaler {
-				return innerFunc(ctx)
-
-			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -17704,6 +17484,16 @@ func (ec *executionContext) marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋv
 	return ec._FetchedGame(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNFormat2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx context.Context, v interface{}) (model.Format, error) {
+	var res model.Format
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNFormat2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx context.Context, sel ast.SelectionSet, v model.Format) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) unmarshalNFullSearchRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFullSearchRequest(ctx context.Context, v interface{}) (model.FullSearchRequest, error) {
 	res, err := ec.unmarshalInputFullSearchRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -17881,6 +17671,11 @@ func (ec *executionContext) marshalNGetGamePageResponse2ᚖgithubᚗcomᚋvediag
 	return ec._GetGamePageResponse(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNGetGameRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameRequest(ctx context.Context, v interface{}) (model.GetGameRequest, error) {
+	res, err := ec.unmarshalInputGetGameRequest(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) marshalNGetGameResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx context.Context, sel ast.SelectionSet, v model.GetGameResponse) graphql.Marshaler {
 	return ec._GetGameResponse(ctx, sel, &v)
 }
@@ -17893,11 +17688,6 @@ func (ec *executionContext) marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagames
 		return graphql.Null
 	}
 	return ec._GetGameResponse(ctx, sel, v)
-}
-
-func (ec *executionContext) unmarshalNGetGameTagRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameTagRequest(ctx context.Context, v interface{}) (model.GetGameTagRequest, error) {
-	res, err := ec.unmarshalInputGetGameTagRequest(ctx, v)
-	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) unmarshalNGetHomePageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetHomePageRequest(ctx context.Context, v interface{}) (model.GetHomePageRequest, error) {
@@ -17993,6 +17783,11 @@ func (ec *executionContext) marshalNGetTagPageResponse2ᚖgithubᚗcomᚋvediaga
 		return graphql.Null
 	}
 	return ec._GetTagPageResponse(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNGetTagRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagRequest(ctx context.Context, v interface{}) (model.GetTagRequest, error) {
+	res, err := ec.unmarshalInputGetTagRequest(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
 }
 
 func (ec *executionContext) marshalNGetTagResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagResponse) graphql.Marshaler {
@@ -18292,6 +18087,16 @@ func (ec *executionContext) marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagame
 	return ec._ListTagsResponse(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNOriginal2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐOriginal(ctx context.Context, v interface{}) (model.Original, error) {
+	var res model.Original
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNOriginal2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐOriginal(ctx context.Context, sel ast.SelectionSet, v model.Original) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SearchItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -18484,6 +18289,27 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	}
 
 	return ret
+}
+
+func (ec *executionContext) unmarshalNString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
+	res, err := graphql.UnmarshalString(v)
+	return &res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNString2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	res := graphql.MarshalString(*v)
+	if res == graphql.Null {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+	}
+	return res
 }
 
 func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Tag) graphql.Marshaler {

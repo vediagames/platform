@@ -255,9 +255,7 @@ func gameFromGame(game gamedomain.Game) (model.Game, error) {
 		Categories: &model.ComplimentaryCategories{
 			Data: categories,
 		},
-		Mobile:           game.Mobile,
-		Thumbnail512x384: thumb512x384,
-		Thumbnail512x512: thumb512x512,
+		Mobile: game.Mobile,
 	}, nil
 }
 
@@ -310,8 +308,7 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		CreatedAt:        t.CreatedAt.String(),
 		DeletedAt:        stringToPointer(t.DeletedAt.String()),
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
-		Thumbnail512x384: thumb512x384,
-		Thumbnail128x128: thumb128x128,
+		Thumbnail:        thumbnail,
 	}, nil
 }
 

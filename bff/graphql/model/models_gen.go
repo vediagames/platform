@@ -117,15 +117,15 @@ type GetGamePageResponse struct {
 	IsDisliked bool               `json:"isDisliked"`
 }
 
-type GetGameResponse struct {
-	Data *Game `json:"data"`
-}
-
-type GetGameTagRequest struct {
+type GetGameRequest struct {
 	Field     GetByField `json:"field"`
 	Value     string     `json:"value"`
 	Language  Language   `json:"language"`
 	Thumbnail *Thumbnail `json:"thumbnail"`
+}
+
+type GetGameResponse struct {
+	Data *Game `json:"data"`
 }
 
 type GetHomePageRequest struct {
@@ -185,6 +185,13 @@ type GetTagPageRequest struct {
 type GetTagPageResponse struct {
 	Tag   *GetTagResponse    `json:"tag"`
 	Games *ListGamesResponse `json:"games"`
+}
+
+type GetTagRequest struct {
+	Field     GetByField `json:"field"`
+	Value     string     `json:"value"`
+	Language  Language   `json:"language"`
+	Thumbnail *Thumbnail `json:"thumbnail"`
 }
 
 type GetTagResponse struct {
@@ -273,10 +280,53 @@ type TagSection struct {
 }
 
 type Thumbnail struct {
-	Original *string `json:"original"`
-	Width    *int    `json:"width"`
-	Height   *int    `json:"height"`
-	Format   *string `json:"format"`
+	Original Original `json:"original"`
+	Width    int      `json:"width"`
+	Height   int      `json:"height"`
+	Format   Format   `json:"format"`
+}
+
+type Format string
+
+const (
+	FormatWebp Format = "webp"
+	FormatJpeg Format = "jpeg"
+	FormatPng  Format = "png"
+)
+
+var AllFormat = []Format{
+	FormatWebp,
+	FormatJpeg,
+	FormatPng,
+}
+
+func (e Format) IsValid() bool {
+	switch e {
+	case FormatWebp, FormatJpeg, FormatPng:
+		return true
+	}
+	return false
+}
+
+func (e Format) String() string {
+	return string(e)
+}
+
+func (e *Format) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Format(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Format", str)
+	}
+	return nil
+}
+
+func (e Format) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
 type GetByField string
@@ -317,6 +367,49 @@ func (e *GetByField) UnmarshalGQL(v interface{}) error {
 }
 
 func (e GetByField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Original string
+
+const (
+	OriginalThumbnail512x512 Original = "thumbnail512x512"
+	OriginalThumbnail512x384 Original = "thumbnail512x384"
+	OriginalThumbnail128x128 Original = "thumbnail128x128"
+)
+
+var AllOriginal = []Original{
+	OriginalThumbnail512x512,
+	OriginalThumbnail512x384,
+	OriginalThumbnail128x128,
+}
+
+func (e Original) IsValid() bool {
+	switch e {
+	case OriginalThumbnail512x512, OriginalThumbnail512x384, OriginalThumbnail128x128:
+		return true
+	}
+	return false
+}
+
+func (e Original) String() string {
+	return string(e)
+}
+
+func (e *Original) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Original(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Original", str)
+	}
+	return nil
+}
+
+func (e Original) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

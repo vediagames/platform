@@ -173,7 +173,7 @@ func (r *queryResolver) GetGamePage(ctx context.Context, request model.GetGamePa
 		54: "brain",
 	}
 
-	gameRes, err := r.GetGame(ctx, model.GetGameTagRequest{
+	gameRes, err := r.GetGame(ctx, model.GetGameRequest{
 		Field:    model.GetByFieldSlug,
 		Value:    request.Slug,
 		Language: request.Language,
@@ -345,7 +345,7 @@ func (r *queryResolver) GetWizardPage(ctx context.Context, request model.GetWiza
 
 // GetTagPage is the resolver for the getTagPage field.
 func (r *queryResolver) GetTagPage(ctx context.Context, request model.GetTagPageRequest) (*model.GetTagPageResponse, error) {
-	tagRes, err := r.GetTag(ctx, model.GetGameTagRequest{
+	tagRes, err := r.GetTag(ctx, model.GetTagRequest{
 		Field:    model.GetByFieldID,
 		Value:    strconv.Itoa(request.TagID),
 		Language: request.Language,
@@ -423,7 +423,7 @@ func (r *queryResolver) GetCategoryPage(ctx context.Context, request model.GetCa
 
 	tagSections := make([]*model.TagSection, 0, len(tagLayout))
 	for _, tag := range tagLayout {
-		tagRes, err := r.GetTag(ctx, model.GetGameTagRequest{
+		tagRes, err := r.GetTag(ctx, model.GetTagRequest{
 			Field:    model.GetByFieldSlug,
 			Value:    tag,
 			Language: request.Language,

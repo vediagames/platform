@@ -4,13 +4,13 @@ type Query {
 
     availableLanguages: [LanguageItem!]!
     listGames(request: ListGamesRequest!): ListGamesResponse!
-    getGame(request: GetGameTagRequest!): GetGameResponse!
+    getGame(request: GetGameRequest!): GetGameResponse!
 
     listCategories(request: BaseListRequest!): ListCategoriesResponse!
     getCategory(request: BaseGetRequest!): GetCategoryResponse!
 
     listTags(request: ListTagsRequest!): ListTagsResponse!
-    getTag(request: GetGameTagRequest!): GetTagResponse!
+    getTag(request: GetTagRequest!): GetTagResponse!
 
     listSections(request: BaseListRequest!): ListSectionsResponse!
     getSection(request: BaseGetRequest!): GetSectionResponse!
@@ -151,8 +151,6 @@ type Game {
     tags: ComplimentaryTags!
     categories: ComplimentaryCategories!
     mobile: Boolean!
-    thumbnail512x384: String!
-    thumbnail512x512: String!
     pageUrl: String!
     fullScreenPageUrl: String!
     thumbnail: String!
@@ -266,8 +264,6 @@ type Tag {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    thumbnail512x384: String!
-    thumbnail128x128: String!
     pageUrl: String!
     thumbnail: String!
 }
@@ -329,18 +325,38 @@ input BaseGetRequest {
     language: Language!
 }
 
-input GetGameTagRequest {
+input GetTagRequest {
     field: GetByField!
     value: String!
     language: Language!
     thumbnail: Thumbnail!
 }
 
+input GetGameRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+    thumbnail: Thumbnail!
+}
+
+
+enum Original {
+    thumbnail512x512
+    thumbnail512x384
+    thumbnail128x128
+}
+
+enum Format {
+    webp
+    jpeg
+    png
+}
+
 input Thumbnail {
-    original: String
-    width: Int
-    height: Int
-    format: String # webp, jpeg, png
+    original: Original!
+    width: Int!
+    height: Int!
+    format: Format!
 }
 
 scalar Upload

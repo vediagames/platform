@@ -4,25 +4,41 @@ import (
 	"context"
 	"fmt"
 
+	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
 	"github.com/vediagames/vediagames.com/config"
 	"github.com/vediagames/vediagames.com/image/domain"
 )
 
 type service struct {
 	processor domain.Processor
+	storage   bucketdomain.Client
 }
 
 type Config struct {
 	Processor domain.Processor
 	Cfg       config.Imagor
+	Storage   bucketdomain.Client
 }
 
 func (c Config) Validate() error {
 	if c.Cfg.Secret == "" {
 		return fmt.Errorf("secret required")
 	}
+
 	if c.Cfg.URL == "" {
 		return fmt.Errorf("url required")
+	}
+
+	if c.Cfg.DownloadURL == "" {
+		return fmt.Errorf("download url required")
+	}
+
+	if c.Processor != nil {
+		return fmt.Errorf("image processor service required")
+	}
+
+	if c.Storage != nil {
+		return fmt.Errorf("image stoage service required")
 	}
 
 	return nil
@@ -35,13 +51,27 @@ func New(config Config) (domain.Service, error) {
 
 	return &service{
 		processor: config.Processor,
+		storage:   config.Storage,
 	}, nil
 }
 
-func (s service) Put(ctx context.Context) error {
-	return fmt.Errorf("not implemented")
-}
+func (s *service) GetThumbnail(ctx context.Context, req domain.GetThumbnailRequest) (string, error) {
+	// the resolution format already exists on S3
+	thumb, exist, err := domain.GetExistingThumbnail(req)
+	if err != nil {
+		return "", fmt.Errorf("failed to generate url for existing image on S3: %w", err)
+	}
+	if exist {
+		return thumb, err
+	}
+	// process new image
+	image, err := s.processor.Process(ctx, req, thumb)
 
-func (s service) Get(ctx context.Context) error {
-	return fmt.Errorf("not implemented")
+	// upload the processed image to bunny storage
+	// TODO: generate path according to S3 path
+	if err := s.storage.Upload(ctx, path, image); err != nil {
+		return "", fmt.Errorf("failed to upload the processed image to storage: %w", err)
+	}
+	//TODO:	return url uploaded imageURL
+	return imageURL, err
 }
