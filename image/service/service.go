@@ -35,16 +35,18 @@ func (c Config) Validate() error {
 		return fmt.Errorf("url required")
 	}
 
-	if c.Processor != nil {
+	if c.Processor == nil {
 		return fmt.Errorf("image processor service required")
 	}
 
-	if c.Storage != nil {
+	if c.Storage == nil {
 		return fmt.Errorf("image stoage service required")
 	}
+
 	if c.CDNURLs.bunny == "" {
 		return fmt.Errorf("bunny cdn url required")
 	}
+
 	if c.CDNURLs.s3 == "" {
 		return fmt.Errorf("s3 cdn url required")
 	}

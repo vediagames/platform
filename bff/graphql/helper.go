@@ -316,7 +316,7 @@ func requestThumbnailToTagDomain(s *model.Thumbnail) imagedomain.Thumbnail {
 		return thumb
 	}
 	thumb.Format = (*imagedomain.Format)(s.Format)
-	thumb.Height = thumb.Height
-	thumb.Width = thumb.Width
+	thumb.Height = s.Height
+	thumb.Width = s.Width
 	return thumb
 }
