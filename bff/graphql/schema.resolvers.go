@@ -11,6 +11,7 @@ import (
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
+	imagedomain "github.com/vediagames/vediagames.com/image/domain"
 	notificationdomain "github.com/vediagames/vediagames.com/notification/domain"
 	searchdomain "github.com/vediagames/vediagames.com/search/domain"
 	sectiondomain "github.com/vediagames/vediagames.com/section/domain"
@@ -66,7 +67,15 @@ func (r *queryResolver) GetMostPlayedGames(ctx context.Context, request model.Ge
 		if err != nil {
 			return nil, fmt.Errorf("failed to convert game: %w", err)
 		}
-
+		thumb, err := r.imageService.GetThumbnail(ctx, imagedomain.GetThumbnailRequest{
+			Path:      string(pathGame),
+			Slug:      game.Slug,
+			Thumbnail: requestThumbnailToTagDomain(request.Thumbnail),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert game: %w", err)
+		}
+		gameModel.Thumbnail = thumb
 		res.Data = append(res.Data, gameModel)
 	}
 

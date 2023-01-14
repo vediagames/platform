@@ -27,7 +27,6 @@ redisAddress: "localhost:6379"
 imagor:
   URL: "localhost:8000"
   secret: "vediagames"
-  downloadURL: "https://images.vediagames.com/file/vg-images/"
 
 bunnyStorage:
   URL: "storage.bunnycdn.com"

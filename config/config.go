@@ -14,9 +14,8 @@ const (
 )
 
 type Imagor struct {
-	URL         string `mapstructure:"URL"`
-	Secret      string `mapstructure:"secret"`
-	DownloadURL string `mapstructure:"downloadURL"`
+	URL    string `mapstructure:"URL"`
+	Secret string `mapstructure:"secret"`
 }
 type BunnyStorage struct {
 	URL       string `mapstructure:"URL"`

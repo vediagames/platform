@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
 
 	"github.com/vediagames/vediagames.com/bucket/domain"
 	"github.com/vediagames/vediagames.com/config"
@@ -47,15 +48,21 @@ func New(cfg Config) (domain.Client, error) {
 }
 
 func (s client) Upload(ctx context.Context, path string, reader io.Reader) error {
+
 	// baseCDNURL/{storageZoneName}/{path}/{fileName}
-	url := fmt.Sprintf("/%s/%s/%s", s.url, s.zone, path)
+	url := fmt.Sprintf("%s/%s/%s", s.url, s.zone, path)
 	req, err := http.NewRequest("PUT", url, reader)
 	if err != nil {
 		return fmt.Errorf("invalid http request to Bunny, %w", err)
 	}
 	req.Header.Add("AccessKey", s.accessKey)
-	// TODO: generate content-type according to requested format
-	req.Header.Add("content-type", "application/octet-stream")
+	contentType := "image/jpeg"
+	if strings.Contains(path, ".webp") {
+		contentType = "image/webp"
+	} else if strings.Contains(path, ".png") {
+		contentType = "image/png"
+	}
+	req.Header.Add("content-type", contentType)
 
 	_, err = s.client.Do(req)
 	return err

@@ -95,10 +95,11 @@ type GetFilterPageResponse struct {
 }
 
 type GetFreshGamesRequest struct {
-	Language Language `json:"language"`
-	Page     int      `json:"page"`
-	Limit    int      `json:"limit"`
-	MaxDays  int      `json:"maxDays"`
+	Language  Language   `json:"language"`
+	Page      int        `json:"page"`
+	Limit     int        `json:"limit"`
+	MaxDays   int        `json:"maxDays"`
+	Thumbnail *Thumbnail `json:"thumbnail"`
 }
 
 type GetGamePageRequest struct {
@@ -144,10 +145,11 @@ type GetHomePageResponse struct {
 }
 
 type GetMostPlayedGamesRequest struct {
-	Language Language `json:"language"`
-	Page     int      `json:"page"`
-	Limit    int      `json:"limit"`
-	MaxDays  int      `json:"maxDays"`
+	Language  Language   `json:"language"`
+	Page      int        `json:"page"`
+	Limit     int        `json:"limit"`
+	MaxDays   int        `json:"maxDays"`
+	Thumbnail *Thumbnail `json:"thumbnail"`
 }
 
 type GetSearchPageRequest struct {
@@ -281,9 +283,9 @@ type TagSection struct {
 
 type Thumbnail struct {
 	Original Original `json:"original"`
-	Width    int      `json:"width"`
-	Height   int      `json:"height"`
-	Format   Format   `json:"format"`
+	Width    *int     `json:"width"`
+	Height   *int     `json:"height"`
+	Format   *Format  `json:"format"`
 }
 
 type Format string

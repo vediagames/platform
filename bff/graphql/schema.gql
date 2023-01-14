@@ -287,6 +287,7 @@ input GetFreshGamesRequest {
     page: Int!
     limit: Int!
     maxDays: Int!
+    thumbnail: Thumbnail!
 }
 
 
@@ -295,6 +296,7 @@ input GetMostPlayedGamesRequest {
     page: Int!
     limit: Int!
     maxDays: Int!
+    thumbnail: Thumbnail!
 }
 
 input ListGamesRequest {
@@ -354,9 +356,9 @@ enum Format {
 
 input Thumbnail {
     original: Original!
-    width: Int!
-    height: Int!
-    format: Format!
+    width: Int
+    height: Int
+    format: Format
 }
 
 scalar Upload

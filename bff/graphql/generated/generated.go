@@ -2273,6 +2273,7 @@ input GetFreshGamesRequest {
     page: Int!
     limit: Int!
     maxDays: Int!
+    thumbnail: Thumbnail!
 }
 
 
@@ -2281,6 +2282,7 @@ input GetMostPlayedGamesRequest {
     page: Int!
     limit: Int!
     maxDays: Int!
+    thumbnail: Thumbnail!
 }
 
 input ListGamesRequest {
@@ -2340,9 +2342,9 @@ enum Format {
 
 input Thumbnail {
     original: Original!
-    width: Int!
-    height: Int!
-    format: Format!
+    width: Int
+    height: Int
+    format: Format
 }
 
 scalar Upload
@@ -11512,9 +11514,9 @@ func (ec *executionContext) _Tag_thumbnail(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*string)
+	res := resTmp.(string)
 	fc.Result = res
-	return ec.marshalNString2ᚖstring(ctx, field.Selections, res)
+	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Tag_thumbnail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13836,7 +13838,7 @@ func (ec *executionContext) unmarshalInputGetFreshGamesRequest(ctx context.Conte
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "page", "limit", "maxDays"}
+	fieldsInOrder := [...]string{"language", "page", "limit", "maxDays", "thumbnail"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -13872,6 +13874,14 @@ func (ec *executionContext) unmarshalInputGetFreshGamesRequest(ctx context.Conte
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxDays"))
 			it.MaxDays, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNThumbnail2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐThumbnail(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14044,7 +14054,7 @@ func (ec *executionContext) unmarshalInputGetMostPlayedGamesRequest(ctx context.
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "page", "limit", "maxDays"}
+	fieldsInOrder := [...]string{"language", "page", "limit", "maxDays", "thumbnail"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -14080,6 +14090,14 @@ func (ec *executionContext) unmarshalInputGetMostPlayedGamesRequest(ctx context.
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("maxDays"))
 			it.MaxDays, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "thumbnail":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("thumbnail"))
+			it.Thumbnail, err = ec.unmarshalNThumbnail2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐThumbnail(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14535,7 +14553,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("width"))
-			it.Width, err = ec.unmarshalNInt2int(ctx, v)
+			it.Width, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14543,7 +14561,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
-			it.Height, err = ec.unmarshalNInt2int(ctx, v)
+			it.Height, err = ec.unmarshalOInt2ᚖint(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14551,7 +14569,7 @@ func (ec *executionContext) unmarshalInputThumbnail(ctx context.Context, obj int
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("format"))
-			it.Format, err = ec.unmarshalNFormat2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx, v)
+			it.Format, err = ec.unmarshalOFormat2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -17484,16 +17502,6 @@ func (ec *executionContext) marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋv
 	return ec._FetchedGame(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNFormat2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx context.Context, v interface{}) (model.Format, error) {
-	var res model.Format
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNFormat2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx context.Context, sel ast.SelectionSet, v model.Format) graphql.Marshaler {
-	return v
-}
-
 func (ec *executionContext) unmarshalNFullSearchRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFullSearchRequest(ctx context.Context, v interface{}) (model.FullSearchRequest, error) {
 	res, err := ec.unmarshalInputFullSearchRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -18291,27 +18299,6 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) unmarshalNString2ᚖstring(ctx context.Context, v interface{}) (*string, error) {
-	res, err := graphql.UnmarshalString(v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNString2ᚖstring(ctx context.Context, sel ast.SelectionSet, v *string) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	res := graphql.MarshalString(*v)
-	if res == graphql.Null {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-	}
-	return res
-}
-
 func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Tag) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -18728,6 +18715,22 @@ func (ec *executionContext) marshalOCategory2ᚖgithubᚗcomᚋvediagamesᚋvedi
 		return graphql.Null
 	}
 	return ec._Category(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalOFormat2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx context.Context, v interface{}) (*model.Format, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.Format)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOFormat2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFormat(ctx context.Context, sel ast.SelectionSet, v *model.Format) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalOGame2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGame(ctx context.Context, sel ast.SelectionSet, v *model.Game) graphql.Marshaler {

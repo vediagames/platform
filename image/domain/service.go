@@ -19,10 +19,11 @@ type GetThumbnailRequest struct {
 	Thumbnail Thumbnail
 }
 type Thumbnail struct {
-	Original Original `json:"original"`
-	Width    int      `json:"width"`
-	Height   int      `json:"height"`
-	Format   Format   `json:"format"`
+	Original  Original
+	Width     *int
+	Height    *int
+	Format    *Format
+	IsDefault bool
 }
 
 type Format string

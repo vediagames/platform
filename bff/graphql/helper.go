@@ -11,9 +11,18 @@ import (
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
+	imagedomain "github.com/vediagames/vediagames.com/image/domain"
 	searchdomain "github.com/vediagames/vediagames.com/search/domain"
 	sectiondomain "github.com/vediagames/vediagames.com/section/domain"
 	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
+)
+
+const (
+	pathGame         = imagedomain.PathGame
+	pathTag          = imagedomain.PathTag
+	thumbnail128x128 = imagedomain.Thumbnail128x128
+	thumbnail512x384 = imagedomain.Thumbnail512x384
+	thumbnail512x512 = imagedomain.Thumbnail512x512
 )
 
 func searchFromSearch(games, tags []searchdomain.SearchItem, total int, fullSearch bool) (model.SearchResponse, error) {
@@ -192,15 +201,6 @@ func sortingMethodToDomain[T gamedomain.SortingMethod | searchdomain.SortingMeth
 }
 
 func gameFromGame(game gamedomain.Game) (model.Game, error) {
-	thumb512x384, err := pathGame.Thumbnail(game.Slug, thumbnail512x384)
-	if err != nil {
-		return model.Game{}, fmt.Errorf("failed to get 512x384 thumbnail: %w", err)
-	}
-
-	thumb512x512, err := pathGame.Thumbnail(game.Slug, thumbnail512x512)
-	if err != nil {
-		return model.Game{}, fmt.Errorf("failed to get 512x512 thumbnail: %w", err)
-	}
 
 	tags := make([]model.ComplimentaryTag, 0, len(game.Tags))
 	for _, tag := range game.Tags {
@@ -285,15 +285,6 @@ func sortingMethodToTag(s *model.TagSortingMethod) tagdomain.SortingMethod {
 }
 
 func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
-	thumb512x384, err := pathTag.Thumbnail(t.Slug, thumbnail512x384)
-	if err != nil {
-		return model.Tag{}, fmt.Errorf("failed to get 512x384 thumbnail: %w", err)
-	}
-
-	thumb128x128, err := pathTag.Thumbnail(t.Slug, thumbnail128x128)
-	if err != nil {
-		return model.Tag{}, fmt.Errorf("failed to get 128x128 thumbnail: %w", err)
-	}
 
 	return model.Tag{
 		ID:               t.ID,
@@ -308,10 +299,24 @@ func tagFromTag(t tagdomain.Tag) (model.Tag, error) {
 		CreatedAt:        t.CreatedAt.String(),
 		DeletedAt:        stringToPointer(t.DeletedAt.String()),
 		PublishedAt:      stringToPointer(t.PublishedAt.String()),
-		Thumbnail:        thumbnail,
 	}, nil
 }
 
 func sortingMethodToPointer[T model.SortingMethod | model.TagSortingMethod](m T) *T {
 	return &m
+}
+
+// requestThumbnailToTagDomain - converts requested structure into Tag domain structure
+func requestThumbnailToTagDomain(s *model.Thumbnail) imagedomain.Thumbnail {
+	thumb := imagedomain.Thumbnail{
+		Original: imagedomain.Original(s.Original),
+	}
+	if s.Format == nil || s.Height == nil || s.Width == nil {
+		thumb.IsDefault = true
+		return thumb
+	}
+	thumb.Format = (*imagedomain.Format)(s.Format)
+	thumb.Height = thumb.Height
+	thumb.Width = thumb.Width
+	return thumb
 }
