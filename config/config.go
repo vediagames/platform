@@ -14,8 +14,10 @@ const (
 )
 
 type Imagor struct {
-	URL    string `mapstructure:"URL"`
-	Secret string `mapstructure:"secret"`
+	URL         string `mapstructure:"URL"`
+	Secret      string `mapstructure:"secret"`
+	S3CDNURL    string `mapstructure:"s3CDNURL"`
+	BunnyCDNURL string `mapstructure:"bunnyCDNURL"`
 }
 type BunnyStorage struct {
 	URL       string `mapstructure:"URL"`
@@ -135,6 +137,14 @@ func (c Config) Validate() error {
 
 	if c.Imagor.Secret == "" {
 		err.Add(fmt.Errorf("imagor secret key is not set"))
+	}
+
+	if c.Imagor.S3CDNURL == "" {
+		err.Add(fmt.Errorf("s3 cdn url key is not set"))
+	}
+
+	if c.Imagor.BunnyCDNURL == "" {
+		err.Add(fmt.Errorf("bunny cdn url key is not set"))
 	}
 	return err.Err()
 }

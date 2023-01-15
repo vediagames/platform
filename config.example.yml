@@ -27,6 +27,8 @@ redisAddress: "localhost:6379"
 imagor:
   URL: "localhost:8000"
   secret: "vediagames"
+  s3CDNURL: "example.com"
+  bunnyCDNURL: "example.com"
 
 bunnyStorage:
   URL: "storage.bunnycdn.com"

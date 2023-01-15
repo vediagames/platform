@@ -73,7 +73,7 @@ func (s *service) GetThumbnail(ctx context.Context, req domain.GetThumbnailReque
 	}
 	if req.Thumbnail.IsDefault {
 		// original requested
-		return fmt.Sprintf("%s%s", s.CDNURLs.s3, thumb), err
+		return fmt.Sprintf("%s/%s", s.CDNURLs.s3, thumb), err
 	}
 	// process new image as requested resolution & format
 	image, err := s.processor.Process(ctx, req, thumb)
@@ -84,5 +84,5 @@ func (s *service) GetThumbnail(ctx context.Context, req domain.GetThumbnailReque
 		return "", fmt.Errorf("failed to upload the processed image to storage: %w", err)
 	}
 	//TODO:	return url uploaded imageURL
-	return fmt.Sprintf("%s%s", s.CDNURLs.bunny, thumb), err
+	return fmt.Sprintf("%s/%s", s.CDNURLs.bunny, thumb), err
 }
