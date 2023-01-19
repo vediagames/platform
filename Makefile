@@ -1,7 +1,10 @@
 .PHONY: gqlgen up build
 
 dc = docker-compose -f docker-compose.yaml
+env_file = ./.env
 
+include $(env_file)
+export $(shell sed 's/=.*//' $(env_file))
 PATH := $(PATH):$(GOPATH)/bin
 
 gqlgen/%:
@@ -18,3 +21,11 @@ down:
 generate:
 	echo "Regenerating code"
 	go generate ./...
+
+build:
+	@docker build -f ./build/Dockerfile -t $(IMAGE_NAME):$(IMAGE_VERSION) \
+		--build-arg GITHUB_USERNAME=$(GITHUB_USERNAME) \
+		--build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
+
+push:
+	@docker push $(img_name):$(version)
