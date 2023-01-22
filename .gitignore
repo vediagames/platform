@@ -1,4 +1,6 @@
 tmp/
 .idea/
+secret/
 
 config.yml
+.env
