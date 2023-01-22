@@ -23,9 +23,9 @@ generate:
 	go generate ./...
 
 build:
-	@docker build -f ./build/Dockerfile -t $(IMAGE_NAME):$(IMAGE_VERSION) \
+	@docker build -f ./build/Dockerfile -t $(IMAGE_REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION) \
 		--build-arg GITHUB_USERNAME=$(GITHUB_USERNAME) \
 		--build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
 
 push:
-	@docker push $(img_name):$(version)
+	@docker push $(IMAGE_REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION)
