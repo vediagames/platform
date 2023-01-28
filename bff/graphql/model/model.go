@@ -80,8 +80,7 @@ type Tag struct {
 	CreatedAt        string   `json:"createdAt"`
 	DeletedAt        *string  `json:"deletedAt"`
 	PublishedAt      *string  `json:"publishedAt"`
-	Thumbnail512x384 string   `json:"thumbnail512x384"`
-	Thumbnail128x128 string   `json:"thumbnail128x128"`
+	Thumbnail        string   `json:"thumbnail"`
 }
 
 func (t *Tag) PageUrl() string {
@@ -153,8 +152,7 @@ type Game struct {
 	Tags             *ComplimentaryTags       `json:"tags"`
 	Categories       *ComplimentaryCategories `json:"categories"`
 	Mobile           bool                     `json:"mobile"`
-	Thumbnail512x384 string                   `json:"thumbnail512x384"`
-	Thumbnail512x512 string                   `json:"thumbnail512x512"`
+	Thumbnail        string                   `json:"thumbnail"`
 }
 
 func (g *Game) PageUrl() string {

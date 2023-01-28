@@ -66,7 +66,15 @@ func (r *queryResolver) GetMostPlayedGames(ctx context.Context, request model.Ge
 		if err != nil {
 			return nil, fmt.Errorf("failed to convert game: %w", err)
 		}
-
+		thumb, err := r.imageService.GetThumbnail(ctx, imagedomain.GetThumbnailRequest{
+			Path:      string(pathGame),
+			Slug:      game.Slug,
+			Thumbnail: requestThumbnailToTagDomain(request.Thumbnail),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert game: %w", err)
+		}
+		gameModel.Thumbnail = thumb
 		res.Data = append(res.Data, gameModel)
 	}
 
@@ -152,7 +160,7 @@ func (r *queryResolver) ListGames(ctx context.Context, request model.ListGamesRe
 }
 
 // GetGame is the resolver for the getGame field.
-func (r *queryResolver) GetGame(ctx context.Context, request model.BaseGetRequest) (*model.GetGameResponse, error) {
+func (r *queryResolver) GetGame(ctx context.Context, request model.GetGameRequest) (*model.GetGameResponse, error) {
 	gameRes, err := r.gameService.Get(ctx, gamedomain.GetRequest{
 		Field:    gamedomain.GetByField(request.Field),
 		Value:    request.Value,
@@ -261,7 +269,7 @@ func (r *queryResolver) ListTags(ctx context.Context, request model.ListTagsRequ
 }
 
 // GetTag is the resolver for the getTag field.
-func (r *queryResolver) GetTag(ctx context.Context, request model.BaseGetRequest) (*model.GetTagResponse, error) {
+func (r *queryResolver) GetTag(ctx context.Context, request model.GetTagRequest) (*model.GetTagResponse, error) {
 	tagRes, err := r.tagService.Get(ctx, tagdomain.GetRequest{
 		Field:    tagdomain.GetByField(request.Field),
 		Value:    request.Value,

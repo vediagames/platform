@@ -23,6 +23,7 @@ type GetCategoriesPageResponse {
 input GetTagsPageRequest {
     language: Language!
     page: Int!
+    thumbnail: Thumbnail!
 }
 
 type GetTagsPageResponse {
@@ -33,6 +34,7 @@ input GetTagPageRequest {
     language: Language!
     tagID: Int!
     page: Int!
+    thumbnail: Thumbnail!
 }
 
 type GetTagPageResponse {
@@ -141,4 +143,5 @@ input GetGamePageRequest {
     lastPlayedGameIDs: [Int]
     likedGameIDs: [Int]
     dislikedGameIDs: [Int]
+    thumbnail: Thumbnail!
 }
