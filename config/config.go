@@ -13,6 +13,17 @@ const (
 	ContextKey contextKey = "config_context_key"
 )
 
+type Imagor struct {
+	URL         string `mapstructure:"URL"`
+	Secret      string `mapstructure:"secret"`
+	S3CDNURL    string `mapstructure:"s3CDNURL"`
+	BunnyCDNURL string `mapstructure:"bunnyCDNURL"`
+}
+type BunnyStorage struct {
+	URL       string `mapstructure:"URL"`
+	Zone      string `mapstructure:"zone"`
+	AccessKey string `mapstructure:"accessKey"`
+}
 type Config struct {
 	Environment string `mapstructure:"environment"`
 	LogLevel    string `mapstructure:"logLevel"`
@@ -40,7 +51,9 @@ type Config struct {
 	Auth struct {
 		KratosURL string `mapstructure:"kratosURL"`
 	} `mapstructure:"auth"`
-	RedisAddress string `mapstructure:"redisAddress"`
+	RedisAddress string       `mapstructure:"redisAddress"`
+	Imagor       Imagor       `mapstructure:"imagor"`
+	BunnyStorage BunnyStorage `mapstructure:"bunnyStorage"`
 }
 
 func (c Config) Validate() error {
@@ -110,6 +123,34 @@ func (c Config) Validate() error {
 
 	if c.Auth.KratosURL == "" {
 		err.Add(fmt.Errorf("kratos auth url is not set"))
+	}
+
+	if c.BunnyStorage.URL == "" {
+		err.Add(fmt.Errorf("bunny storage url key is not set"))
+	}
+
+	if c.BunnyStorage.AccessKey == "" {
+		err.Add(fmt.Errorf("bunny storage access key is not set"))
+	}
+
+	if c.BunnyStorage.AccessKey == "" {
+		err.Add(fmt.Errorf("bunny storage access key is not set"))
+	}
+
+	if c.Imagor.URL == "" {
+		err.Add(fmt.Errorf("imagor url key is not set"))
+	}
+
+	if c.Imagor.Secret == "" {
+		err.Add(fmt.Errorf("imagor secret key is not set"))
+	}
+
+	if c.Imagor.S3CDNURL == "" {
+		err.Add(fmt.Errorf("s3 cdn url key is not set"))
+	}
+
+	if c.Imagor.BunnyCDNURL == "" {
+		err.Add(fmt.Errorf("bunny cdn url key is not set"))
 	}
 
 	return err.Err()

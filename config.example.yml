@@ -26,3 +26,15 @@ redisAddress: "localhost:6379"
 
 auth:
   kratosURL: "http://localhost:4433"
+
+imagor:
+  URL: "localhost:8000"
+  secret: "vediagames"
+  s3CDNURL: "example.com"
+  bunnyCDNURL: "example.com"
+
+bunnyStorage:
+  URL: "storage.bunnycdn.com"
+  zone: "vediagames"
+  accessKey: "UUID"
+  

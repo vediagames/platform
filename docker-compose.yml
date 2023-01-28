@@ -51,6 +51,16 @@ services:
     ports:
       - "4436:4436"
       - "4437:4437"
+
+  imagor:
+    image: shumc/imagor:1.3.5
+    environment:
+      PORT: 8000
+      IMAGOR_SECRET: vediagames
+      IMAGOR_SIGNER_TYPE: sha256
+      IMAGOR_SIGNER_TRUNCATE: 40
+    ports:
+      - "8000:8000"
 volumes:
   database-data:
   redis-data:
