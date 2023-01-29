@@ -309,13 +309,11 @@ func sortingMethodToPointer[T model.SortingMethod | model.TagSortingMethod](m T)
 func requestThumbnailToTagDomain(s *model.Thumbnail) imagedomain.Thumbnail {
 	thumb := imagedomain.Thumbnail{
 		Original: imagedomain.Original(s.Original),
+		Height:   s.Height,
+		Width:    s.Width,
+		Format:   imagedomain.Format(s.Format),
 	}
-	if s.Format == nil || s.Height == nil || s.Width == nil {
-		thumb.IsDefault = true
-		return thumb
-	}
-	thumb.Format = (*imagedomain.Format)(s.Format)
-	thumb.Height = s.Height
-	thumb.Width = s.Width
+
+	// TODO: check if client requests original
 	return thumb
 }

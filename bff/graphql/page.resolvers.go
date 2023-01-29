@@ -345,7 +345,7 @@ func (r *queryResolver) GetWizardPage(ctx context.Context, request model.GetWiza
 
 // GetTagPage is the resolver for the getTagPage field.
 func (r *queryResolver) GetTagPage(ctx context.Context, request model.GetTagPageRequest) (*model.GetTagPageResponse, error) {
-	tagRes, err := r.GetTag(ctx, model.GetTagPageRequest{
+	tagRes, err := r.GetTag(ctx, model.GetTagRequest{
 		Field:    model.GetByFieldID,
 		Value:    strconv.Itoa(request.TagID),
 		Language: request.Language,

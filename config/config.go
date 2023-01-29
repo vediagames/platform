@@ -60,97 +60,97 @@ func (c Config) Validate() error {
 	var err zeroerror.Error
 
 	if c.Environment == "" {
-		err.Add(fmt.Errorf("environment is not set"))
+		err.Add(fmt.Errorf("empty environment"))
 	}
 
 	if c.LogLevel == "" {
-		err.Add(fmt.Errorf("log level is not set"))
+		err.Add(fmt.Errorf("empty log level"))
 	}
 
 	if c.Port == 0 {
-		err.Add(fmt.Errorf("port is not set"))
+		err.Add(fmt.Errorf("empty port"))
 	}
 
 	if c.PostgreSQL.ConnectionString == "" {
-		err.Add(fmt.Errorf("postgresql connection string is not set"))
+		err.Add(fmt.Errorf("empty postgresql connection string"))
 	}
 
 	if c.SendInBlue.Key == "" {
-		err.Add(fmt.Errorf("sendinblue key is not set"))
+		err.Add(fmt.Errorf("empty sendinblue key"))
 	}
 
 	if c.Bucket.Key == "" {
-		err.Add(fmt.Errorf("bucket key is not set"))
+		err.Add(fmt.Errorf("empty bucket key"))
 	}
 
 	if c.Bucket.Secret == "" {
-		err.Add(fmt.Errorf("bucket secret is not set"))
+		err.Add(fmt.Errorf("empty bucket secret"))
 	}
 
 	if c.Bucket.Region == "" {
-		err.Add(fmt.Errorf("bucket region is not set"))
+		err.Add(fmt.Errorf("empty bucket region"))
 	}
 
 	if c.Bucket.EndPoint == "" {
-		err.Add(fmt.Errorf("bucket endpoint is not set"))
+		err.Add(fmt.Errorf("empty bucket endpoint"))
 	}
 
 	if c.Bucket.Bucket == "" {
-		err.Add(fmt.Errorf("bucket name is not set"))
+		err.Add(fmt.Errorf("empty bucket name"))
 	}
 
 	if len(c.CORS.AllowedOrigins) == 0 {
-		err.Add(fmt.Errorf("cors allowed origins is not set"))
+		err.Add(fmt.Errorf("empty cors allowed origins"))
 	}
 
 	for _, origin := range c.CORS.AllowedOrigins {
 		if origin == "" {
-			err.Add(fmt.Errorf("cors allowed origin is empty"))
+			err.Add(fmt.Errorf("empty cors allowed origin"))
 		}
 	}
 
 	if c.PostgreSQL.Path.Migration == "" {
-		err.Add(fmt.Errorf("postgresql path migration is not set"))
+		err.Add(fmt.Errorf("empty postgresql path migration"))
 	}
 
 	if c.PostgreSQL.Path.Stub == "" {
-		err.Add(fmt.Errorf("postgresql path stub is not set"))
+		err.Add(fmt.Errorf("empty postgresql path stub"))
 	}
 
 	if c.RedisAddress == "" {
-		err.Add(fmt.Errorf("redis address is not set"))
+		err.Add(fmt.Errorf("empty redis address"))
 	}
 
 	if c.Auth.KratosURL == "" {
-		err.Add(fmt.Errorf("kratos auth url is not set"))
+		err.Add(fmt.Errorf("empty kratos auth url"))
 	}
 
 	if c.BunnyStorage.URL == "" {
-		err.Add(fmt.Errorf("bunny storage url key is not set"))
+		err.Add(fmt.Errorf("empty bunny storage url key"))
 	}
 
 	if c.BunnyStorage.AccessKey == "" {
-		err.Add(fmt.Errorf("bunny storage access key is not set"))
+		err.Add(fmt.Errorf("empty bunny storage access key"))
 	}
 
 	if c.BunnyStorage.AccessKey == "" {
-		err.Add(fmt.Errorf("bunny storage access key is not set"))
+		err.Add(fmt.Errorf("empty bunny storage access key"))
 	}
 
 	if c.Imagor.URL == "" {
-		err.Add(fmt.Errorf("imagor url key is not set"))
+		err.Add(fmt.Errorf("empty imagor url key"))
 	}
 
 	if c.Imagor.Secret == "" {
-		err.Add(fmt.Errorf("imagor secret key is not set"))
+		err.Add(fmt.Errorf("empty imagor secret key"))
 	}
 
 	if c.Imagor.S3CDNURL == "" {
-		err.Add(fmt.Errorf("s3 cdn url key is not set"))
+		err.Add(fmt.Errorf("empty s3 cdn url key"))
 	}
 
 	if c.Imagor.BunnyCDNURL == "" {
-		err.Add(fmt.Errorf("bunny cdn url key is not set"))
+		err.Add(fmt.Errorf("empty bunny cdn url key"))
 	}
 
 	return err.Err()
