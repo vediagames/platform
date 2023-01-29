@@ -6,7 +6,6 @@ import (
 	"crypto/sha256"
 	"encoding/base64"
 	"fmt"
-	"io"
 	"net/http"
 	"strings"
 
@@ -34,16 +33,19 @@ func New(cfg Config) domain.Processor {
 	}
 }
 
-func (p processor) Process(ctx context.Context, req domain.GetThumbnailRequest, imageURL string) (io.Reader, error) {
-	reqImageURL := fmt.Sprintf("fit-in/%dx%d/filters:format(%s)/%s", req.Thumbnail.Width, req.Thumbnail.Height, req.Thumbnail.Format, imageURL)
+func (p processor) Process(ctx context.Context, req domain.ProcessQuery) (domain.ProcessResult, error) {
 
+	reqImageURL := fmt.Sprintf("fit-in/%dx%d/filters:format(%s)/%s", req.Thumbnail.Width, req.Thumbnail.Height, req.Thumbnail.Format, req.ImageURL)
 	encryptedURL := p.generateUrl(reqImageURL, p.secret)
+
 	res, err := p.client.Get(encryptedURL)
 	if err != nil {
-		return nil, fmt.Errorf("failed to process the image: %w", err)
+		return domain.ProcessResult{}, fmt.Errorf("failed to process the image: %w", err)
 	}
 
-	return res.Body, nil
+	return domain.ProcessResult{
+		File: res.Body,
+	}, nil
 }
 
 func (p processor) generateUrl(path, secret string) string {

@@ -13,6 +13,13 @@ const (
 	ContextKey contextKey = "config_context_key"
 )
 
+type Imagor struct {
+	URL         string `mapstructure:"URL"`
+	Secret      string `mapstructure:"secret"`
+	S3CDNURL    string `mapstructure:"s3CDNURL"`
+	BunnyCDNURL string `mapstructure:"bunnyCDNURL"`
+}
+
 type Config struct {
 	Environment string `mapstructure:"environment"`
 	LogLevel    string `mapstructure:"logLevel"`
@@ -41,6 +48,7 @@ type Config struct {
 		KratosURL string `mapstructure:"kratosURL"`
 	} `mapstructure:"auth"`
 	RedisAddress string `mapstructure:"redisAddress"`
+	Imagor       Imagor `mapstructure:"imagor"`
 }
 
 func (c Config) Validate() error {

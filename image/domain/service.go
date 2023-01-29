@@ -2,15 +2,13 @@ package domain
 
 import (
 	"context"
-	"io"
+	"fmt"
+
+	"github.com/vediagames/zeroerror"
 )
 
-type Processor interface {
-	Process(context.Context, GetThumbnailRequest, string) (io.Reader, error)
-}
-
 type Service interface {
-	GetThumbnail(context.Context, GetThumbnailRequest) (string, error)
+	GetThumbnail(context.Context, GetThumbnailRequest) (GetThumbnailResponse, error)
 }
 
 type GetThumbnailRequest struct {
@@ -18,11 +16,42 @@ type GetThumbnailRequest struct {
 	Slug      string
 	Thumbnail Thumbnail
 }
+
+func (r GetThumbnailRequest) Validate() error {
+	var err zeroerror.Error
+
+	if r.Path == "" {
+		err.Add(fmt.Errorf("empty path"))
+	}
+
+	if r.Slug == "" {
+		err.Add(fmt.Errorf("empty slug"))
+	}
+
+	if r.Thumbnail.Format.IsValid() {
+		err.Add(fmt.Errorf("invalid format"))
+	}
+
+	if r.Thumbnail.Height == 0 {
+		err.Add(fmt.Errorf("invalid Thumbnail.Height"))
+	}
+
+	if r.Thumbnail.Width == 0 {
+		err.Add(fmt.Errorf("invalid Thumbnail.Width"))
+	}
+
+	return err.Err()
+}
+
+type GetThumbnailResponse struct {
+	ImageURL string
+}
+
 type Thumbnail struct {
 	Original  Original
-	Width     *int
-	Height    *int
-	Format    *Format
+	Width     int
+	Height    int
+	Format    Format
 	IsDefault bool
 }
 

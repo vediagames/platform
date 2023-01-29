@@ -68,24 +68,34 @@ func New(config Config) (domain.Service, error) {
 	}, nil
 }
 
-func (s *service) GetThumbnail(ctx context.Context, req domain.GetThumbnailRequest) (string, error) {
+func (s *service) GetThumbnail(ctx context.Context, req domain.GetThumbnailRequest) (domain.GetThumbnailResponse, error) {
+	if err := req.Validate(); err != nil {
+		return domain.GetThumbnailResponse{}, fmt.Errorf("invalid config: %w", err)
+	}
+
 	thumb, err := domain.GetExistingThumbnail(req)
 	if err != nil {
-		return "", fmt.Errorf("failed to generate url for existing image on S3: %w", err)
+		return domain.GetThumbnailResponse{}, fmt.Errorf("failed to generate url for existing image on S3: %w", err)
 	}
 
 	if req.Thumbnail.IsDefault {
-		return fmt.Sprintf("%s/%s", s.CDNURLs.s3, thumb), err
+		return domain.GetThumbnailResponse{
+			ImageURL: fmt.Sprintf("%s/%s", s.CDNURLs.s3, thumb),
+		}, err
 	}
 
-	// process new image as requested resolution & format
-	image, err := s.processor.Process(ctx, req, thumb)
+	image, err := s.processor.Process(ctx, domain.ProcessQuery{
+		Thumbnail: req.Thumbnail,
+		ImageURL:  thumb,
+	})
 
 	path := domain.GetImagePath(req.Path, req.Slug, req.Thumbnail.Format.String())
-	if err := s.storage.Upload(ctx, path, image); err != nil {
-		return "", fmt.Errorf("failed to upload the processed image to storage: %w", err)
+	if err := s.storage.Upload(ctx, path, image.File); err != nil {
+		return domain.GetThumbnailResponse{}, fmt.Errorf("failed to upload the processed image to storage: %w", err)
 	}
 
 	//TODO:	return url uploaded imageURL
-	return fmt.Sprintf("%s/%s", s.CDNURLs.bunny, thumb), err
+	return domain.GetThumbnailResponse{
+		ImageURL: fmt.Sprintf("%s/%s", s.CDNURLs.bunny, thumb),
+	}, err
 }
