@@ -2052,8 +2052,8 @@ enum SortingMethod {
     random
     most_popular
     least_popular
-    newest_date
-    oldest_date
+    newest
+    oldest
     most_liked
     least_liked
     most_disliked
@@ -2067,8 +2067,8 @@ enum TagSortingMethod {
     random
     most_popular
     least_popular
-    newest_date
-    oldest_date
+    newest
+    oldest
 }
 
 enum SearchItemType {

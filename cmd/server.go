@@ -15,6 +15,7 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
+
 	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	authservice "github.com/vediagames/vediagames.com/auth/service"
 	"github.com/vediagames/vediagames.com/bff/graphql"
@@ -242,7 +243,7 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
-	router.Use(authMiddleware(authService))
+	//router.Use(authMiddleware(authService))
 
 	router.Handle("/graph", gqlHandler)
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
