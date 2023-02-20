@@ -352,8 +352,8 @@ const (
 	SortingMethodRandom        SortingMethod = "random"
 	SortingMethodMostPopular   SortingMethod = "most_popular"
 	SortingMethodLeastPopular  SortingMethod = "least_popular"
-	SortingMethodNewest        SortingMethod = "newest"
-	SortingMethodOldest        SortingMethod = "oldest"
+	SortingMethodNewestDate    SortingMethod = "newest_date"
+	SortingMethodOldestDate    SortingMethod = "oldest_date"
 	SortingMethodMostLiked     SortingMethod = "most_liked"
 	SortingMethodLeastLiked    SortingMethod = "least_liked"
 	SortingMethodMostDisliked  SortingMethod = "most_disliked"
@@ -367,8 +367,8 @@ var AllSortingMethod = []SortingMethod{
 	SortingMethodRandom,
 	SortingMethodMostPopular,
 	SortingMethodLeastPopular,
-	SortingMethodNewest,
-	SortingMethodOldest,
+	SortingMethodNewestDate,
+	SortingMethodOldestDate,
 	SortingMethodMostLiked,
 	SortingMethodLeastLiked,
 	SortingMethodMostDisliked,
@@ -378,7 +378,7 @@ var AllSortingMethod = []SortingMethod{
 
 func (e SortingMethod) IsValid() bool {
 	switch e {
-	case SortingMethodID, SortingMethodName, SortingMethodRandom, SortingMethodMostPopular, SortingMethodLeastPopular, SortingMethodNewest, SortingMethodOldest, SortingMethodMostLiked, SortingMethodLeastLiked, SortingMethodMostDisliked, SortingMethodLeastDisliked, SortingMethodMostRelevant:
+	case SortingMethodID, SortingMethodName, SortingMethodRandom, SortingMethodMostPopular, SortingMethodLeastPopular, SortingMethodNewestDate, SortingMethodOldestDate, SortingMethodMostLiked, SortingMethodLeastLiked, SortingMethodMostDisliked, SortingMethodLeastDisliked, SortingMethodMostRelevant:
 		return true
 	}
 	return false
@@ -413,8 +413,8 @@ const (
 	TagSortingMethodRandom       TagSortingMethod = "random"
 	TagSortingMethodMostPopular  TagSortingMethod = "most_popular"
 	TagSortingMethodLeastPopular TagSortingMethod = "least_popular"
-	TagSortingMethodNewest       TagSortingMethod = "newest"
-	TagSortingMethodOldest       TagSortingMethod = "oldest"
+	TagSortingMethodNewestDate   TagSortingMethod = "newest_date"
+	TagSortingMethodOldestDate   TagSortingMethod = "oldest_date"
 )
 
 var AllTagSortingMethod = []TagSortingMethod{
@@ -423,13 +423,13 @@ var AllTagSortingMethod = []TagSortingMethod{
 	TagSortingMethodRandom,
 	TagSortingMethodMostPopular,
 	TagSortingMethodLeastPopular,
-	TagSortingMethodNewest,
-	TagSortingMethodOldest,
+	TagSortingMethodNewestDate,
+	TagSortingMethodOldestDate,
 }
 
 func (e TagSortingMethod) IsValid() bool {
 	switch e {
-	case TagSortingMethodID, TagSortingMethodName, TagSortingMethodRandom, TagSortingMethodMostPopular, TagSortingMethodLeastPopular, TagSortingMethodNewest, TagSortingMethodOldest:
+	case TagSortingMethodID, TagSortingMethodName, TagSortingMethodRandom, TagSortingMethodMostPopular, TagSortingMethodLeastPopular, TagSortingMethodNewestDate, TagSortingMethodOldestDate:
 		return true
 	}
 	return false

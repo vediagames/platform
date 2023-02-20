@@ -90,7 +90,7 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 					Page:     1,
 					Limit:    10,
 				},
-				Sort: sortingMethodToPointer[model.SortingMethod](model.SortingMethodNewest),
+				Sort: sortingMethodToPointer[model.SortingMethod](model.SortingMethodNewestDate),
 			}
 		default:
 			if len(websitePlacement.Section.Categories.Data) == 0 &&

@@ -58,7 +58,7 @@ type section struct {
 	PublishedAt      pq.NullTime    `db:"published_at"`
 	Tags             sql.NullString `db:"tags"`
 	Categories       sql.NullString `db:"categories"`
-	Games            []int          `db:"games"`
+	Games            pq.Int32Array  `db:"games"`
 }
 
 func (s section) toDomain(ctx context.Context) (domain.Section, error) {
@@ -91,6 +91,11 @@ func (s section) toDomain(ctx context.Context) (domain.Section, error) {
 		}
 	}
 
+	games := make([]int, 0, len(s.Games))
+	for i := 0; i < len(s.Games); i++ {
+		games = append(games, int(s.Games[i]))
+	}
+
 	return domain.Section{
 		ID:               s.ID,
 		Language:         domain.Language(s.LanguageCode),
@@ -104,7 +109,7 @@ func (s section) toDomain(ctx context.Context) (domain.Section, error) {
 		Categories: domain.ComplimentaryCategories{
 			Data: domainCategories,
 		},
-		Games:       s.Games,
+		Games:       games,
 		Status:      domain.Status(s.Status),
 		CreatedAt:   s.CreatedAt,
 		DeletedAt:   s.DeletedAt.Time,
