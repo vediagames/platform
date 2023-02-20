@@ -112,7 +112,7 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		switch s.Slug {
 		case "newest":
 			paramsFilter = filterParams{
-				Sort: model.SortingMethodNewestDate,
+				Sort: model.SortingMethodNewest,
 			}
 		default:
 			paramsFilter = filterParams{

@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/rs/zerolog"
+
 	"github.com/vediagames/vediagames.com/bff/domain"
 	"github.com/vediagames/vediagames.com/bff/graphql/model"
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
@@ -90,7 +91,7 @@ func (r *queryResolver) GetHomePage(ctx context.Context, request model.GetHomePa
 					Page:     1,
 					Limit:    10,
 				},
-				Sort: sortingMethodToPointer[model.SortingMethod](model.SortingMethodNewestDate),
+				Sort: sortingMethodToPointer[model.SortingMethod](model.SortingMethodNewest),
 			}
 		default:
 			if len(websitePlacement.Section.Categories.Data) == 0 &&
