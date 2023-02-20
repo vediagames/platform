@@ -91,7 +91,7 @@ func (s section) toDomain(ctx context.Context) (domain.Section, error) {
 		}
 	}
 
-	var games = make([]int, 0, len(s.Games))
+	games := make([]int, 0, len(s.Games))
 	for i := 0; i < len(s.Games); i++ {
 		games = append(games, int(s.Games[i]))
 	}
