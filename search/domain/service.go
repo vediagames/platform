@@ -139,7 +139,7 @@ const (
 	SortingMethodName          SortingMethod = "name"
 	SortingMethodMostPopular   SortingMethod = "most-popular"
 	SortingMethodLeastPopular  SortingMethod = "least-popular"
-	SortingMethodNewest        SortingMethod = "newest-date"
+	SortingMethodNewest        SortingMethod = "newest"
 	SortingMethodOldest        SortingMethod = "oldest-date"
 	SortingMethodMostLiked     SortingMethod = "most-liked"
 	SortingMethodLeastLiked    SortingMethod = "least-liked"
