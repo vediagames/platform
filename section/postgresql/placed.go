@@ -5,24 +5,25 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
 	"github.com/vediagames/vediagames.com/section/domain"
 )
 
-type websitePlacementRepository struct {
+type placedRepository struct {
 	db *sqlx.DB
 }
 
-func NewWebsitePlacementRepository(cfg Config) (domain.WebsitePlacementRepository, error) {
+func NewPlaced(cfg Config) (domain.PlacedRepository, error) {
 	if err := cfg.Validate(); err != nil {
 		return nil, fmt.Errorf("invalid config: %w", err)
 	}
 
-	return &websitePlacementRepository{
+	return &placedRepository{
 		db: cfg.DB,
 	}, nil
 }
 
-func (r websitePlacementRepository) Find(ctx context.Context, q domain.WebsitePlacementFindQuery) (domain.WebsitePlacementFindResult, error) {
+func (r placedRepository) Find(ctx context.Context, q domain.PlacedFindQuery) (domain.PlacedFindResult, error) {
 	var sqlRes []struct {
 		section
 		PlacementNumber int `db:"placement_number"`
@@ -51,28 +52,28 @@ func (r websitePlacementRepository) Find(ctx context.Context, q domain.WebsitePl
 	`
 
 	if err := r.db.Select(&sqlRes, sqlQuery, q.Language.String()); err != nil {
-		return domain.WebsitePlacementFindResult{}, fmt.Errorf("failed to select: %w", err)
+		return domain.PlacedFindResult{}, fmt.Errorf("failed to select: %w", err)
 	}
 
-	res := make([]domain.WebsitePlacement, 0, len(sqlRes))
+	res := make([]domain.Placed, 0, len(sqlRes))
 	for _, v := range sqlRes {
 		g, err := v.toDomain(ctx)
 		if err != nil {
-			return domain.WebsitePlacementFindResult{}, fmt.Errorf("failed to convert to domain: %w", err)
+			return domain.PlacedFindResult{}, fmt.Errorf("failed to convert to domain: %w", err)
 		}
 
-		res = append(res, domain.WebsitePlacement{
+		res = append(res, domain.Placed{
 			Section:         g,
 			PlacementNumber: v.PlacementNumber,
 		})
 	}
 
-	return domain.WebsitePlacementFindResult{
+	return domain.PlacedFindResult{
 		Data: res,
 	}, nil
 }
 
-func (r websitePlacementRepository) Update(ctx context.Context, q domain.WebsitePlacementUpdateQuery) error {
+func (r placedRepository) Update(ctx context.Context, q domain.PlacedUpdateQuery) error {
 	tx, err := r.db.Beginx()
 	if err != nil {
 		return fmt.Errorf("failed to begin tx: %w", err)
@@ -85,7 +86,7 @@ func (r websitePlacementRepository) Update(ctx context.Context, q domain.Website
 		return txError(tx, fmt.Errorf("failed to insert: %w", err))
 	}
 
-	for placement, sectionID := range q.WebsitePlacements {
+	for placement, sectionID := range q.Placements {
 		_, err = tx.Exec(`
 			INSERT INTO website_sections_placement (section_id, placement_number)
 			VALUES ($1, $2);

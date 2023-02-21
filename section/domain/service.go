@@ -11,22 +11,22 @@ type Service interface {
 	List(context.Context, ListRequest) (ListResponse, error)
 	Get(context.Context, GetRequest) (GetResponse, error)
 
-	GetWebsitePlacements(context.Context, GetWebsitePlacementsRequest) (GetWebsitePlacementsResponse, error)
-	EditWebsitePlacements(context.Context, EditWebsitePlacementsRequest) error
+	GetPlaced(context.Context, GetPlacedRequest) (GetPlacedResponse, error)
+	EditPlaced(context.Context, EditPlacedRequest) error
 }
 
-type EditWebsitePlacementsRequest struct {
-	WebsitePlacements map[Placement]int
+type EditPlacedRequest struct {
+	Placements map[Placement]int
 }
 
 type Placement int
 
-func (r EditWebsitePlacementsRequest) Validate() error {
+func (r EditPlacedRequest) Validate() error {
 	var err zeroerror.Error
 
 	previousPlacement := 0
 
-	for placement, sectionID := range r.WebsitePlacements {
+	for placement, sectionID := range r.Placements {
 		if int(placement) != previousPlacement+1 {
 			err.Add(fmt.Errorf("%w for placement %d and section %d", ErrPlacementNotInOrder, placement, sectionID))
 		}
@@ -45,13 +45,13 @@ func (r EditWebsitePlacementsRequest) Validate() error {
 	return err.Err()
 }
 
-type GetWebsitePlacementsRequest struct {
+type GetPlacedRequest struct {
 	Language       Language
 	AllowDeleted   bool
 	AllowInvisible bool
 }
 
-func (r GetWebsitePlacementsRequest) Validate() error {
+func (r GetPlacedRequest) Validate() error {
 	var err zeroerror.Error
 
 	if ve := r.Language.Validate(); ve != nil {
@@ -61,11 +61,11 @@ func (r GetWebsitePlacementsRequest) Validate() error {
 	return err.Err()
 }
 
-type GetWebsitePlacementsResponse struct {
-	Data []WebsitePlacement
+type GetPlacedResponse struct {
+	Data []Placed
 }
 
-func (r GetWebsitePlacementsResponse) Validate() error {
+func (r GetPlacedResponse) Validate() error {
 	var err zeroerror.Error
 
 	for _, section := range r.Data {

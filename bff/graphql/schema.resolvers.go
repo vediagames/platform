@@ -335,7 +335,7 @@ func (r *queryResolver) GetSection(ctx context.Context, request model.BaseGetReq
 
 // GetWebsiteSectionsPlacement is the resolver for the getWebsiteSectionsPlacement field.
 func (r *queryResolver) GetWebsiteSectionsPlacement(ctx context.Context, language model.Language) (*model.GetWebsiteSectionsPlacementResponse, error) {
-	sectionRes, err := r.sectionService.GetWebsitePlacements(ctx, sectiondomain.GetWebsitePlacementsRequest{
+	sectionRes, err := r.sectionService.GetPlaced(ctx, sectiondomain.GetPlacedRequest{
 		Language: sectiondomain.Language(language),
 	})
 	if err != nil {

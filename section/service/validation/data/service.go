@@ -41,12 +41,12 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 	return s.svc.Get(ctx, req)
 }
 
-func (s service) GetWebsitePlacements(ctx context.Context, req domain.GetWebsitePlacementsRequest) (domain.GetWebsitePlacementsResponse, error) {
-	return s.svc.GetWebsitePlacements(ctx, req)
+func (s service) GetPlaced(ctx context.Context, req domain.GetPlacedRequest) (domain.GetPlacedResponse, error) {
+	return s.svc.GetPlaced(ctx, req)
 }
 
-func (s service) EditWebsitePlacements(ctx context.Context, req domain.EditWebsitePlacementsRequest) error {
-	for placement, sectionID := range req.WebsitePlacements {
+func (s service) EditPlaced(ctx context.Context, req domain.EditPlacedRequest) error {
+	for placement, sectionID := range req.Placements {
 		_, err := s.svc.Get(ctx, domain.GetRequest{
 			Field:    domain.GetByFieldID,
 			Value:    sectionID,
@@ -57,5 +57,5 @@ func (s service) EditWebsitePlacements(ctx context.Context, req domain.EditWebsi
 		}
 	}
 
-	return s.svc.EditWebsitePlacements(ctx, req)
+	return s.svc.EditPlaced(ctx, req)
 }

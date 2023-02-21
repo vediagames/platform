@@ -225,12 +225,12 @@ const (
 	GetByFieldSlug GetByField = "slug"
 )
 
-type WebsitePlacement struct {
+type Placed struct {
 	Section         Section
 	PlacementNumber int
 }
 
-func (p WebsitePlacement) Validate() error {
+func (p Placed) Validate() error {
 	var err zeroerror.Error
 
 	if ve := p.Section.Validate(); ve != nil {

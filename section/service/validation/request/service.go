@@ -67,29 +67,29 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 	return res, nil
 }
 
-func (s service) GetWebsitePlacements(ctx context.Context, req domain.GetWebsitePlacementsRequest) (domain.GetWebsitePlacementsResponse, error) {
+func (s service) GetPlaced(ctx context.Context, req domain.GetPlacedRequest) (domain.GetPlacedResponse, error) {
 	if err := req.Validate(); err != nil {
-		return domain.GetWebsitePlacementsResponse{}, fmt.Errorf("invalid request: %w", err)
+		return domain.GetPlacedResponse{}, fmt.Errorf("invalid request: %w", err)
 	}
 
-	res, err := s.svc.GetWebsitePlacements(ctx, req)
+	res, err := s.svc.GetPlaced(ctx, req)
 	if err != nil {
-		return domain.GetWebsitePlacementsResponse{}, fmt.Errorf("failed to get website placements: %w", err)
+		return domain.GetPlacedResponse{}, fmt.Errorf("failed to get website placements: %w", err)
 	}
 
 	if err := res.Validate(); err != nil {
-		return domain.GetWebsitePlacementsResponse{}, fmt.Errorf("invalid response: %w", err)
+		return domain.GetPlacedResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
 
 	return res, nil
 }
 
-func (s service) EditWebsitePlacements(ctx context.Context, req domain.EditWebsitePlacementsRequest) error {
+func (s service) EditPlaced(ctx context.Context, req domain.EditPlacedRequest) error {
 	if err := req.Validate(); err != nil {
 		return fmt.Errorf("invalid request: %w", err)
 	}
 
-	if err := s.svc.EditWebsitePlacements(ctx, req); err != nil {
+	if err := s.svc.EditPlaced(ctx, req); err != nil {
 		return fmt.Errorf("failed to edit website placements: %w", err)
 	}
 

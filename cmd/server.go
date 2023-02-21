@@ -108,7 +108,7 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create section repository: %w", err)
 	}
 
-	websitePlacementRepository, err := sectionpostgresql.NewWebsitePlacementRepository(sectionpostgresql.Config{
+	websitePlacementRepository, err := sectionpostgresql.NewPlaced(sectionpostgresql.Config{
 		DB: db,
 	})
 	if err != nil {
@@ -116,8 +116,8 @@ func startServer(ctx context.Context) error {
 	}
 
 	sectionService, err := sectionservice.New(sectionservice.Config{
-		Repository:                 sectionRepository,
-		WebsitePlacementRepository: websitePlacementRepository,
+		Repository:       sectionRepository,
+		PlacedRepository: websitePlacementRepository,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create section service: %w", err)
