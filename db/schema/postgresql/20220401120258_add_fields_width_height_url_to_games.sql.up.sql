@@ -1,11 +1,10 @@
 DROP MATERIALIZED VIEW mat_games_view;
 DROP VIEW games_view;
 
-ALTER TABLE "games"
+ALTER TABLE games
     ADD COLUMN url varchar,
     ADD COLUMN width int DEFAULT 0 NOT NULL,
     ADD COLUMN height int DEFAULT 0 NOT NULL;
-
 
 CREATE MATERIALIZED VIEW mat_games_view AS
 SELECT games.id,
@@ -40,7 +39,6 @@ FROM games
 GROUP BY games.id, al.code, games.slug, games.status, games.created_at, games.deleted_at, games.published_at,
          games.likes, gtxt.player_1_controls, gtxt.player_2_controls, games.dislikes, games.plays, games.weight,
          gtxt.name, gtxt.short_description, gtxt.description, gtxt.content, games.url, games.width, games.height;
-
 
 CREATE VIEW games_view AS
 SELECT games.id,

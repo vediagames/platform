@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=123
       - POSTGRES_DB=vediagames
     volumes:
-      - database-data:/var/lib/postgresql/data/
+      - ./tmp/database-data:/var/lib/postgresql/data/
       - ./db/data/init.sql:/docker-entrypoint-initdb.d/docker_postgres_init.sql
 
   redis:

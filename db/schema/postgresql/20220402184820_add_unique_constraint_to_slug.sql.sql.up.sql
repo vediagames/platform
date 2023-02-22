@@ -1,5 +1,5 @@
 ALTER TABLE games
-ADD CONSTRAINT game_slug_constraint UNIQUE (slug);
+    ADD CONSTRAINT game_slug_constraint UNIQUE (slug);
 
 ALTER TABLE tags
     ADD CONSTRAINT tag_slug_constraint UNIQUE (slug);

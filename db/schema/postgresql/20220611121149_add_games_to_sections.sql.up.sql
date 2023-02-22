@@ -1,16 +1,14 @@
 DROP MATERIALIZED VIEW mat_sections_view;
 DROP VIEW sections_view;
 
-CREATE TABLE "section_games"
-(
-    "section_id" int NOT NULL,
-    "game_id"    int NOT NULL
+CREATE TABLE section_games (
+    section_id int NOT NULL,
+    game_id    int NOT NULL
 );
 
-ALTER TABLE "section_games" ADD FOREIGN KEY ("section_id") REFERENCES "sections" ("id");
-
-ALTER TABLE "section_games" ADD FOREIGN KEY ("game_id") REFERENCES "games" ("id");
-
+ALTER TABLE section_games
+    ADD FOREIGN KEY (section_id) REFERENCES sections (id),
+    ADD FOREIGN KEY (game_id) REFERENCES games (id);
 
 CREATE MATERIALIZED VIEW mat_sections_view AS
 SELECT sections.id,
@@ -39,12 +37,6 @@ FROM sections
 GROUP BY sections.id, al.code, sections.slug, sections.status, sections.created_at, sections.deleted_at,
          sections.published_at,
          txt.name, txt.short_description, txt.description, txt.content;
-
-
-
-
-
-
 
 CREATE VIEW sections_view AS
 SELECT sections.id,

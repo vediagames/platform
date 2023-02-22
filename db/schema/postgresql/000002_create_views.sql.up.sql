@@ -10,7 +10,6 @@ FROM tags
          LEFT JOIN tag_texts tt on tags.id = tt.tag_id
          LEFT JOIN available_languages al on tt.language_id = al.id;
 
-
 CREATE VIEW json_categories_view AS
 SELECT categories.id,
        al.code as language_code,
@@ -22,9 +21,6 @@ SELECT categories.id,
 FROM categories
          LEFT JOIN category_texts ct on categories.id = ct.category_id
          LEFT JOIN available_languages al on ct.language_id = al.id;
-
-
-
 
 CREATE VIEW games_view AS
 SELECT games.id,
@@ -55,9 +51,6 @@ GROUP BY games.id, al.code, games.slug, games.status, games.created_at, games.de
          games.likes,
          games.dislikes, games.plays, games.weight, gtxt.name, gtxt.short_description, gtxt.description, gtxt.content;
 
-
-
-
 CREATE VIEW categories_view AS
 SELECT categories.id,
        al.code as language_code,
@@ -75,9 +68,6 @@ FROM categories
          LEFT JOIN category_texts ct on categories.id = ct.category_id
          LEFT JOIN available_languages al on ct.language_id = al.id;
 
-
-
-
 CREATE VIEW tags_view AS
 SELECT tags.id,
        al.code as language_code,
@@ -94,9 +84,6 @@ SELECT tags.id,
 FROM tags
          LEFT JOIN tag_texts tt on tags.id = tt.tag_id
          LEFT JOIN available_languages al on tt.language_id = al.id;
-
-
-
 
 CREATE VIEW sections_view AS
 SELECT sections.id,
