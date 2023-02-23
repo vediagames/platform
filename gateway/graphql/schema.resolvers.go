@@ -8,10 +8,32 @@ import (
 	"context"
 	"fmt"
 
-	model1 "github.com/vediagames/vediagames.com/bff/graphql/model"
 	"github.com/vediagames/vediagames.com/gateway/graphql/generated"
 	"github.com/vediagames/vediagames.com/gateway/graphql/model"
+	notificationdomain "github.com/vediagames/vediagames.com/notification/domain"
 )
+
+// SendEmail is the resolver for the sendEmail field.
+func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmailRequest) (*bool, error) {
+	err := r.emailClient.Email(ctx, notificationdomain.EmailRequest{
+		To: notificationdomain.User{
+			Email: "antonio.jelic@vediagames.com",
+			Name:  "Antonio Jelic",
+		},
+		From: notificationdomain.User{
+			Email: request.From,
+			Name:  "vediagames.com Contact form",
+		},
+		Name:    request.Name,
+		Subject: request.Subject,
+		Body:    request.Body,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to email: %w", err)
+	}
+
+	return pointerTrue(), nil
+}
 
 // MostPlayedGames is the resolver for the mostPlayedGames field.
 func (r *queryResolver) MostPlayedGames(ctx context.Context, request model.MostPlayedGamesRequest) (*model.MostPlayedGamesResponse, error) {
@@ -69,12 +91,12 @@ func (r *queryResolver) PlacedSections(ctx context.Context, request model.Placed
 }
 
 // Search is the resolver for the search field.
-func (r *queryResolver) Search(ctx context.Context, request model.SearchRequest) (*model1.SearchResponse, error) {
+func (r *queryResolver) Search(ctx context.Context, request model.SearchRequest) (*model.SearchResponse, error) {
 	panic(fmt.Errorf("not implemented: Search - search"))
 }
 
 // FullSearch is the resolver for the fullSearch field.
-func (r *queryResolver) FullSearch(ctx context.Context, request model1.FullSearchRequest) (*model.FullSearchResponse, error) {
+func (r *queryResolver) FullSearch(ctx context.Context, request model.FullSearchRequest) (*model.FullSearchResponse, error) {
 	panic(fmt.Errorf("not implemented: FullSearch - fullSearch"))
 }
 
@@ -88,18 +110,11 @@ func (r *queryResolver) AvailableLanguages(ctx context.Context) (*model.Availabl
 	panic(fmt.Errorf("not implemented: AvailableLanguages - availableLanguages"))
 }
 
-// SearchItems is the resolver for the searchItems field.
-func (r *searchResponseResolver) SearchItems(ctx context.Context, obj *model1.SearchResponse) ([]*model1.SearchItem, error) {
-	panic(fmt.Errorf("not implemented: SearchItems - searchItems"))
-}
+// Mutation returns generated.MutationResolver implementation.
+func (r *Resolver) Mutation() generated.MutationResolver { return &mutationResolver{r} }
 
 // Query returns generated.QueryResolver implementation.
 func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
-// SearchResponse returns generated.SearchResponseResolver implementation.
-func (r *Resolver) SearchResponse() generated.SearchResponseResolver {
-	return &searchResponseResolver{r}
-}
-
+type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
-type searchResponseResolver struct{ *Resolver }

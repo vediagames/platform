@@ -21,6 +21,10 @@ type Query {
     availableLanguages: AvailableLanguagesResponse!
 }
 
+type Mutation {
+    sendEmail(request: SendEmailRequest!): Boolean
+}
+
 input MostPlayedGamesRequest {
     language: Language!
     page: Int!
@@ -189,4 +193,199 @@ type RandomProviderGameResponse {
 
 type AvailableLanguagesResponse {
     Languages: [AvailableLanguage!]
+}
+
+input SendEmailRequest {
+    from: String!
+    name: String!
+    subject: String!
+    body: String!
+}
+
+enum GameReaction {
+    None
+    Like
+    Dislike
+}
+
+enum GetByField {
+    id
+    slug
+}
+
+enum Status {
+    invisible
+    published
+    deleted
+}
+
+enum Language {
+    en
+    es
+}
+
+enum SortingMethod {
+    id
+    name
+    random
+    most_popular
+    least_popular
+    newest
+    oldest
+    most_liked
+    least_liked
+    most_disliked
+    least_disliked
+    most_relevant
+}
+
+enum TagSortingMethod {
+    id
+    name
+    random
+    most_popular
+    least_popular
+    newest
+    oldest
+}
+
+enum SearchItemType {
+    game
+    tag
+}
+
+type Games {
+    data: [Game!]!
+    total: Int!
+}
+
+type Game {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    status: Status!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    url: String!
+    width: Int!
+    height: Int!
+    shortDescription: String
+    description: String
+    content: String
+    likes: Int!
+    dislikes: Int!
+    plays: Int!
+    weight: Int!
+    player1Controls: String
+    player2Controls: String
+    tags: Tags!
+    categories: Categories!
+    mobile: Boolean!
+    thumbnail512x384: String!
+    thumbnail512x512: String!
+    pageUrl: String!
+    fullScreenPageUrl: String!
+}
+
+type PlacedSections{
+    data: [PlacedSection!]!
+    total: Int!
+}
+
+type PlacedSection {
+    section: Section!
+    placement: Int!
+}
+
+type Sections {
+    data: [Section!]!
+    total: Int!
+}
+
+type Section {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    status: Status!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    shortDescription: String
+    description: String
+    content: String
+    tags: Tags!
+    categories: Categories!
+    games: Games!
+    pageUrl: String!
+}
+
+type Tags {
+    data: [Tag!]!
+    total: Int!
+}
+
+type Tag {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    shortDescription: String
+    description: String
+    content: String
+    status: Status!
+    clicks: Int!
+    createdAt: String!
+    deletedAt: String
+    publishedAt: String
+    thumbnail512x384: String!
+    thumbnail128x128: String!
+    pageUrl: String!
+}
+
+type Categories {
+    data: [Category!]!
+    total: Int!
+}
+
+type Category {
+    id: Int!
+    language: Language!
+    slug: String!
+    name: String!
+    shortDescription: String
+    description: String
+    content: String
+    status: Status!
+    clicks: Int!
+    createdAt: String!
+    deletedAt: String!
+    publishedAt: String
+    pageUrl: String!
+}
+
+type TagSections {
+    data: [TagSection!]!
+    total: Int!
+}
+
+type TagSection {
+    games: Games
+    tag: Tag!
+}
+
+type SearchItem {
+    shortDescription: String!
+    name: String!
+    slug: String!
+    type: SearchItemType!
+    pageUrl: String!
+    thumbnail512x384: String!
+}
+
+type AvailableLanguage {
+    code: Language!
+    name: String!
 }

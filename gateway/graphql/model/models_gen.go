@@ -6,13 +6,11 @@ import (
 	"fmt"
 	"io"
 	"strconv"
-
-	"github.com/vediagames/vediagames.com/bff/graphql/model"
 )
 
 type AvailableLanguage struct {
-	Code model.Language `json:"code"`
-	Name string         `json:"name"`
+	Code Language `json:"code"`
+	Name string   `json:"name"`
 }
 
 type AvailableLanguagesResponse struct {
@@ -20,74 +18,130 @@ type AvailableLanguagesResponse struct {
 }
 
 type Categories struct {
-	Data  []*model.Category `json:"data"`
-	Total int               `json:"total"`
+	Data  []*Category `json:"data"`
+	Total int         `json:"total"`
 }
 
 type CategoriesRequest struct {
-	Language       model.Language `json:"language"`
-	Page           int            `json:"page"`
-	Limit          int            `json:"limit"`
-	AllowDeleted   bool           `json:"allowDeleted"`
-	AllowInvisible bool           `json:"allowInvisible"`
+	Language       Language `json:"language"`
+	Page           int      `json:"page"`
+	Limit          int      `json:"limit"`
+	AllowDeleted   bool     `json:"allowDeleted"`
+	AllowInvisible bool     `json:"allowInvisible"`
 }
 
 type CategoriesResponse struct {
 	Categories *Categories `json:"categories"`
 }
 
+type Category struct {
+	ID               int      `json:"id"`
+	Language         Language `json:"language"`
+	Slug             string   `json:"slug"`
+	Name             string   `json:"name"`
+	ShortDescription *string  `json:"shortDescription"`
+	Description      *string  `json:"description"`
+	Content          *string  `json:"content"`
+	Status           Status   `json:"status"`
+	Clicks           int      `json:"clicks"`
+	CreatedAt        string   `json:"createdAt"`
+	DeletedAt        string   `json:"deletedAt"`
+	PublishedAt      *string  `json:"publishedAt"`
+	PageURL          string   `json:"pageUrl"`
+}
+
 type CategoryRequest struct {
-	Field    model.GetByField `json:"field"`
-	Value    string           `json:"value"`
-	Language model.Language   `json:"language"`
+	Field    GetByField `json:"field"`
+	Value    string     `json:"value"`
+	Language Language   `json:"language"`
 }
 
 type CategoryResponse struct {
-	Category *model.Category `json:"category"`
+	Category *Category `json:"category"`
 }
 
 type FreshGamesRequest struct {
-	Language model.Language `json:"language"`
-	Page     int            `json:"page"`
-	Limit    int            `json:"limit"`
-	MaxDays  int            `json:"maxDays"`
+	Language Language `json:"language"`
+	Page     int      `json:"page"`
+	Limit    int      `json:"limit"`
+	MaxDays  int      `json:"maxDays"`
 }
 
 type FreshGamesResponse struct {
 	Games *Games `json:"games"`
 }
 
+type FullSearchRequest struct {
+	Language       Language       `json:"language"`
+	Query          string         `json:"query"`
+	Page           int            `json:"page"`
+	Limit          int            `json:"limit"`
+	Sort           *SortingMethod `json:"sort"`
+	AllowDeleted   bool           `json:"allowDeleted"`
+	AllowInvisible bool           `json:"allowInvisible"`
+}
+
 type FullSearchResponse struct {
-	SearchItems []*model.SearchItem `json:"searchItems"`
-	Total       int                 `json:"total"`
+	SearchItems []*SearchItem `json:"searchItems"`
+	Total       int           `json:"total"`
+}
+
+type Game struct {
+	ID                int         `json:"id"`
+	Language          Language    `json:"language"`
+	Slug              string      `json:"slug"`
+	Name              string      `json:"name"`
+	Status            Status      `json:"status"`
+	CreatedAt         string      `json:"createdAt"`
+	DeletedAt         *string     `json:"deletedAt"`
+	PublishedAt       *string     `json:"publishedAt"`
+	URL               string      `json:"url"`
+	Width             int         `json:"width"`
+	Height            int         `json:"height"`
+	ShortDescription  *string     `json:"shortDescription"`
+	Description       *string     `json:"description"`
+	Content           *string     `json:"content"`
+	Likes             int         `json:"likes"`
+	Dislikes          int         `json:"dislikes"`
+	Plays             int         `json:"plays"`
+	Weight            int         `json:"weight"`
+	Player1Controls   *string     `json:"player1Controls"`
+	Player2Controls   *string     `json:"player2Controls"`
+	Tags              *Tags       `json:"tags"`
+	Categories        *Categories `json:"categories"`
+	Mobile            bool        `json:"mobile"`
+	Thumbnail512x384  string      `json:"thumbnail512x384"`
+	Thumbnail512x512  string      `json:"thumbnail512x512"`
+	PageURL           string      `json:"pageUrl"`
+	FullScreenPageURL string      `json:"fullScreenPageUrl"`
 }
 
 type GameRequest struct {
-	Field    model.GetByField `json:"field"`
-	Value    string           `json:"value"`
-	Language model.Language   `json:"language"`
+	Field    GetByField `json:"field"`
+	Value    string     `json:"value"`
+	Language Language   `json:"language"`
 }
 
 type GameResponse struct {
-	Game *model.Game `json:"game"`
+	Game *Game `json:"game"`
 }
 
 type Games struct {
-	Data  []*model.Game `json:"data"`
-	Total int           `json:"total"`
+	Data  []*Game `json:"data"`
+	Total int     `json:"total"`
 }
 
 type GamesRequest struct {
-	Language        model.Language       `json:"language"`
-	Page            int                  `json:"page"`
-	Limit           int                  `json:"limit"`
-	AllowDeleted    bool                 `json:"allowDeleted"`
-	AllowInvisible  bool                 `json:"allowInvisible"`
-	Sort            *model.SortingMethod `json:"sort"`
-	Categories      []int                `json:"categories"`
-	Tags            []int                `json:"tags"`
-	Ids             []int                `json:"ids"`
-	ExcludedGameIDs []int                `json:"excludedGameIDs"`
+	Language        Language       `json:"language"`
+	Page            int            `json:"page"`
+	Limit           int            `json:"limit"`
+	AllowDeleted    bool           `json:"allowDeleted"`
+	AllowInvisible  bool           `json:"allowInvisible"`
+	Sort            *SortingMethod `json:"sort"`
+	Categories      []int          `json:"categories"`
+	Tags            []int          `json:"tags"`
+	Ids             []int          `json:"ids"`
+	ExcludedGameIDs []int          `json:"excludedGameIDs"`
 }
 
 type GamesResponse struct {
@@ -95,10 +149,10 @@ type GamesResponse struct {
 }
 
 type MostPlayedGamesRequest struct {
-	Language model.Language `json:"language"`
-	Page     int            `json:"page"`
-	Limit    int            `json:"limit"`
-	MaxDays  int            `json:"maxDays"`
+	Language Language `json:"language"`
+	Page     int      `json:"page"`
+	Limit    int      `json:"limit"`
+	MaxDays  int      `json:"maxDays"`
 }
 
 type MostPlayedGamesResponse struct {
@@ -106,8 +160,8 @@ type MostPlayedGamesResponse struct {
 }
 
 type PlacedSection struct {
-	Section   *model.Section `json:"section"`
-	Placement int            `json:"placement"`
+	Section   *Section `json:"section"`
+	Placement int      `json:"placement"`
 }
 
 type PlacedSections struct {
@@ -116,7 +170,7 @@ type PlacedSections struct {
 }
 
 type PlacedSectionsRequest struct {
-	Language model.Language `json:"language"`
+	Language Language `json:"language"`
 }
 
 type PlacedSectionsResponse struct {
@@ -136,69 +190,131 @@ type RandomProviderGameResponse struct {
 	Images      []string `json:"images"`
 }
 
+type SearchItem struct {
+	ShortDescription string         `json:"shortDescription"`
+	Name             string         `json:"name"`
+	Slug             string         `json:"slug"`
+	Type             SearchItemType `json:"type"`
+	PageURL          string         `json:"pageUrl"`
+	Thumbnail512x384 string         `json:"thumbnail512x384"`
+}
+
 type SearchRequest struct {
-	Language       model.Language `json:"language"`
-	Query          string         `json:"query"`
-	MaxGames       int            `json:"maxGames"`
-	MaxTags        int            `json:"maxTags"`
-	AllowDeleted   bool           `json:"allowDeleted"`
-	AllowInvisible bool           `json:"allowInvisible"`
+	Language       Language `json:"language"`
+	Query          string   `json:"query"`
+	MaxGames       int      `json:"maxGames"`
+	MaxTags        int      `json:"maxTags"`
+	AllowDeleted   bool     `json:"allowDeleted"`
+	AllowInvisible bool     `json:"allowInvisible"`
+}
+
+type SearchResponse struct {
+	SearchItems []*SearchItem `json:"searchItems"`
+	Total       int           `json:"total"`
+}
+
+type Section struct {
+	ID               int         `json:"id"`
+	Language         Language    `json:"language"`
+	Slug             string      `json:"slug"`
+	Name             string      `json:"name"`
+	Status           Status      `json:"status"`
+	CreatedAt        string      `json:"createdAt"`
+	DeletedAt        *string     `json:"deletedAt"`
+	PublishedAt      *string     `json:"publishedAt"`
+	ShortDescription *string     `json:"shortDescription"`
+	Description      *string     `json:"description"`
+	Content          *string     `json:"content"`
+	Tags             *Tags       `json:"tags"`
+	Categories       *Categories `json:"categories"`
+	Games            *Games      `json:"games"`
+	PageURL          string      `json:"pageUrl"`
 }
 
 type SectionRequest struct {
-	Field    model.GetByField `json:"field"`
-	Value    string           `json:"value"`
-	Language model.Language   `json:"language"`
+	Field    GetByField `json:"field"`
+	Value    string     `json:"value"`
+	Language Language   `json:"language"`
 }
 
 type SectionResponse struct {
-	Section *model.Section `json:"section"`
+	Section *Section `json:"section"`
 }
 
 type Sections struct {
-	Data  []*model.Section `json:"data"`
-	Total int              `json:"total"`
+	Data  []*Section `json:"data"`
+	Total int        `json:"total"`
 }
 
 type SectionsRequest struct {
-	Language       model.Language `json:"language"`
-	Page           int            `json:"page"`
-	Limit          int            `json:"limit"`
-	AllowDeleted   bool           `json:"allowDeleted"`
-	AllowInvisible bool           `json:"allowInvisible"`
+	Language       Language `json:"language"`
+	Page           int      `json:"page"`
+	Limit          int      `json:"limit"`
+	AllowDeleted   bool     `json:"allowDeleted"`
+	AllowInvisible bool     `json:"allowInvisible"`
 }
 
 type SectionsResponse struct {
 	Sections *Sections `json:"sections"`
 }
 
+type SendEmailRequest struct {
+	From    string `json:"from"`
+	Name    string `json:"name"`
+	Subject string `json:"subject"`
+	Body    string `json:"body"`
+}
+
+type Tag struct {
+	ID               int      `json:"id"`
+	Language         Language `json:"language"`
+	Slug             string   `json:"slug"`
+	Name             string   `json:"name"`
+	ShortDescription *string  `json:"shortDescription"`
+	Description      *string  `json:"description"`
+	Content          *string  `json:"content"`
+	Status           Status   `json:"status"`
+	Clicks           int      `json:"clicks"`
+	CreatedAt        string   `json:"createdAt"`
+	DeletedAt        *string  `json:"deletedAt"`
+	PublishedAt      *string  `json:"publishedAt"`
+	Thumbnail512x384 string   `json:"thumbnail512x384"`
+	Thumbnail128x128 string   `json:"thumbnail128x128"`
+	PageURL          string   `json:"pageUrl"`
+}
+
 type TagRequest struct {
-	Field    model.GetByField `json:"field"`
-	Value    string           `json:"value"`
-	Language model.Language   `json:"language"`
+	Field    GetByField `json:"field"`
+	Value    string     `json:"value"`
+	Language Language   `json:"language"`
 }
 
 type TagResponse struct {
-	Tag *model.Tag `json:"tag"`
+	Tag *Tag `json:"tag"`
+}
+
+type TagSection struct {
+	Games *Games `json:"games"`
+	Tag   *Tag   `json:"tag"`
 }
 
 type TagSections struct {
-	Data  []*model.TagSection `json:"data"`
-	Total int                 `json:"total"`
+	Data  []*TagSection `json:"data"`
+	Total int           `json:"total"`
 }
 
 type Tags struct {
-	Data  []*model.Tag `json:"data"`
-	Total int          `json:"total"`
+	Data  []*Tag `json:"data"`
+	Total int    `json:"total"`
 }
 
 type TagsRequest struct {
-	Language       model.Language          `json:"language"`
-	Page           int                     `json:"page"`
-	Limit          int                     `json:"limit"`
-	AllowDeleted   bool                    `json:"allowDeleted"`
-	AllowInvisible bool                    `json:"allowInvisible"`
-	Sort           *model.TagSortingMethod `json:"sort"`
+	Language       Language          `json:"language"`
+	Page           int               `json:"page"`
+	Limit          int               `json:"limit"`
+	AllowDeleted   bool              `json:"allowDeleted"`
+	AllowInvisible bool              `json:"allowInvisible"`
+	Sort           *TagSortingMethod `json:"sort"`
 }
 
 type TagsResponse struct {
@@ -245,5 +361,283 @@ func (e *GameReaction) UnmarshalGQL(v interface{}) error {
 }
 
 func (e GameReaction) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type GetByField string
+
+const (
+	GetByFieldID   GetByField = "id"
+	GetByFieldSlug GetByField = "slug"
+)
+
+var AllGetByField = []GetByField{
+	GetByFieldID,
+	GetByFieldSlug,
+}
+
+func (e GetByField) IsValid() bool {
+	switch e {
+	case GetByFieldID, GetByFieldSlug:
+		return true
+	}
+	return false
+}
+
+func (e GetByField) String() string {
+	return string(e)
+}
+
+func (e *GetByField) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = GetByField(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid GetByField", str)
+	}
+	return nil
+}
+
+func (e GetByField) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Language string
+
+const (
+	LanguageEn Language = "en"
+	LanguageEs Language = "es"
+)
+
+var AllLanguage = []Language{
+	LanguageEn,
+	LanguageEs,
+}
+
+func (e Language) IsValid() bool {
+	switch e {
+	case LanguageEn, LanguageEs:
+		return true
+	}
+	return false
+}
+
+func (e Language) String() string {
+	return string(e)
+}
+
+func (e *Language) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Language(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Language", str)
+	}
+	return nil
+}
+
+func (e Language) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SearchItemType string
+
+const (
+	SearchItemTypeGame SearchItemType = "game"
+	SearchItemTypeTag  SearchItemType = "tag"
+)
+
+var AllSearchItemType = []SearchItemType{
+	SearchItemTypeGame,
+	SearchItemTypeTag,
+}
+
+func (e SearchItemType) IsValid() bool {
+	switch e {
+	case SearchItemTypeGame, SearchItemTypeTag:
+		return true
+	}
+	return false
+}
+
+func (e SearchItemType) String() string {
+	return string(e)
+}
+
+func (e *SearchItemType) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SearchItemType(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SearchItemType", str)
+	}
+	return nil
+}
+
+func (e SearchItemType) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type SortingMethod string
+
+const (
+	SortingMethodID            SortingMethod = "id"
+	SortingMethodName          SortingMethod = "name"
+	SortingMethodRandom        SortingMethod = "random"
+	SortingMethodMostPopular   SortingMethod = "most_popular"
+	SortingMethodLeastPopular  SortingMethod = "least_popular"
+	SortingMethodNewest        SortingMethod = "newest"
+	SortingMethodOldest        SortingMethod = "oldest"
+	SortingMethodMostLiked     SortingMethod = "most_liked"
+	SortingMethodLeastLiked    SortingMethod = "least_liked"
+	SortingMethodMostDisliked  SortingMethod = "most_disliked"
+	SortingMethodLeastDisliked SortingMethod = "least_disliked"
+	SortingMethodMostRelevant  SortingMethod = "most_relevant"
+)
+
+var AllSortingMethod = []SortingMethod{
+	SortingMethodID,
+	SortingMethodName,
+	SortingMethodRandom,
+	SortingMethodMostPopular,
+	SortingMethodLeastPopular,
+	SortingMethodNewest,
+	SortingMethodOldest,
+	SortingMethodMostLiked,
+	SortingMethodLeastLiked,
+	SortingMethodMostDisliked,
+	SortingMethodLeastDisliked,
+	SortingMethodMostRelevant,
+}
+
+func (e SortingMethod) IsValid() bool {
+	switch e {
+	case SortingMethodID, SortingMethodName, SortingMethodRandom, SortingMethodMostPopular, SortingMethodLeastPopular, SortingMethodNewest, SortingMethodOldest, SortingMethodMostLiked, SortingMethodLeastLiked, SortingMethodMostDisliked, SortingMethodLeastDisliked, SortingMethodMostRelevant:
+		return true
+	}
+	return false
+}
+
+func (e SortingMethod) String() string {
+	return string(e)
+}
+
+func (e *SortingMethod) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = SortingMethod(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid SortingMethod", str)
+	}
+	return nil
+}
+
+func (e SortingMethod) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type Status string
+
+const (
+	StatusInvisible Status = "invisible"
+	StatusPublished Status = "published"
+	StatusDeleted   Status = "deleted"
+)
+
+var AllStatus = []Status{
+	StatusInvisible,
+	StatusPublished,
+	StatusDeleted,
+}
+
+func (e Status) IsValid() bool {
+	switch e {
+	case StatusInvisible, StatusPublished, StatusDeleted:
+		return true
+	}
+	return false
+}
+
+func (e Status) String() string {
+	return string(e)
+}
+
+func (e *Status) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = Status(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid Status", str)
+	}
+	return nil
+}
+
+func (e Status) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type TagSortingMethod string
+
+const (
+	TagSortingMethodID           TagSortingMethod = "id"
+	TagSortingMethodName         TagSortingMethod = "name"
+	TagSortingMethodRandom       TagSortingMethod = "random"
+	TagSortingMethodMostPopular  TagSortingMethod = "most_popular"
+	TagSortingMethodLeastPopular TagSortingMethod = "least_popular"
+	TagSortingMethodNewest       TagSortingMethod = "newest"
+	TagSortingMethodOldest       TagSortingMethod = "oldest"
+)
+
+var AllTagSortingMethod = []TagSortingMethod{
+	TagSortingMethodID,
+	TagSortingMethodName,
+	TagSortingMethodRandom,
+	TagSortingMethodMostPopular,
+	TagSortingMethodLeastPopular,
+	TagSortingMethodNewest,
+	TagSortingMethodOldest,
+}
+
+func (e TagSortingMethod) IsValid() bool {
+	switch e {
+	case TagSortingMethodID, TagSortingMethodName, TagSortingMethodRandom, TagSortingMethodMostPopular, TagSortingMethodLeastPopular, TagSortingMethodNewest, TagSortingMethodOldest:
+		return true
+	}
+	return false
+}
+
+func (e TagSortingMethod) String() string {
+	return string(e)
+}
+
+func (e *TagSortingMethod) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = TagSortingMethod(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid TagSortingMethod", str)
+	}
+	return nil
+}
+
+func (e TagSortingMethod) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

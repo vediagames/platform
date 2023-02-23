@@ -1,0 +1,15 @@
+{
+  "name": "Gateway GraphQL schema",
+  "schemaPath": "schema.gql",
+  "extensions": {
+    "endpoints": {
+      "Default GraphQL Endpoint": {
+        "url": "http://localhost:4455/gateway/graphql",
+        "headers": {
+          "user-agent": "JS GraphQL"
+        },
+        "introspect": false
+      }
+    }
+  }
+}
