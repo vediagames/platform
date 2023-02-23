@@ -30,7 +30,7 @@ func (c Category) Validate() error {
 	}
 
 	if ve := c.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	if c.Slug == "" {
@@ -46,7 +46,7 @@ func (c Category) Validate() error {
 	}
 
 	if ve := c.Status.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidStatus, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidStatus, ve))
 	}
 
 	if c.Clicks < 0 {

@@ -10,23 +10,17 @@ import (
 
 type service struct {
 	repository      domain.Repository
-	statsRepository domain.StatsRepository
 	eventRepository domain.EventRepository
 }
 
 type Config struct {
 	Repository      domain.Repository
-	StatsRepository domain.StatsRepository
 	EventRepository domain.EventRepository
 }
 
 func (c Config) Validate() error {
 	if c.Repository == nil {
 		return fmt.Errorf("repository is required")
-	}
-
-	if c.StatsRepository == nil {
-		return fmt.Errorf("stats repository is required")
 	}
 
 	if c.EventRepository == nil {
@@ -36,16 +30,15 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func New(config Config) (domain.Service, error) {
+func New(config Config) domain.Service {
 	if err := config.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		repository:      config.Repository,
-		statsRepository: config.StatsRepository,
 		eventRepository: config.EventRepository,
-	}, nil
+	}
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {
@@ -54,17 +47,17 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 	}
 
 	repoRes, err := s.repository.Find(ctx, domain.FindQuery{
-		Language:        req.Language,
-		Page:            req.Page,
-		Limit:           req.Limit,
-		AllowDeleted:    req.AllowDeleted,
-		AllowInvisible:  req.AllowInvisible,
-		Categories:      req.Categories,
-		Tags:            req.Tags,
-		Sort:            req.Sort,
-		IDs:             req.IDs,
-		ExcludedGameIDs: req.ExcludedGameIDs,
-		MobileOnly:      req.MobileOnly,
+		Language:       req.Language,
+		Page:           req.Page,
+		Limit:          req.Limit,
+		AllowDeleted:   req.AllowDeleted,
+		AllowInvisible: req.AllowInvisible,
+		CategoryIDRefs: req.CategoryIDRefs,
+		TagIDRefs:      req.TagIDRefs,
+		Sort:           req.Sort,
+		IDRefs:         req.IDRefs,
+		ExcludedIDRefs: req.ExcludedIDRefs,
+		MobileOnly:     req.MobileOnly,
 	})
 	if err != nil {
 		return domain.ListResponse{}, fmt.Errorf("failed to list games: %w", err)
@@ -101,7 +94,7 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("invalid request: %w", ve)
 	}
 
-	repoRes, err := s.statsRepository.FindMostPlayedIDsByDate(ctx, domain.FindMostPlayedIDsByDateQuery{
+	repoRes, err := s.repository.FindMostPlayedIDsByDate(ctx, domain.FindMostPlayedIDsByDateQuery{
 		Page:      req.Page,
 		Limit:     req.Limit,
 		DateLimit: time.Now().AddDate(0, 0, -req.MaxDays),
@@ -115,7 +108,7 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 		Page:     req.Page,
 		Limit:    req.Limit,
 		Sort:     domain.SortingMethodMostPopular,
-		IDs:      repoRes.Data,
+		IDRefs:   repoRes.Data,
 	})
 	if err != nil {
 		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to find: %w", err)

@@ -15,8 +15,8 @@ type Game struct {
 	ShortDescription string
 	Description      string
 	Mobile           bool
-	Tags             []ComplimentaryTag
-	Categories       []ComplimentaryCategory
+	TagIDRefs        IDs
+	CategoryIDRefs   IDs
 	Status           Status
 	CreatedAt        time.Time
 	DeletedAt        time.Time
@@ -41,7 +41,7 @@ func (g Game) Validate() error {
 	}
 
 	if ve := g.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	if g.Slug == "" {
@@ -56,20 +56,16 @@ func (g Game) Validate() error {
 		err.Add(ErrEmptyDescription)
 	}
 
-	for _, tag := range g.Tags {
-		if ve := tag.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidTag, ve))
-		}
+	if ve := g.TagIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidTagIDRefs, ve))
 	}
 
-	for _, category := range g.Categories {
-		if ve := category.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidCategory, ve))
-		}
+	if ve := g.CategoryIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidCategoryIDRefs, ve))
 	}
 
 	if ve := g.Status.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidStatus, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidStatus, ve))
 	}
 
 	if g.CreatedAt.IsZero() {
@@ -99,56 +95,6 @@ func (g Game) Validate() error {
 	return err.Err()
 }
 
-type ComplimentaryTag struct {
-	ID          int
-	Slug        string
-	Name        string
-	Description string
-}
-
-func (t ComplimentaryTag) Validate() error {
-	var err zeroerror.Error
-
-	if t.ID < 0 {
-		err.Add(ErrInvalidID)
-	}
-
-	if t.Slug == "" {
-		err.Add(ErrEmptySlug)
-	}
-
-	if t.Name == "" {
-		err.Add(ErrEmptyName)
-	}
-
-	return err.Err()
-}
-
-type ComplimentaryCategory struct {
-	ID          int
-	Slug        string
-	Name        string
-	Description string
-}
-
-func (c ComplimentaryCategory) Validate() error {
-	var err zeroerror.Error
-
-	if c.ID < 0 {
-		err.Add(ErrInvalidID)
-	}
-
-	if c.Slug == "" {
-		err.Add(ErrEmptySlug)
-	}
-
-	if c.Name == "" {
-		err.Add(ErrEmptyName)
-	}
-
-	return err.Err()
-}
-
 type Language string
 
 func (l Language) Validate() error {
@@ -157,7 +103,7 @@ func (l Language) Validate() error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid value: %q", l)
+	return fmt.Errorf("%w: %q", ErrInvalidValue, l)
 }
 
 func (l Language) String() string {
@@ -180,7 +126,7 @@ func (m SortingMethod) Validate() error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid value: %q", m)
+	return fmt.Errorf("%w: %q", ErrInvalidValue, m)
 }
 
 func (m SortingMethod) String() string {
@@ -210,7 +156,7 @@ func (s Status) Validate() error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid value: %q", s)
+	return fmt.Errorf("%w: %q", ErrInvalidValue, s)
 }
 
 func (s Status) String() string {
@@ -231,7 +177,7 @@ func (f GetByField) Validate() error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid value: %q", f)
+	return fmt.Errorf("%w: %q", ErrInvalidValue, f)
 }
 
 const (
@@ -246,7 +192,7 @@ func (ids IDs) Validate() error {
 
 	for i, id := range ids {
 		if id < 0 {
-			err.Add(fmt.Errorf("%w at index: %d", ErrInvalidID, i))
+			err.Add(fmt.Errorf("%w at index: %d", ErrInvalidValue, i))
 		}
 	}
 
@@ -265,7 +211,7 @@ func (f IncreasableField) Validate() error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid value: %q", f)
+	return fmt.Errorf("%w: %q", ErrInvalidValue, f)
 }
 
 const (
@@ -288,5 +234,5 @@ func (e Event) Validate() error {
 		return nil
 	}
 
-	return fmt.Errorf("invalid value: %q", e)
+	return fmt.Errorf("%w: %q", ErrInvalidValue, e)
 }

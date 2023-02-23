@@ -120,16 +120,16 @@ func (r *queryResolver) AvailableLanguages(ctx context.Context) ([]*model.Langua
 // ListGames is the resolver for the listGames field.
 func (r *queryResolver) ListGames(ctx context.Context, request model.ListGamesRequest) (*model.ListGamesResponse, error) {
 	gameRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
-		Language:        gamedomain.Language(request.Base.Language),
-		Page:            request.Base.Page,
-		Limit:           request.Base.Limit,
-		AllowDeleted:    request.Base.AllowDeleted,
-		AllowInvisible:  request.Base.AllowInvisible,
-		Sort:            sortingMethodToDomain[gamedomain.SortingMethod](request.Sort),
-		Categories:      request.Categories,
-		Tags:            request.Tags,
-		IDs:             request.Ids,
-		ExcludedGameIDs: request.ExcludedGameIDs,
+		Language:       gamedomain.Language(request.Base.Language),
+		Page:           request.Base.Page,
+		Limit:          request.Base.Limit,
+		AllowDeleted:   request.Base.AllowDeleted,
+		AllowInvisible: request.Base.AllowInvisible,
+		Sort:           sortingMethodToDomain[gamedomain.SortingMethod](request.Sort),
+		CategoryIDRefs: request.Categories,
+		TagIDRefs:      request.Tags,
+		IDRefs:         request.Ids,
+		ExcludedIDRefs: request.ExcludedGameIDs,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list games: %w", err)

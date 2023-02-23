@@ -11,9 +11,6 @@ type Repository interface {
 	IncreaseField(context.Context, IncreaseFieldQuery) error
 	Search(context.Context, SearchQuery) (SearchResult, error)
 	FullSearch(context.Context, FullSearchQuery) (FullSearchResult, error)
-}
-
-type StatsRepository interface {
 	FindMostPlayedIDsByDate(context.Context, FindMostPlayedIDsByDateQuery) (FindMostPlayedIDsByDateResult, error)
 }
 
@@ -50,8 +47,8 @@ type FullSearchResult struct {
 }
 
 type LogQuery struct {
-	GameID int
-	Event  Event
+	ID    int
+	Event Event
 }
 
 type IncreaseFieldQuery struct {
@@ -76,12 +73,12 @@ type FindQuery struct {
 	Limit           int
 	AllowDeleted    bool
 	AllowInvisible  bool
-	Categories      []int
-	Tags            []int
+	CategoryIDRefs  []int
+	TagIDRefs       []int
 	Sort            SortingMethod
 	CreateDateLimit time.Time
-	IDs             []int
-	ExcludedGameIDs []int
+	IDRefs          []int
+	ExcludedIDRefs  []int
 	MobileOnly      bool
 }
 

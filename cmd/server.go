@@ -57,35 +57,18 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to open db connection: %w", err)
 	}
 
-	gameRepository, err := gamepostgresql.New(gamepostgresql.Config{
+	gameRepository := gamepostgresql.New(gamepostgresql.Config{
 		DB: db,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game repository: %w", err)
-	}
 
-	gameStatsRepository, err := gamepostgresql.NewStatsRepository(gamepostgresql.Config{
+	gameEventRepository := gamepostgresql.NewEvent(gamepostgresql.Config{
 		DB: db,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game stats repository: %w", err)
-	}
 
-	gameEventRepository, err := gamepostgresql.NewEventRepository(gamepostgresql.Config{
-		DB: db,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create game event repository: %w", err)
-	}
-
-	gameService, err := gameservice.New(gameservice.Config{
+	gameService := gameservice.New(gameservice.Config{
 		Repository:      gameRepository,
-		StatsRepository: gameStatsRepository,
 		EventRepository: gameEventRepository,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game service: %w", err)
-	}
 
 	categoryRepository := categorypostgresql.New(categorypostgresql.Config{
 		DB: db,

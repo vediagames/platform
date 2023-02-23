@@ -1,0 +1,51 @@
+enum GameReaction {
+    None
+    Like
+    Dislike
+}
+
+enum GetByField {
+    id
+    slug
+}
+
+enum Status {
+    invisible
+    published
+    deleted
+}
+
+enum Language {
+    en
+    es
+}
+
+enum SortingMethod {
+    id
+    name
+    random
+    most_popular
+    least_popular
+    newest
+    oldest
+    most_liked
+    least_liked
+    most_disliked
+    least_disliked
+    most_relevant
+}
+
+enum TagSortingMethod {
+    id
+    name
+    random
+    most_popular
+    least_popular
+    newest
+    oldest
+}
+
+enum SearchItemType {
+    game
+    tag
+}

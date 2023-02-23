@@ -23,7 +23,7 @@ func (r GetRequest) Validate() error {
 	var err zeroerror.Error
 
 	if ve := r.Field.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidField, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidField, ve))
 	}
 
 	if r.Value == nil {
@@ -31,7 +31,7 @@ func (r GetRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	return err.Err()
@@ -45,7 +45,7 @@ func (r GetResponse) Validate() error {
 	var err zeroerror.Error
 
 	if ve := r.Data.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidCategory, ve))
+		err.Add(fmt.Errorf("%ws: %w", ErrInvalidCategory, ve))
 	}
 
 	return err.Err()
@@ -71,7 +71,7 @@ func (r ListRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	return err.Err()
@@ -87,7 +87,7 @@ func (r ListResponse) Validate() error {
 
 	for _, category := range r.Data {
 		if ve := category.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidCategory, ve))
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidCategory, ve))
 		}
 	}
 

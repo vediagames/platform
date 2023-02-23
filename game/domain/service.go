@@ -39,7 +39,7 @@ func (r SearchRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	return err.Err()
@@ -55,7 +55,7 @@ func (r SearchResponse) Validate() error {
 
 	for _, game := range r.Data {
 		if ve := game.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidGame, ve))
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidGame, ve))
 		}
 	}
 
@@ -92,7 +92,7 @@ func (r FullSearchRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	return err.Err()
@@ -108,7 +108,7 @@ func (r FullSearchResponse) Validate() error {
 
 	for _, game := range r.Data {
 		if ve := game.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidGame, ve))
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidGame, ve))
 		}
 	}
 
@@ -145,7 +145,7 @@ func (r GetRequest) Validate() error {
 	var err zeroerror.Error
 
 	if ve := r.Field.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidField, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidField, ve))
 	}
 
 	if r.Value == nil {
@@ -153,7 +153,7 @@ func (r GetRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	return err.Err()
@@ -167,7 +167,7 @@ func (r GetResponse) Validate() error {
 	var err zeroerror.Error
 
 	if ve := r.Data.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidGame, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidGame, ve))
 	}
 
 	return err.Err()
@@ -193,7 +193,7 @@ func (r GetMostPlayedByDaysRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	if r.MaxDays < 1 {
@@ -229,7 +229,7 @@ func (r GetFreshRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	if r.MaxDays < 1 {
@@ -244,17 +244,17 @@ func (r GetFreshRequest) Validate() error {
 }
 
 type ListRequest struct {
-	Language        Language
-	Page            int
-	Limit           int
-	AllowDeleted    bool
-	AllowInvisible  bool
-	Sort            SortingMethod
-	Categories      IDs
-	Tags            IDs
-	IDs             IDs
-	ExcludedGameIDs IDs
-	MobileOnly      bool
+	Language       Language
+	Page           int
+	Limit          int
+	AllowDeleted   bool
+	AllowInvisible bool
+	Sort           SortingMethod
+	CategoryIDRefs IDs
+	TagIDRefs      IDs
+	IDRefs         IDs
+	ExcludedIDRefs IDs
+	MobileOnly     bool
 }
 
 func (r ListRequest) Validate() error {
@@ -269,27 +269,27 @@ func (r ListRequest) Validate() error {
 	}
 
 	if ve := r.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	if ve := r.Sort.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidSortingMethod, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidSortingMethod, ve))
 	}
 
-	if ve := r.Categories.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidCategories, ve))
+	if ve := r.CategoryIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidCategoryIDRefs, ve))
 	}
 
-	if ve := r.Tags.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidTags, ve))
+	if ve := r.TagIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidTagIDRefs, ve))
 	}
 
-	if ve := r.IDs.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidIDs, ve))
+	if ve := r.IDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidIDRefs, ve))
 	}
 
-	if ve := r.ExcludedGameIDs.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidExcludedGameIDs, ve))
+	if ve := r.ExcludedIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidExcludedIDRefs, ve))
 	}
 
 	return err.Err()
@@ -305,7 +305,7 @@ func (r ListResponse) Validate() error {
 
 	for _, game := range r.Data {
 		if ve := game.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidGame, ve))
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidGame, ve))
 		}
 	}
 
@@ -317,19 +317,19 @@ func (r ListResponse) Validate() error {
 }
 
 type LogEventRequest struct {
-	GameID int
-	Event  Event
+	ID    int
+	Event Event
 }
 
 func (r LogEventRequest) Validate() error {
 	var err zeroerror.Error
 
-	if r.GameID < 1 {
+	if r.ID < 1 {
 		err.Add(ErrInvalidID)
 	}
 
 	if ve := r.Event.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidEvent, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidEvent, ve))
 	}
 
 	return err.Err()

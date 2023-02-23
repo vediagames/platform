@@ -1,0 +1,192 @@
+type Query {
+    mostPlayedGames(request: MostPlayedGamesRequest!): MostPlayedGamesResponse!
+    freshGames(request: FreshGamesRequest!): FreshGamesResponse!
+    games(request: GamesRequest!): GamesResponse!
+    game(request: GameRequest!): GameResponse!
+
+    categories(request: CategoriesRequest!): CategoriesResponse!
+    category(request: CategoryRequest!): CategoryResponse!
+
+    tags(request: TagsRequest!): TagsResponse!
+    tag(request: TagRequest!): TagResponse!
+
+    sections(request: SectionsRequest!): SectionsResponse!
+    section(request: SectionRequest!): SectionResponse!
+    placedSections(request: PlacedSectionsRequest!): PlacedSectionsResponse!
+
+    search(request: SearchRequest!): SearchResponse!
+    fullSearch(request: FullSearchRequest!): FullSearchResponse!
+
+    randomProviderGame: RandomProviderGameResponse
+    availableLanguages: AvailableLanguagesResponse!
+}
+
+input MostPlayedGamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    maxDays: Int!
+}
+
+type MostPlayedGamesResponse {
+    games: Games!
+}
+
+input FreshGamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    maxDays: Int!
+}
+
+type FreshGamesResponse {
+    games: Games!
+}
+
+input GamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+    sort: SortingMethod
+    categories: [Int!]
+    tags: [Int!]
+    ids: [Int!]
+    excludedGameIDs: [Int!]
+}
+
+type GamesResponse {
+    games: Games!
+}
+
+input GameRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+}
+
+type GameResponse {
+    game: Game!
+}
+
+input CategoriesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type CategoriesResponse {
+    categories: Categories!
+}
+
+input CategoryRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+}
+
+type CategoryResponse {
+    category: Category!
+}
+
+input TagsRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+    sort: TagSortingMethod
+}
+
+type TagsResponse {
+    tags: Tags!
+}
+
+input TagRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+}
+
+type TagResponse {
+    tag: Tag!
+}
+
+input SectionsRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type SectionsResponse {
+    sections: Sections!
+}
+
+input SectionRequest {
+    field: GetByField!
+    value: String!
+    language: Language!
+}
+
+type SectionResponse {
+    section: Section!
+}
+
+input PlacedSectionsRequest {
+    language: Language!
+}
+
+type PlacedSectionsResponse {
+    placedSections: PlacedSections!
+}
+
+input SearchRequest {
+    language: Language!
+    query: String!
+    maxGames: Int!
+    maxTags: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type SearchResponse {
+    searchItems: [SearchItem!]!
+    total: Int!
+}
+
+input FullSearchRequest {
+    language: Language!
+    query: String!
+    page: Int!
+    limit: Int!
+    sort: SortingMethod
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type FullSearchResponse {
+    searchItems: [SearchItem!]!
+    total: Int!
+}
+
+type RandomProviderGameResponse {
+    name: String!
+    url: String!
+    description: String!
+    controls: String!
+    mobile: Boolean!
+    height: Int!
+    width: Int!
+    categories: [String!]!
+    tags: [String!]!
+    images: [String!]!
+}
+
+type AvailableLanguagesResponse {
+    Languages: [AvailableLanguage!]
+}
