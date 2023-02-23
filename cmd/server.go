@@ -87,19 +87,13 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create game service: %w", err)
 	}
 
-	categoryRepository, err := categorypostgresql.New(categorypostgresql.Config{
+	categoryRepository := categorypostgresql.New(categorypostgresql.Config{
 		DB: db,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create category repository: %w", err)
-	}
 
-	categoryService, err := categoryservice.New(categoryservice.Config{
+	categoryService := categoryservice.New(categoryservice.Config{
 		Repository: categoryRepository,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create category service: %w", err)
-	}
 
 	sectionRepository, err := sectionpostgresql.New(sectionpostgresql.Config{
 		DB: db,

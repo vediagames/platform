@@ -7,27 +7,6 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
-type Text struct {
-	Name             string
-	Description      string
-	ShortDescription string
-	Content          string
-}
-
-func (t Text) Validate() error {
-	var err zeroerror.Error
-
-	if t.Name == "" {
-		err.Add(ErrEmptyName)
-	}
-
-	if t.Description == "" {
-		err.Add(ErrEmptyDescription)
-	}
-
-	return err.Err()
-}
-
 type Category struct {
 	ID               int
 	Language         Language

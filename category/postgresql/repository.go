@@ -10,6 +10,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+
 	"github.com/vediagames/vediagames.com/category/domain"
 )
 
@@ -33,14 +34,14 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func New(cfg Config) (*repository, error) {
+func New(cfg Config) domain.Repository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &repository{
 		db: cfg.DB,
-	}, nil
+	}
 }
 
 type category struct {
@@ -88,8 +89,22 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 			"AllowInvisible": q.AllowInvisible,
 		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_categories_view
+		SELECT
+			id,
+			language_code,
+			slug,
+			name,
+			short_description,
+			description,
+			content,
+			status,
+			clicks,
+			created_at,
+			deleted_at,
+			deleted_at,
+			published_at,
+		    COUNT(*) OVER() AS total_count
+		FROM public.categories_view
 		WHERE language_code = $1
 		{{ if not .AllowDeleted }}
 			AND status != 'deleted'
@@ -140,7 +155,21 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		SELECT * FROM mat_categories_view 
+		SELECT
+			id,
+			language_code,
+			slug,
+			name,
+			short_description,
+			description,
+			content,
+			status,
+			clicks,
+			created_at,
+			deleted_at,
+			deleted_at,
+			published_at
+		FROM categories_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 

@@ -23,14 +23,14 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func New(cfg Config) (domain.Service, error) {
+func New(cfg Config) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		repository: cfg.Repository,
-	}, nil
+	}
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {
