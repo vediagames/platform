@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -38,6 +39,7 @@ import (
 	sectionvalidationdata "github.com/vediagames/vediagames.com/section/service/validation/data"
 	sectionvalidationrequest "github.com/vediagames/vediagames.com/section/service/validation/request"
 	sessionbigquery "github.com/vediagames/vediagames.com/session/bigquery"
+	sessiondomain "github.com/vediagames/vediagames.com/session/domain"
 	sessionservice "github.com/vediagames/vediagames.com/session/service"
 	tagpostgresql "github.com/vediagames/vediagames.com/tag/postgresql"
 	tagservice "github.com/vediagames/vediagames.com/tag/service"
@@ -179,7 +181,7 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create session repository: %w", err)
 	}
 
-	_, err = sessionservice.New(sessionservice.Config{
+	sessionService, err := sessionservice.New(sessionservice.Config{
 		Repository: sessionRepository,
 	})
 	if err != nil {
@@ -273,6 +275,7 @@ func startServer(ctx context.Context) error {
 	//router.Use(authMiddleware(authService))
 
 	router.Handle("/graph", gqlHandler)
+	router.Handle("/session/new", createSessionHandler(sessionService))
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
 		w.WriteHeader(http.StatusOK)
@@ -343,5 +346,34 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 				s.ToContext(r.Context(), res.User),
 			))
 		})
+	}
+}
+
+type Response struct {
+	ID string `json:"id"`
+}
+
+func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		res, err := s.Create(r.Context())
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to serve: %w", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		jsonRes, err := json.Marshal(Response{
+			ID: res.SessionID.String(),
+		})
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %w", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		w.Write(jsonRes)
 	}
 }
