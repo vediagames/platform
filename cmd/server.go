@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	"cloud.google.com/go/bigquery"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -15,6 +16,7 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
+	"google.golang.org/api/option"
 
 	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	authservice "github.com/vediagames/vediagames.com/auth/service"
@@ -35,6 +37,8 @@ import (
 	sectionservice "github.com/vediagames/vediagames.com/section/service"
 	sectionvalidationdata "github.com/vediagames/vediagames.com/section/service/validation/data"
 	sectionvalidationrequest "github.com/vediagames/vediagames.com/section/service/validation/request"
+	sessionbigquery "github.com/vediagames/vediagames.com/session/bigquery"
+	sessionservice "github.com/vediagames/vediagames.com/session/service"
 	tagpostgresql "github.com/vediagames/vediagames.com/tag/postgresql"
 	tagservice "github.com/vediagames/vediagames.com/tag/service"
 )
@@ -157,6 +161,29 @@ func startServer(ctx context.Context) error {
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create search service: %w", err)
+	}
+
+	options := option.WithCredentialsFile(cfg.BigQuery.CredentialsPath)
+	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID, options)
+	if err != nil {
+		return fmt.Errorf("failed to create bigquery client: %w", err)
+	}
+	defer client.Close()
+
+	sessionRepository, err := sessionbigquery.New(sessionbigquery.Config{
+		Client:    client,
+		TableID:   cfg.BigQuery.TableID,
+		DatasetID: cfg.BigQuery.DatasetID,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create session repository: %w", err)
+	}
+
+	_, err = sessionservice.New(sessionservice.Config{
+		Repository: sessionRepository,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create session service: %w", err)
 	}
 
 	emailClient := sendinblue.New(http.Client{
