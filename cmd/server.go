@@ -358,7 +358,7 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 
 		res, err := s.Create(r.Context())
 		if err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to serve: %w", err)
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to serve: %s", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
@@ -367,13 +367,15 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 			ID: res.SessionID.String(),
 		})
 		if err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %w", err)
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %s", err)
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
 
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(http.StatusCreated)
-		w.Write(jsonRes)
+		if _, err = w.Write(jsonRes); err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to write: %s", err)
+		}
 	}
 }
