@@ -45,7 +45,7 @@ type Category struct {
 	Status           Status   `json:"status"`
 	Clicks           int      `json:"clicks"`
 	CreatedAt        string   `json:"createdAt"`
-	DeletedAt        string   `json:"deletedAt"`
+	DeletedAt        *string  `json:"deletedAt"`
 	PublishedAt      *string  `json:"publishedAt"`
 	PageURL          string   `json:"pageUrl"`
 }

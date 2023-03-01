@@ -104,21 +104,14 @@ func (r ListRequest) Validate() error {
 }
 
 type ListResponse struct {
-	Data  []Section
-	Total int
+	Data Sections
 }
 
 func (r ListResponse) Validate() error {
 	var err zeroerror.Error
 
-	for _, section := range r.Data {
-		if ve := section.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidSection, ve))
-		}
-	}
-
-	if r.Total < 0 {
-		err.Add(ErrInvalidTotal)
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
 	}
 
 	return err.Err()

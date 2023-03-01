@@ -120,19 +120,31 @@ func (r FullSearchResponse) Validate() error {
 }
 
 type GetMostPlayedByDaysResponse struct {
-	Data ListResponse
+	Data Games
 }
 
 func (r GetMostPlayedByDaysResponse) Validate() error {
-	return r.Data.Validate()
+	var err zeroerror.Error
+
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
+	}
+
+	return err.Err()
 }
 
 type GetFreshResponse struct {
-	Data ListResponse
+	Data Games
 }
 
 func (r GetFreshResponse) Validate() error {
-	return r.Data.Validate()
+	var err zeroerror.Error
+
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
+	}
+
+	return err.Err()
 }
 
 type GetRequest struct {
@@ -296,21 +308,14 @@ func (r ListRequest) Validate() error {
 }
 
 type ListResponse struct {
-	Data  []Game
-	Total int
+	Data Games
 }
 
 func (r ListResponse) Validate() error {
 	var err zeroerror.Error
 
-	for _, game := range r.Data {
-		if ve := game.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%w: %w", ErrInvalidGame, ve))
-		}
-	}
-
-	if r.Total < 0 {
-		err.Add(ErrInvalidTotal)
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
 	}
 
 	return err.Err()

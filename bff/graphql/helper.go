@@ -78,8 +78,8 @@ func pointerTrue() *bool {
 }
 
 func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.Section, l model.Language) (model.Section, error) {
-	tags := make([]model.ComplimentaryTag, 0, len(s.Tags.Data))
-	for _, tag := range s.Tags.Data {
+	tags := make([]model.ComplimentaryTag, 0, len(s.TagIDRefs.Data))
+	for _, tag := range s.TagIDRefs.Data {
 		thumb, err := pathTag.Thumbnail(tag.Slug, thumbnail128x128)
 		if err != nil {
 			return model.Section{}, fmt.Errorf("failed to get thumbnail: %w", err)
@@ -94,8 +94,8 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 		})
 	}
 
-	categories := make([]model.ComplimentaryCategory, 0, len(s.Categories.Data))
-	for _, category := range s.Categories.Data {
+	categories := make([]model.ComplimentaryCategory, 0, len(s.CategoryIDRefs.Data))
+	for _, category := range s.CategoryIDRefs.Data {
 		categories = append(categories, model.ComplimentaryCategory{
 			ID:          category.ID,
 			Slug:        category.Slug,
@@ -116,8 +116,8 @@ func (r *queryResolver) sectionFromSection(ctx context.Context, s sectiondomain.
 			}
 		default:
 			paramsFilter = filterParams{
-				Tags:       s.Tags.IDs(),
-				Categories: s.Categories.IDs(),
+				Tags:       s.TagIDRefs.IDs(),
+				Categories: s.CategoryIDRefs.IDs(),
 				Games:      s.Games,
 			}
 		}

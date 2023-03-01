@@ -7,6 +7,27 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
+type Sections struct {
+	Data  []Section
+	Total int
+}
+
+func (s Sections) Validate() error {
+	var err zeroerror.Error
+
+	for _, section := range s.Data {
+		if ve := section.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidSection, ve))
+		}
+	}
+
+	if s.Total < 0 {
+		err.Add(ErrInvalidTotal)
+	}
+
+	return err.Err()
+}
+
 type Section struct {
 	ID               int
 	Language         Language
@@ -14,9 +35,9 @@ type Section struct {
 	Name             string
 	ShortDescription string
 	Description      string
-	Tags             ComplimentaryTags
-	Categories       ComplimentaryCategories
-	Games            IDs
+	TagIDRefs        IDs
+	CategoryIDRefs   IDs
+	GameIDRefs       IDs
 	Status           Status
 	CreatedAt        time.Time
 	DeletedAt        time.Time
@@ -43,15 +64,15 @@ func (s Section) Validate() error {
 		err.Add(ErrEmptyName)
 	}
 
-	if ve := s.Tags.Validate(); ve != nil {
+	if ve := s.TagIDRefs.Validate(); ve != nil {
 		err.Add(fmt.Errorf("invalid tags: %w", ve))
 	}
 
-	if ve := s.Categories.Validate(); ve != nil {
+	if ve := s.CategoryIDRefs.Validate(); ve != nil {
 		err.Add(fmt.Errorf("invalid categories: %w", ve))
 	}
 
-	if ve := s.Games.Validate(); ve != nil {
+	if ve := s.GameIDRefs.Validate(); ve != nil {
 		err.Add(fmt.Errorf("%s: %w", ErrInvalidGames, ve))
 	}
 
@@ -61,108 +82,6 @@ func (s Section) Validate() error {
 
 	if s.CreatedAt.IsZero() {
 		err.Add(ErrInvalidCreatedAt)
-	}
-
-	return err.Err()
-}
-
-type ComplimentaryTag struct {
-	ID          int
-	Slug        string
-	Name        string
-	Description string
-}
-
-func (t ComplimentaryTag) Validate() error {
-	var err zeroerror.Error
-
-	if t.ID < 0 {
-		err.Add(ErrInvalidID)
-	}
-
-	if t.Slug == "" {
-		err.Add(ErrEmptySlug)
-	}
-
-	if t.Name == "" {
-		err.Add(ErrEmptyName)
-	}
-
-	return err.Err()
-}
-
-type ComplimentaryTags struct {
-	Data []ComplimentaryTag
-}
-
-func (t ComplimentaryTags) IDs() []int {
-	ids := make([]int, len(t.Data))
-
-	for i, tag := range t.Data {
-		ids[i] = tag.ID
-	}
-
-	return ids
-}
-
-func (t ComplimentaryTags) Validate() error {
-	var err zeroerror.Error
-
-	for _, tag := range t.Data {
-		if ve := tag.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidTag, ve))
-		}
-	}
-
-	return err.Err()
-}
-
-type ComplimentaryCategory struct {
-	ID          int
-	Slug        string
-	Name        string
-	Description string
-}
-
-func (c ComplimentaryCategory) Validate() error {
-	var err zeroerror.Error
-
-	if c.ID < 0 {
-		err.Add(ErrInvalidID)
-	}
-
-	if c.Slug == "" {
-		err.Add(ErrEmptySlug)
-	}
-
-	if c.Name == "" {
-		err.Add(ErrEmptyName)
-	}
-
-	return err.Err()
-}
-
-type ComplimentaryCategories struct {
-	Data []ComplimentaryCategory
-}
-
-func (c ComplimentaryCategories) IDs() []int {
-	ids := make([]int, len(c.Data))
-
-	for i, category := range c.Data {
-		ids[i] = category.ID
-	}
-
-	return ids
-}
-
-func (c ComplimentaryCategories) Validate() error {
-	var err zeroerror.Error
-
-	for _, category := range c.Data {
-		if ve := category.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidCategory, ve))
-		}
 	}
 
 	return err.Err()

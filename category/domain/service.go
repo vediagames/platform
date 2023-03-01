@@ -57,6 +57,7 @@ type ListRequest struct {
 	Limit          int
 	AllowDeleted   bool
 	AllowInvisible bool
+	IDs            IDs
 }
 
 func (r ListRequest) Validate() error {
@@ -74,25 +75,22 @@ func (r ListRequest) Validate() error {
 		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
+	if ve := r.IDs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%s: %w", ErrInvalidIDs, ve))
+	}
+
 	return err.Err()
 }
 
 type ListResponse struct {
-	Data  []Category
-	Total int
+	Data Categories
 }
 
 func (r ListResponse) Validate() error {
 	var err zeroerror.Error
 
-	for _, category := range r.Data {
-		if ve := category.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%w: %w", ErrInvalidCategory, ve))
-		}
-	}
-
-	if r.Total < 0 {
-		err.Add(ErrInvalidTotal)
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
 	}
 
 	return err.Err()

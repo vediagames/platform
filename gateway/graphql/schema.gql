@@ -361,7 +361,7 @@ type Category {
     status: Status!
     clicks: Int!
     createdAt: String!
-    deletedAt: String!
+    deletedAt: String
     publishedAt: String
     pageUrl: String!
 }

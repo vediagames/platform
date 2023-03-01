@@ -11,6 +11,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+
 	"github.com/vediagames/vediagames.com/section/domain"
 )
 
@@ -103,13 +104,13 @@ func (s section) toDomain(ctx context.Context) (domain.Section, error) {
 		Name:             s.Name,
 		ShortDescription: s.ShortDescription.String,
 		Description:      s.Description.String,
-		Tags: domain.ComplimentaryTags{
+		TagIDRefs: domain.ComplimentaryTags{
 			Data: domainTags,
 		},
-		Categories: domain.ComplimentaryCategories{
+		CategoryIDRefs: domain.ComplimentaryCategories{
 			Data: domainCategories,
 		},
-		Games:       games,
+		GameIDRefs:  games,
 		Status:      domain.Status(s.Status),
 		CreatedAt:   s.CreatedAt,
 		DeletedAt:   s.DeletedAt.Time,
@@ -202,7 +203,7 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		SELECT * FROM mat_sections_view 
+		SELECT * FROM mat_sections_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 

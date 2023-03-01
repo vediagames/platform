@@ -7,6 +7,27 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
+type Games struct {
+	Data  []Game
+	Total int
+}
+
+func (g Games) Validate() error {
+	var err zeroerror.Error
+
+	for _, game := range g.Data {
+		if ve := game.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidGame, ve))
+		}
+	}
+
+	if g.Total < 0 {
+		err.Add(ErrInvalidTotal)
+	}
+
+	return err.Err()
+}
+
 type Game struct {
 	ID               int
 	Language         Language

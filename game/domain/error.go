@@ -37,4 +37,5 @@ const (
 	ErrQueryTooShort                = Error("query too short")
 	ErrInvalidMax                   = Error("invalid max")
 	ErrInvalidValue                 = Error("invalid value")
+	ErrInvalidData                  = Error("invalid data")
 )
