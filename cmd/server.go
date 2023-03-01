@@ -243,7 +243,7 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
-	//router.Use(authMiddleware(authService))
+	router.Use(authMiddleware(authService))
 
 	router.Handle("/graph", gqlHandler)
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
@@ -310,8 +310,8 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 			if err != nil {
 				zerolog.Ctx(r.Context()).Error().Msgf("failed to authenticate: %s", err)
 				next.ServeHTTP(w, r)
+				return
 			}
-
 			next.ServeHTTP(w, r.WithContext(
 				s.ToContext(r.Context(), res.User),
 			))
