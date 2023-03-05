@@ -45,6 +45,11 @@ import (
 	tagservice "github.com/vediagames/vediagames.com/tag/service"
 )
 
+const (
+	tableID   = "tableID"
+	datasetID = "datasetID"
+)
+
 func ServerCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "server",
@@ -172,16 +177,16 @@ func startServer(ctx context.Context) error {
 	}
 	defer client.Close()
 
-	sessionRepository, err := sessionbigquery.New(sessionbigquery.Config{
+	sessionRepository := sessionbigquery.New(sessionbigquery.Config{
 		Client:    client,
-		TableID:   cfg.BigQuery.TableID,
-		DatasetID: cfg.BigQuery.DatasetID,
+		TableID:   tableID,
+		DatasetID: datasetID,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create session repository: %w", err)
 	}
 
-	sessionService, err := sessionservice.New(sessionservice.Config{
+	sessionService := sessionservice.New(sessionservice.Config{
 		Repository: sessionRepository,
 	})
 	if err != nil {
@@ -350,25 +355,36 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 }
 
 type Response struct {
-	ID string `json:"id"`
+	Session sessiondomain.Session `json:"session"`
+}
+
+type Request struct {
+	CreatedAt int64 `json:"created_at"`
 }
 
 func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		var body Request
 
-		res, err := s.Create(r.Context())
-		if err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to serve: %s", err)
-			w.WriteHeader(http.StatusInternalServerError)
+		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		jsonRes, err := json.Marshal(Response{
-			ID: res.SessionID.String(),
+		createdAt := time.Unix(body.CreatedAt, 0)
+		res, err := s.Create(r.Context(), sessiondomain.CreateRequest{
+			CreatedAt: createdAt,
 		})
 		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to create: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		jsonRes, err := json.Marshal(Response(res))
+		if err != nil {
 			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %s", err)
-			w.WriteHeader(http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
@@ -376,6 +392,7 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 		w.WriteHeader(http.StatusCreated)
 		if _, err = w.Write(jsonRes); err != nil {
 			zerolog.Ctx(r.Context()).Error().Msgf("failed to write: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
 }

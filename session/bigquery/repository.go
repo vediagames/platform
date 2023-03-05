@@ -3,6 +3,7 @@ package postgresql
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"cloud.google.com/go/bigquery"
 	"github.com/google/uuid"
@@ -34,37 +35,46 @@ func (c Config) Validate() error {
 		return fmt.Errorf("empty dataset id")
 	}
 
-	query := "SELECT 1"
-	if _, err := c.Client.Query(query).Read(context.Background()); err != nil {
-		return fmt.Errorf("failed to ping bigquery: %w", err)
-	}
-
 	return nil
 }
 
-func New(cfg Config) (*repository, error) {
+func New(cfg Config) *repository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &repository{
 		client:    cfg.Client,
 		tableID:   cfg.TableID,
 		datasetID: cfg.DatasetID,
-	}, nil
+	}
 }
 
-func (r repository) Create(ctx context.Context) (domain.CreateResult, error) {
-
-	sessionID := uuid.New()
-	row := []bigquery.Value{sessionID.String()}
+func (r repository) Insert(ctx context.Context, req domain.InsertQuery) (domain.InsertResult, error) {
+	if ve := req.Validate(); ve != nil {
+		return domain.InsertResult{}, fmt.Errorf("invalid request: %w", ve)
+	}
+	var (
+		sessionID  = uuid.New().String()
+		createdAt  = req.CreatedAt
+		insertedAt = time.Now().Unix()
+		row        = []bigquery.Value{
+			sessionID,
+			createdAt,
+			insertedAt,
+		}
+	)
 
 	err := r.client.Dataset(r.datasetID).Table(r.tableID).Inserter().Put(ctx, row)
 	if err != nil {
-		return domain.CreateResult{}, fmt.Errorf("failed to insert: %w", err)
+		return domain.InsertResult{}, fmt.Errorf("failed to insert: %w", err)
 	}
 
-	return domain.CreateResult{
-		SessionID: sessionID,
+	return domain.InsertResult{
+		Session: domain.Session{
+			ID:         sessionID,
+			CreatedAt:  createdAt,
+			InsertedAt: insertedAt,
+		},
 	}, nil
 }

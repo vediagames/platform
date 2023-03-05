@@ -23,22 +23,30 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func New(cfg Config) (domain.Service, error) {
+func New(cfg Config) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		repository: cfg.Repository,
-	}, nil
+	}
 }
 
-func (s service) Create(ctx context.Context) (domain.CreateResponse, error) {
+func (s service) Create(ctx context.Context, req domain.CreateRequest) (domain.CreateResponse, error) {
+	if ve := req.Validate(); ve != nil {
+		return domain.CreateResponse{}, fmt.Errorf("invalid request: %w", ve)
+	}
 
-	repoRes, err := s.repository.Create(ctx)
+	repoRes, err := s.repository.Insert(ctx, req.ToInsertQuery())
 	if err != nil {
 		return domain.CreateResponse{}, fmt.Errorf("failed to create: %w", err)
 	}
 
-	return domain.CreateResponse(repoRes), nil
+	res := domain.CreateResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.CreateResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
+
+	return res, nil
 }

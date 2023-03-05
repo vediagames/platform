@@ -7,5 +7,7 @@ func (e Error) Error() string {
 }
 
 const (
-	ErrNoData = Error("no data")
+	ErrNoData           = Error("no data")
+	ErrInvalidTimestamp = Error("invalid timestamp")
+	ErrInvalidUUID      = Error("invalid uuid")
 )

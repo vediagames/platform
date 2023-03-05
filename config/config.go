@@ -45,8 +45,6 @@ type Config struct {
 	BigQuery     struct {
 		ProjectID       string `mapstructure:"projectID"`
 		CredentialsPath string `mapstructure:"credentialsPath"`
-		TableID         string `mapstructure:"tableID"`
-		DatasetID       string `mapstructure:"datasetID"`
 	} `mapstructure:"bigquery"`
 }
 
@@ -121,14 +119,6 @@ func (c Config) Validate() error {
 
 	if c.BigQuery.ProjectID == "" {
 		err.Add(fmt.Errorf("bigquery project id is not set"))
-	}
-
-	if c.BigQuery.TableID == "" {
-		err.Add(fmt.Errorf("bigquery table id is not set"))
-	}
-
-	if c.BigQuery.DatasetID == "" {
-		err.Add(fmt.Errorf("bigquery dataset id is not set"))
 	}
 
 	if c.BigQuery.CredentialsPath == "" || !strings.Contains(c.BigQuery.CredentialsPath, ".json") {
