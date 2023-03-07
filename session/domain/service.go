@@ -17,17 +17,10 @@ type CreateRequest struct {
 
 func (r CreateRequest) Validate() error {
 	var err zeroerror.Error
-	if r.CreatedAt.IsZero() {
-		err.Add(ErrInvalidTimestamp)
-	}
+
+	err.AddIf(r.CreatedAt.IsZero(), ErrInvalidCreatedAt)
 
 	return nil
-}
-
-func (r CreateRequest) ToInsertQuery() InsertQuery {
-	return InsertQuery{
-		CreatedAt: r.CreatedAt.Unix(),
-	}
 }
 
 type CreateResponse struct {
@@ -37,17 +30,9 @@ type CreateResponse struct {
 func (r CreateResponse) Validate() error {
 	var err zeroerror.Error
 
-	if r.Session.ID != "" {
-		err.Add(ErrInvalidUUID)
-	}
-
-	if r.Session.CreatedAt <= 0 {
-		err.Add(ErrInvalidTimestamp)
-	}
-
-	if r.Session.InsertedAt <= 0 {
-		err.Add(ErrInvalidTimestamp)
-	}
+	err.AddIf(r.Session.ID != "", ErrEmptyID)
+	err.AddIf(r.Session.CreatedAt.IsZero(), ErrInvalidCreatedAt)
+	err.AddIf(r.Session.InsertedAt.IsZero(), ErrInvalidInsertedAt)
 
 	return err.Err()
 }

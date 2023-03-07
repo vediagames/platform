@@ -7,7 +7,8 @@ func (e Error) Error() string {
 }
 
 const (
-	ErrNoData           = Error("no data")
-	ErrInvalidTimestamp = Error("invalid timestamp")
-	ErrInvalidUUID      = Error("invalid uuid")
+	ErrNoData            = Error("no data")
+	ErrEmptyID           = Error("empty ID")
+	ErrInvalidCreatedAt  = Error("invalid created at")
+	ErrInvalidInsertedAt = Error("invalid inserted at")
 )

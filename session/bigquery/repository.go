@@ -7,6 +7,7 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	"github.com/google/uuid"
+
 	"github.com/vediagames/vediagames.com/session/domain"
 )
 
@@ -38,7 +39,7 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func New(cfg Config) *repository {
+func New(cfg Config) domain.Repository {
 	if err := cfg.Validate(); err != nil {
 		panic(fmt.Errorf("invalid config: %w", err))
 	}
@@ -51,29 +52,28 @@ func New(cfg Config) *repository {
 }
 
 func (r repository) Insert(ctx context.Context, req domain.InsertQuery) (domain.InsertResult, error) {
-	if ve := req.Validate(); ve != nil {
-		return domain.InsertResult{}, fmt.Errorf("invalid request: %w", ve)
-	}
 	var (
 		sessionID  = uuid.New().String()
-		createdAt  = req.CreatedAt
-		insertedAt = time.Now().Unix()
-		row        = []bigquery.Value{
-			sessionID,
-			createdAt,
-			insertedAt,
-		}
+		insertedAt = time.Now()
 	)
 
-	err := r.client.Dataset(r.datasetID).Table(r.tableID).Inserter().Put(ctx, row)
+	err := r.client.
+		Dataset(r.datasetID).
+		Table(r.tableID).
+		Inserter().
+		Put(ctx, []bigquery.Value{
+			sessionID,
+			req.CreatedAt.Unix(),
+			insertedAt.Unix(),
+		})
 	if err != nil {
-		return domain.InsertResult{}, fmt.Errorf("failed to insert: %w", err)
+		return domain.InsertResult{}, fmt.Errorf("failed to put: %w", err)
 	}
 
 	return domain.InsertResult{
 		Session: domain.Session{
 			ID:         sessionID,
-			CreatedAt:  createdAt,
+			CreatedAt:  req.CreatedAt,
 			InsertedAt: insertedAt,
 		},
 	}, nil
