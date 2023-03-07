@@ -53,7 +53,7 @@ func New(cfg Config) domain.Repository {
 
 func (r repository) Insert(ctx context.Context, req domain.InsertQuery) (domain.InsertResult, error) {
 	var (
-		sessionID  = uuid.New().String()
+		sessionID  = uuid.NewString()
 		insertedAt = time.Now()
 	)
 
