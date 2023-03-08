@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/session/domain"
 )
 
@@ -16,11 +18,13 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
+	var err zeroerror.Error
+
 	if c.Repository == nil {
-		return fmt.Errorf("repository is required")
+		err.AddIf(c.Repository == nil, fmt.Errorf("repository is required"))
 	}
 
-	return nil
+	return err.Err()
 }
 
 func New(cfg Config) domain.Service {
@@ -38,9 +42,9 @@ func (s service) Create(ctx context.Context, req domain.CreateRequest) (domain.C
 		return domain.CreateResponse{}, fmt.Errorf("invalid request: %w", ve)
 	}
 
-	repoRes, err := s.repository.Insert(ctx, req.ToInsertQuery())
+	repoRes, err := s.repository.Insert(ctx, domain.InsertQuery(req))
 	if err != nil {
-		return domain.CreateResponse{}, fmt.Errorf("failed to create: %w", err)
+		return domain.CreateResponse{}, fmt.Errorf("failed to insert: %w", err)
 	}
 
 	res := domain.CreateResponse(repoRes)

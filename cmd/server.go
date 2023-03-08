@@ -354,26 +354,27 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 	}
 }
 
-type Response struct {
-	Session sessiondomain.Session `json:"session"`
+type sessionNewResponse struct {
+	ID         string    `json:"id"`
+	CreatedAt  time.Time `json:"createdAt"`
+	InsertedAt time.Time `json:"insertedAt"`
 }
 
-type Request struct {
-	CreatedAt int64 `json:"created_at"`
+type sessionNewRequest struct {
+	CreatedAt time.Time `json:"created_at"`
 }
 
 func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var body Request
+		var req sessionNewRequest
 
-		if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
 
-		createdAt := time.Unix(body.CreatedAt, 0)
 		res, err := s.Create(r.Context(), sessiondomain.CreateRequest{
-			CreatedAt: createdAt,
+			CreatedAt: req.CreatedAt,
 		})
 		if err != nil {
 			zerolog.Ctx(r.Context()).Error().Msgf("failed to create: %s", err)
@@ -381,7 +382,11 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 			return
 		}
 
-		jsonRes, err := json.Marshal(Response(res))
+		jsonRes, err := json.Marshal(sessionNewResponse{
+			ID:         res.Session.ID,
+			CreatedAt:  res.Session.CreatedAt,
+			InsertedAt: res.Session.InsertedAt,
+		})
 		if err != nil {
 			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %s", err)
 			http.Error(w, err.Error(), http.StatusInternalServerError)
