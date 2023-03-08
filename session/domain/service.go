@@ -12,6 +12,9 @@ type Service interface {
 }
 
 type CreateRequest struct {
+	PageURL   string
+	IP        IP
+	Device    Device
 	CreatedAt time.Time
 }
 
@@ -19,6 +22,9 @@ func (r CreateRequest) Validate() error {
 	var err zeroerror.Error
 
 	err.AddIf(r.CreatedAt.IsZero(), ErrInvalidCreatedAt)
+	err.AddIf(r.Device.IsValid(), ErrInvalidDevice)
+	err.AddIf(r.IP.IsValid(), ErrInvalidIP)
+	err.AddIf(r.PageURL == "", ErrEmptyPageURL)
 
 	return nil
 }

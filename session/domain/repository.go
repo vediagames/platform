@@ -10,6 +10,9 @@ type Repository interface {
 }
 
 type InsertQuery struct {
+	PageURL   string
+	IP        IP
+	Device    Device
 	CreatedAt time.Time
 }
 

@@ -356,12 +356,18 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 
 type sessionNewResponse struct {
 	ID         string    `json:"id"`
+	IP         string    `json:"ip"`
+	Device     string    `json:"device"`
+	PageURL    string    `json:"page_url"`
 	CreatedAt  time.Time `json:"createdAt"`
 	InsertedAt time.Time `json:"insertedAt"`
 }
 
 type sessionNewRequest struct {
-	CreatedAt time.Time `json:"created_at"`
+	IP        string `json:"ip"`
+	Device    string `json:"device"`
+	PageURL   string `json:"page_url"`
+	CreatedAt string `json:"created_at"`
 }
 
 func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
@@ -369,12 +375,22 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 		var req sessionNewRequest
 
 		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to decode: %s", err)
 			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		createdAt, err := time.Parse(time.RFC3339, req.CreatedAt)
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to parse: %s", err)
+			http.Error(w, sessiondomain.ErrInvalidCreatedAt.Error(), http.StatusBadRequest)
 			return
 		}
 
 		res, err := s.Create(r.Context(), sessiondomain.CreateRequest{
-			CreatedAt: req.CreatedAt,
+			IP:        sessiondomain.IP(req.IP),
+			Device:    sessiondomain.Device(req.Device),
+			PageURL:   req.PageURL,
+			CreatedAt: createdAt,
 		})
 		if err != nil {
 			zerolog.Ctx(r.Context()).Error().Msgf("failed to create: %s", err)
@@ -384,6 +400,9 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 
 		jsonRes, err := json.Marshal(sessionNewResponse{
 			ID:         res.Session.ID,
+			IP:         res.Session.IP.String(),
+			Device:     res.Session.Device.String(),
+			PageURL:    res.Session.PageURL,
 			CreatedAt:  res.Session.CreatedAt,
 			InsertedAt: res.Session.InsertedAt,
 		})
