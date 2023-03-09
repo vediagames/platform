@@ -9,9 +9,7 @@ func (e Error) Error() string {
 const (
 	ErrNoData            = Error("no data")
 	ErrEmptyID           = Error("empty ID")
-	ErrEmptyPageURL      = Error("empty PageURL")
-	ErrInvalidIP         = Error("invalid IP")
-	ErrInvalidDevice     = Error("invalid Device")
+	ErrEmptyPageURL      = Error("empty pageURL")
 	ErrInvalidCreatedAt  = Error("invalid created at")
 	ErrInvalidInsertedAt = Error("invalid inserted at")
 )

@@ -1,8 +1,8 @@
 package domain
 
 import (
+	"fmt"
 	"net"
-	"regexp"
 	"time"
 )
 
@@ -17,18 +17,14 @@ type Session struct {
 
 type IP string
 
-func (i IP) IsValid() bool {
-	regex := regexp.MustCompile(`^(\d{1,3}\.){3}\d{1,3}$`)
-	if !regex.MatchString(string(i)) {
-		return false
-	}
+func (i IP) Validate() error {
 
 	parsedIPAddress := net.ParseIP(string(i))
 	if parsedIPAddress == nil || parsedIPAddress.To4() == nil {
-		return false
+		return fmt.Errorf("invalid IP: %s", i)
 	}
 
-	return true
+	return nil
 }
 
 func (ip IP) String() string {
@@ -38,25 +34,20 @@ func (ip IP) String() string {
 type Device string
 
 const (
-	Laptop Device = "laptop"
-	Tablet Device = "tablet"
-	Phone  Device = "phone"
-	TV     Device = "tv"
+	DeviceLaptop  = Device("laptop")
+	DeviceDesktop = Device("desktop")
+	DeviceTablet  = Device("tablet")
+	DevicePhone   = Device("phone")
+	DeviceTV      = Device("tv")
 )
 
-var AllDevice = []Device{
-	Laptop,
-	Tablet,
-	Phone,
-	TV,
-}
-
-func (d Device) IsValid() bool {
+func (d Device) Validate() error {
 	switch d {
-	case Laptop, Phone, TV, Tablet:
-		return true
+	case DeviceLaptop, DeviceDesktop, DeviceTablet, DevicePhone, DeviceTV:
+		return nil
+	default:
+		return fmt.Errorf("invalid value: %q", d)
 	}
-	return false
 }
 
 func (d Device) String() string {

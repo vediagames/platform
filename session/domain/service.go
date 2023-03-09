@@ -22,11 +22,17 @@ func (r CreateRequest) Validate() error {
 	var err zeroerror.Error
 
 	err.AddIf(r.CreatedAt.IsZero(), ErrInvalidCreatedAt)
-	err.AddIf(r.Device.IsValid(), ErrInvalidDevice)
-	err.AddIf(r.IP.IsValid(), ErrInvalidIP)
 	err.AddIf(r.PageURL == "", ErrEmptyPageURL)
 
-	return nil
+	if ve := r.IP.Validate(); ve != nil {
+		err.Add(ve)
+	}
+
+	if ve := r.Device.Validate(); ve != nil {
+		err.Add(ve)
+	}
+
+	return err.Err()
 }
 
 type CreateResponse struct {
