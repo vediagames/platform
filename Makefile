@@ -20,7 +20,7 @@ down:
 
 generate:
 	echo "Regenerating code"
-	go generate ./...
+	go get github.com/99designs/gqlgen && go generate ./...
 
 build:
 	@docker build -f ./build/Dockerfile -t $(IMAGE_REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION) \

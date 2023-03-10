@@ -32,3 +32,14 @@ bigquery:
   credentialsPath: "path/to/your/credentials.json"
   tableID: "table"
   datasetID: "dataset"
+
+imagor:
+  URL: "localhost:8000"
+  secret: "vediagames"
+  s3CDNURL: "example.com"
+  bunnyCDNURL: "example.com"
+
+bunnyStorage:
+  URL: "storage.bunnycdn.com"
+  zone: "vediagames"
+  accessKey: "UUID"

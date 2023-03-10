@@ -10,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/credentials"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+
 	"github.com/vediagames/vediagames.com/bucket/domain"
 )
 
@@ -77,7 +78,7 @@ func (s client) Upload(ctx context.Context, path string, reader io.Reader) error
 	contentType := "image/jpeg"
 
 	if strings.Contains(path, ".svg") {
-		contentType = "contentType"
+		contentType = "image/svg+xml"
 	}
 
 	_, err := s.client.Upload(&s3manager.UploadInput{
@@ -88,5 +89,5 @@ func (s client) Upload(ctx context.Context, path string, reader io.Reader) error
 		ContentType: aws.String(contentType),
 	})
 
-	return err
+	return fmt.Errorf("failed to upload: %w", err)
 }
