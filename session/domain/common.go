@@ -18,7 +18,6 @@ type Session struct {
 type IP string
 
 func (i IP) Validate() error {
-
 	parsedIPAddress := net.ParseIP(string(i))
 	if parsedIPAddress == nil || parsedIPAddress.To4() == nil {
 		return fmt.Errorf("invalid value: %q", i)
