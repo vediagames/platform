@@ -40,7 +40,9 @@ func GetImagePath(path, slug, fileFormat string) string {
 
 func GetExistingThumbnail(req GetThumbnailRequest) (string, error) {
 	imageName := fmt.Sprintf("thumbnail%s", req.Thumbnail.Original.String())
-	var p path = PathGame
+
+	var p = PathGame
+
 	if path(req.Path) == PathTag {
 		p = PathTag
 	}
