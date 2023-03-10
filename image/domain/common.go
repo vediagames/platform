@@ -18,6 +18,9 @@ func (i Image) Validate() error {
 	err.AddIf(i.Width <= 0, fmt.Errorf("invalid width"))
 	err.AddIf(i.Height <= 0, fmt.Errorf("invalid height"))
 
+	err.AddIf(i.Width > 2000, fmt.Errorf("too large width"))
+	err.AddIf(i.Height > 2000, fmt.Errorf("too large height"))
+
 	if ve := i.Format.Validate(); ve != nil {
 		err.Add(fmt.Errorf("invalid format: %w", ve))
 	}
