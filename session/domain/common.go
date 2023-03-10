@@ -21,7 +21,7 @@ func (i IP) Validate() error {
 
 	parsedIPAddress := net.ParseIP(string(i))
 	if parsedIPAddress == nil || parsedIPAddress.To4() == nil {
-		return fmt.Errorf("invalid IP: %s", i)
+		return fmt.Errorf("invalid value: %q", i)
 	}
 
 	return nil
