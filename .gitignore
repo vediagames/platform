@@ -1,6 +1,6 @@
 tmp/
 .idea/
-
-node_modules/
+secret/
 
 config.yml
+.env

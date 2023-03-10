@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
+	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	"github.com/vediagames/vediagames.com/bff/graphql/generated"
 	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
 	categorydomain "github.com/vediagames/vediagames.com/category/domain"
@@ -33,6 +34,7 @@ type Resolver struct {
 	emailClient     notificationdomain.EmailClient
 	bucketClient    bucketdomain.Client
 	fetcherClient   fetcherdomain.Client
+	authService     authdomain.Service
 }
 
 type Config struct {
@@ -45,6 +47,7 @@ type Config struct {
 	EmailClient     notificationdomain.EmailClient
 	BucketClient    bucketdomain.Client
 	FetcherClient   fetcherdomain.Client
+	AuthService     authdomain.Service
 }
 
 func (c Config) Validate() error {
@@ -84,12 +87,16 @@ func (c Config) Validate() error {
 		return fmt.Errorf("fetcher client is required")
 	}
 
+	if c.AuthService == nil {
+		return fmt.Errorf("auth client is required")
+	}
+
 	return nil
 }
 
 func NewResolver(cfg Config) (Resolver, error) {
 	if err := cfg.Validate(); err != nil {
-		return Resolver{}, err
+		return Resolver{}, fmt.Errorf("invalid config: %w", err)
 	}
 
 	return Resolver{
@@ -102,6 +109,7 @@ func NewResolver(cfg Config) (Resolver, error) {
 		emailClient:     cfg.EmailClient,
 		bucketClient:    cfg.BucketClient,
 		fetcherClient:   cfg.FetcherClient,
+		authService:     cfg.AuthService,
 	}, nil
 }
 

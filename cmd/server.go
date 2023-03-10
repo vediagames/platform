@@ -2,19 +2,25 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
+	"cloud.google.com/go/bigquery"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/go-chi/chi/v5"
-	"github.com/go-redis/redis/v8"
 	"github.com/jmoiron/sqlx"
+	ory "github.com/ory/kratos-client-go"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
+	"google.golang.org/api/option"
+
+	authdomain "github.com/vediagames/vediagames.com/auth/domain"
+	authservice "github.com/vediagames/vediagames.com/auth/service"
 	"github.com/vediagames/vediagames.com/bff/graphql"
 	"github.com/vediagames/vediagames.com/bucket/s3"
 	categorypostgresql "github.com/vediagames/vediagames.com/category/postgresql"
@@ -32,8 +38,16 @@ import (
 	sectionservice "github.com/vediagames/vediagames.com/section/service"
 	sectionvalidationdata "github.com/vediagames/vediagames.com/section/service/validation/data"
 	sectionvalidationrequest "github.com/vediagames/vediagames.com/section/service/validation/request"
+	sessionbigquery "github.com/vediagames/vediagames.com/session/bigquery"
+	sessiondomain "github.com/vediagames/vediagames.com/session/domain"
+	sessionservice "github.com/vediagames/vediagames.com/session/service"
 	tagpostgresql "github.com/vediagames/vediagames.com/tag/postgresql"
 	tagservice "github.com/vediagames/vediagames.com/tag/service"
+)
+
+const (
+	tableID   = "tableID"
+	datasetID = "datasetID"
 )
 
 func ServerCmd() *cobra.Command {
@@ -156,6 +170,29 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create search service: %w", err)
 	}
 
+	options := option.WithCredentialsFile(cfg.BigQuery.CredentialsPath)
+	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID, options)
+	if err != nil {
+		return fmt.Errorf("failed to create bigquery client: %w", err)
+	}
+	defer client.Close()
+
+	sessionRepository := sessionbigquery.New(sessionbigquery.Config{
+		Client:    client,
+		TableID:   tableID,
+		DatasetID: datasetID,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create session repository: %w", err)
+	}
+
+	sessionService := sessionservice.New(sessionservice.Config{
+		Repository: sessionRepository,
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create session service: %w", err)
+	}
+
 	emailClient := sendinblue.New(http.Client{
 		Timeout: 10 * time.Second,
 	}, cfg.SendInBlue.Key)
@@ -181,9 +218,23 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to create bucket client: %w", err)
 	}
 
-	cache, err := NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
+	cache, err := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 	if err != nil {
 		return fmt.Errorf("failed to create cache")
+	}
+
+	c := ory.NewConfiguration()
+	c.Servers = ory.ServerConfigurations{
+		{
+			URL: cfg.Auth.KratosURL,
+		},
+	}
+
+	authService, err := authservice.NewOry(authservice.OryConfig{
+		Client: ory.NewAPIClient(c),
+	})
+	if err != nil {
+		return fmt.Errorf("failed to create auth service")
 	}
 
 	resolver, err := graphql.NewResolver(graphql.Config{
@@ -195,6 +246,7 @@ func startServer(ctx context.Context) error {
 		EmailClient:     emailClient,
 		BucketClient:    bucketClient,
 		FetcherClient:   fetcherClient,
+		AuthService:     authService,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create resolver %w", err)
@@ -209,7 +261,9 @@ func startServer(ctx context.Context) error {
 	gqlHandler.AddTransport(transport.POST{})
 	gqlHandler.AddTransport(transport.MultipartForm{})
 	gqlHandler.Use(extension.Introspection{})
-	gqlHandler.Use(extension.AutomaticPersistedQuery{Cache: cache})
+	gqlHandler.Use(extension.AutomaticPersistedQuery{
+		Cache: cache,
+	})
 
 	httpCors := cors.New(cors.Options{
 		AllowedOrigins:   cfg.CORS.AllowedOrigins,
@@ -223,8 +277,10 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
+	router.Use(authMiddleware(authService))
 
 	router.Handle("/graph", gqlHandler)
+	router.Handle("/session/new", createSessionHandler(sessionService))
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
 		w.WriteHeader(http.StatusOK)
@@ -278,42 +334,89 @@ func loggerMiddleware(logger *zerolog.Logger) func(h http.Handler) http.Handler 
 	}
 }
 
-type Cache struct {
-	client    redis.UniversalClient
-	ttl       time.Duration
-	apqPrefix string
-}
+func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			cookies := r.Header.Get("Cookie")
 
-func NewCache(ctx context.Context, redisAddress string, ttl time.Duration) (*Cache, error) {
-	client := redis.NewClient(&redis.Options{
-		Addr: redisAddress,
-	})
-
-	err := client.Ping(ctx).Err()
-	if err != nil {
-		return nil, fmt.Errorf("could not create cache: %w", err)
-	}
-
-	return &Cache{client: client, ttl: ttl}, nil
-}
-
-func (c Cache) Add(ctx context.Context, key string, value interface{}) {
-	key = fmt.Sprintf("%s:%s", c.apqPrefix, key)
-
-	_, err := c.client.Set(ctx, key, value, c.ttl).Result()
-	if err != nil {
-		zerolog.Ctx(ctx).Err(fmt.Errorf("failed to set cache for key %q: %w", key, err))
+			res, err := s.Authenticate(r.Context(), authdomain.AuthenticateRequest{
+				Cookies: cookies,
+			})
+			if err != nil {
+				zerolog.Ctx(r.Context()).Error().Msgf("failed to authenticate: %s", err)
+				next.ServeHTTP(w, r)
+				return
+			}
+			next.ServeHTTP(w, r.WithContext(
+				s.ToContext(r.Context(), res.User),
+			))
+		})
 	}
 }
 
-func (c Cache) Get(ctx context.Context, key string) (interface{}, bool) {
-	key = fmt.Sprintf("%s:%s", c.apqPrefix, key)
+type sessionNewResponse struct {
+	ID         string    `json:"id"`
+	IP         string    `json:"ip"`
+	Device     string    `json:"device"`
+	PageURL    string    `json:"page_url"`
+	CreatedAt  time.Time `json:"createdAt"`
+	InsertedAt time.Time `json:"insertedAt"`
+}
 
-	s, err := c.client.Get(ctx, key).Result()
-	if err != nil {
-		zerolog.Ctx(ctx).Err(fmt.Errorf("failed to get cache for key %q: %w", key, err))
-		return nil, false
+type sessionNewRequest struct {
+	IP        string `json:"ip"`
+	Device    string `json:"device"`
+	PageURL   string `json:"page_url"`
+	CreatedAt string `json:"created_at"`
+}
+
+func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req sessionNewRequest
+
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to decode: %s", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		createdAt, err := time.Parse(time.RFC3339, req.CreatedAt)
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to parse: %s", err)
+			http.Error(w, sessiondomain.ErrInvalidCreatedAt.Error(), http.StatusBadRequest)
+			return
+		}
+
+		res, err := s.Create(r.Context(), sessiondomain.CreateRequest{
+			IP:        sessiondomain.IP(req.IP),
+			Device:    sessiondomain.Device(req.Device),
+			PageURL:   req.PageURL,
+			CreatedAt: createdAt,
+		})
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to create: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		jsonRes, err := json.Marshal(sessionNewResponse{
+			ID:         res.Session.ID,
+			IP:         res.Session.IP.String(),
+			Device:     res.Session.Device.String(),
+			PageURL:    res.Session.PageURL,
+			CreatedAt:  res.Session.CreatedAt,
+			InsertedAt: res.Session.InsertedAt,
+		})
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		if _, err = w.Write(jsonRes); err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to write: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
-
-	return s, true
 }

@@ -6,6 +6,7 @@ import (
 
 	"github.com/spf13/cobra"
 	"github.com/vediagames/environment"
+
 	"github.com/vediagames/vediagames.com/cmd"
 	"github.com/vediagames/vediagames.com/config"
 )
@@ -31,13 +32,13 @@ func main() {
 
 	cfg, err := config.New(configFilePathFlag)
 	if err != nil {
-		logger.Fatal().Err(fmt.Errorf("failed to load config: %w", err))
+		logger.Fatal().Err(fmt.Errorf("failed to load config: %w", err)).Send()
 	}
 
 	ctx = context.WithValue(ctx, config.ContextKey, cfg)
 	rootCmd.SetContext(ctx)
 
 	if err := rootCmd.Execute(); err != nil {
-		logger.Fatal().Err(fmt.Errorf("failed to execute: %w", err))
+		logger.Fatal().Err(fmt.Errorf("failed to execute: %w", err)).Send()
 	}
 }

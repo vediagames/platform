@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/viper"
 	"github.com/vediagames/zeroerror"
@@ -49,7 +50,14 @@ type Config struct {
 	CORS struct {
 		AllowedOrigins []string `mapstructure:"allowedOrigins"`
 	} `mapstructure:"cors"`
-	RedisAddress string       `mapstructure:"redisAddress"`
+	Auth struct {
+		KratosURL string `mapstructure:"kratosURL"`
+	} `mapstructure:"auth"`
+	RedisAddress string `mapstructure:"redisAddress"`
+	BigQuery     struct {
+		ProjectID       string `mapstructure:"projectID"`
+		CredentialsPath string `mapstructure:"credentialsPath"`
+	} `mapstructure:"bigquery"`
 	Imagor       Imagor       `mapstructure:"imagor"`
 	BunnyStorage BunnyStorage `mapstructure:"bunnyStorage"`
 }
@@ -119,12 +127,20 @@ func (c Config) Validate() error {
 		err.Add(fmt.Errorf("redis address is not set"))
 	}
 
-	if c.BunnyStorage.URL == "" {
-		err.Add(fmt.Errorf("bunny storage url key is not set"))
+	if c.Auth.KratosURL == "" {
+		err.Add(fmt.Errorf("kratos auth url is not set"))
 	}
 
-	if c.BunnyStorage.AccessKey == "" {
-		err.Add(fmt.Errorf("bunny storage access key is not set"))
+	if c.BigQuery.ProjectID == "" {
+		err.Add(fmt.Errorf("bigquery project id is not set"))
+	}
+
+	if c.BigQuery.CredentialsPath == "" || !strings.Contains(c.BigQuery.CredentialsPath, ".json") {
+		err.Add(fmt.Errorf("bigquery credentials path is not set"))
+	}
+
+	if c.BunnyStorage.URL == "" {
+		err.Add(fmt.Errorf("bunny storage url key is not set"))
 	}
 
 	if c.BunnyStorage.AccessKey == "" {
@@ -146,6 +162,7 @@ func (c Config) Validate() error {
 	if c.Imagor.BunnyCDNURL == "" {
 		err.Add(fmt.Errorf("bunny cdn url key is not set"))
 	}
+
 	return err.Err()
 }
 

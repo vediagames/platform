@@ -1,9 +1,10 @@
 .PHONY: gqlgen up build
 
 dc = docker-compose -f docker-compose.yaml
-img_name = eu.gcr.io/vediagames/vg_api
-version = latest
+env_file = ./.env
 
+include $(env_file)
+export $(shell sed 's/=.*//' $(env_file))
 PATH := $(PATH):$(GOPATH)/bin
 
 gqlgen/%:
@@ -19,4 +20,12 @@ down:
 
 generate:
 	echo "Regenerating code"
-	go get github.com/99designs/gqlgen@v0.17.20 && go generate ./...
+	go get github.com/99designs/gqlgen && go generate ./...
+
+build:
+	@docker build -f ./build/Dockerfile -t $(IMAGE_REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION) \
+		--build-arg GITHUB_USERNAME=$(GITHUB_USERNAME) \
+		--build-arg GITHUB_TOKEN=$(GITHUB_TOKEN) .
+
+push:
+	@docker push $(IMAGE_REGISTRY)/$(IMAGE_NAME):$(IMAGE_VERSION)

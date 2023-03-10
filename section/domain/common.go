@@ -44,11 +44,11 @@ func (s Section) Validate() error {
 	}
 
 	if ve := s.Tags.Validate(); ve != nil {
-		err.Add(fmt.Errorf("failed to validate tags: %w", ve))
+		err.Add(fmt.Errorf("invalid tags: %w", ve))
 	}
 
 	if ve := s.Categories.Validate(); ve != nil {
-		err.Add(fmt.Errorf("failed to validate categories: %w", ve))
+		err.Add(fmt.Errorf("invalid categories: %w", ve))
 	}
 
 	if ve := s.Games.Validate(); ve != nil {
