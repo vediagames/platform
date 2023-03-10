@@ -2,6 +2,7 @@ package config
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/spf13/viper"
 	"github.com/vediagames/zeroerror"
@@ -41,6 +42,10 @@ type Config struct {
 		KratosURL string `mapstructure:"kratosURL"`
 	} `mapstructure:"auth"`
 	RedisAddress string `mapstructure:"redisAddress"`
+	BigQuery     struct {
+		ProjectID       string `mapstructure:"projectID"`
+		CredentialsPath string `mapstructure:"credentialsPath"`
+	} `mapstructure:"bigquery"`
 }
 
 func (c Config) Validate() error {
@@ -110,6 +115,14 @@ func (c Config) Validate() error {
 
 	if c.Auth.KratosURL == "" {
 		err.Add(fmt.Errorf("kratos auth url is not set"))
+	}
+
+	if c.BigQuery.ProjectID == "" {
+		err.Add(fmt.Errorf("bigquery project id is not set"))
+	}
+
+	if c.BigQuery.CredentialsPath == "" || !strings.Contains(c.BigQuery.CredentialsPath, ".json") {
+		err.Add(fmt.Errorf("bigquery credentials path is not set"))
 	}
 
 	return err.Err()

@@ -3,11 +3,13 @@ module github.com/vediagames/vediagames.com
 go 1.18
 
 require (
+	cloud.google.com/go/bigquery v1.44.0
 	cloud.google.com/go/storage v1.27.0
 	github.com/99designs/gqlgen v0.17.24
 	github.com/aws/aws-sdk-go v1.44.204
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-redis/redis/v8 v8.11.5
+	github.com/google/uuid v1.3.0
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/lib/pq v1.10.7
 	github.com/ory/kratos-client-go v0.11.1
@@ -18,6 +20,7 @@ require (
 	github.com/vediagames/environment v0.0.0-20221102064304-42c52a3f044b
 	github.com/vediagames/zeroerror v0.0.0-20221102064040-bcc45e6f9ff5
 	github.com/vektah/gqlparser/v2 v2.5.1
+	google.golang.org/api v0.107.0
 )
 
 require (
@@ -45,7 +48,6 @@ require (
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/shlex v0.0.0-20191202100458-e7afc7fbc510 // indirect
-	github.com/google/uuid v1.3.0 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.2.1 // indirect
 	github.com/googleapis/gax-go/v2 v2.7.0 // indirect
 	github.com/gorilla/websocket v1.5.0 // indirect
@@ -88,7 +90,6 @@ require (
 	golang.org/x/text v0.7.0 // indirect
 	golang.org/x/tools v0.6.0 // indirect
 	golang.org/x/xerrors v0.0.0-20220907171357-04be3eba64a2 // indirect
-	google.golang.org/api v0.107.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/genproto v0.0.0-20221227171554-f9683d7f8bef // indirect
 	google.golang.org/grpc v1.52.0 // indirect
