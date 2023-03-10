@@ -25,11 +25,11 @@ func (r CreateRequest) Validate() error {
 	err.AddIf(r.PageURL == "", ErrEmptyPageURL)
 
 	if ve := r.IP.Validate(); ve != nil {
-		err.Add(ve)
+		err.Add(fmt.Errorf("invalid IP: %w", ve))
 	}
 
 	if ve := r.Device.Validate(); ve != nil {
-		err.Add(ve)
+		err.Add(fmt.Errorf("invalid device: %w", ve))
 	}
 
 	return err.Err()
