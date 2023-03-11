@@ -5,8 +5,9 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/cobra"
-	pgmigrator "github.com/vediagames/environment/migrator/postgresql"
+
 	"github.com/vediagames/vediagames.com/config"
+	"github.com/vediagames/vediagames.com/migrator"
 )
 
 func StubCmd() *cobra.Command {
@@ -21,15 +22,11 @@ func StubCmd() *cobra.Command {
 				return fmt.Errorf("failed to open db connection: %w", err)
 			}
 
-			migrator, err := pgmigrator.New(pgmigrator.Config{
-				Path: cfg.PostgreSQL.Path.Migration,
-				DB:   db.DB,
+			mg := migrator.New(migrator.Config{
+				DB: db.DB,
 			})
-			if err != nil {
-				return fmt.Errorf("failed to create migrator: %w", err)
-			}
 
-			if err := migrator.ApplyStubFile(cmd.Context(), cfg.PostgreSQL.Path.Stub); err != nil {
+			if err := mg.ApplyStub(cmd.Context(), cfg.PostgreSQL.Path.Stub); err != nil {
 				return fmt.Errorf("failed to apply stub file: %w", err)
 			}
 
