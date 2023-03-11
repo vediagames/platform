@@ -15,17 +15,17 @@ type Cache struct {
 	apqPrefix string
 }
 
-func NewCache(ctx context.Context, redisAddress string, ttl time.Duration) (*Cache, error) {
+func NewCache(ctx context.Context, redisAddress string, ttl time.Duration) Cache {
 	client := redis.NewClient(&redis.Options{
 		Addr: redisAddress,
 	})
 
 	err := client.Ping(ctx).Err()
 	if err != nil {
-		return nil, fmt.Errorf("could not create cache: %w", err)
+		panic(fmt.Errorf("failed to ping: %w", err))
 	}
 
-	return &Cache{client: client, ttl: ttl}, nil
+	return Cache{client: client, ttl: ttl}
 }
 
 func (c Cache) Add(ctx context.Context, key string, value interface{}) {

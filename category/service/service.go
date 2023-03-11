@@ -4,6 +4,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/category/domain"
 )
 
@@ -16,21 +18,21 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.Repository == nil {
-		return fmt.Errorf("repository is required")
-	}
+	var err zeroerror.Error
 
-	return nil
+	err.AddIf(c.Repository == nil, fmt.Errorf("empty repository"))
+
+	return err.Err()
 }
 
-func New(cfg Config) (domain.Service, error) {
+func New(cfg Config) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		repository: cfg.Repository,
-	}, nil
+	}
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {

@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/game/domain"
 )
 
@@ -21,31 +23,25 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.Repository == nil {
-		return fmt.Errorf("repository is required")
-	}
+	var err zeroerror.Error
 
-	if c.StatsRepository == nil {
-		return fmt.Errorf("stats repository is required")
-	}
+	err.AddIf(c.Repository == nil, fmt.Errorf("empty repository"))
+	err.AddIf(c.EventRepository == nil, fmt.Errorf("empty event repository"))
+	err.AddIf(c.StatsRepository == nil, fmt.Errorf("empty stats repository"))
 
-	if c.EventRepository == nil {
-		return fmt.Errorf("event repository is required")
-	}
-
-	return nil
+	return err.Err()
 }
 
-func New(config Config) (domain.Service, error) {
+func New(config Config) domain.Service {
 	if err := config.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		repository:      config.Repository,
 		statsRepository: config.StatsRepository,
 		eventRepository: config.EventRepository,
-	}, nil
+	}
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {

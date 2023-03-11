@@ -4,15 +4,12 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/vediagames/zeroerror"
+
 	gamedomain "github.com/vediagames/vediagames.com/game/domain"
 	"github.com/vediagames/vediagames.com/search/domain"
 	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
 )
-
-type service struct {
-	gameService gamedomain.Service
-	tagService  tagdomain.Service
-}
 
 type Config struct {
 	GameService gamedomain.Service
@@ -20,26 +17,28 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.GameService == nil {
-		return fmt.Errorf("game service is required")
-	}
+	var err zeroerror.Error
 
-	if c.TagService == nil {
-		return fmt.Errorf("tag service is required")
-	}
+	err.AddIf(c.GameService == nil, fmt.Errorf("empty game service"))
+	err.AddIf(c.TagService == nil, fmt.Errorf("empty tag service"))
 
-	return nil
+	return err.Err()
 }
 
-func New(cfg Config) (domain.Service, error) {
+func New(cfg Config) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		gameService: cfg.GameService,
 		tagService:  cfg.TagService,
-	}, nil
+	}
+}
+
+type service struct {
+	gameService gamedomain.Service
+	tagService  tagdomain.Service
 }
 
 func (s service) Search(ctx context.Context, req domain.SearchRequest) (domain.SearchResponse, error) {

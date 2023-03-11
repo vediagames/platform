@@ -65,147 +65,77 @@ func startServer(ctx context.Context) error {
 
 	db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 	if err != nil {
-		return fmt.Errorf("failed to open db connection: %w", err)
+		return fmt.Errorf("failed to open: %w", err)
 	}
 
-	gameRepository, err := gamepostgresql.New(gamepostgresql.Config{
-		DB: db,
+	gameService := gameservice.New(gameservice.Config{
+		Repository: gamepostgresql.New(gamepostgresql.Config{
+			DB: db,
+		}),
+		StatsRepository: gamepostgresql.NewStatsRepository(gamepostgresql.Config{
+			DB: db,
+		}),
+		EventRepository: gamepostgresql.NewEventRepository(gamepostgresql.Config{
+			DB: db,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game repository: %w", err)
-	}
 
-	gameStatsRepository, err := gamepostgresql.NewStatsRepository(gamepostgresql.Config{
-		DB: db,
+	categoryService := categoryservice.New(categoryservice.Config{
+		Repository: categorypostgresql.New(categorypostgresql.Config{
+			DB: db,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game stats repository: %w", err)
-	}
 
-	gameEventRepository, err := gamepostgresql.NewEventRepository(gamepostgresql.Config{
-		DB: db,
+	sectionService := sectionservice.New(sectionservice.Config{
+		Repository: sectionpostgresql.New(sectionpostgresql.Config{
+			DB: db,
+		}),
+		WebsitePlacementRepository: sectionpostgresql.NewWebsitePlacementRepository(sectionpostgresql.Config{
+			DB: db,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game event repository: %w", err)
-	}
 
-	gameService, err := gameservice.New(gameservice.Config{
-		Repository:      gameRepository,
-		StatsRepository: gameStatsRepository,
-		EventRepository: gameEventRepository,
+	sectionService = sectionvalidationrequest.New(sectionvalidationdata.New(sectionService))
+
+	tagService := tagservice.New(tagservice.Config{
+		Repository: tagpostgresql.New(tagpostgresql.Config{
+			DB: db,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create game service: %w", err)
-	}
 
-	categoryRepository, err := categorypostgresql.New(categorypostgresql.Config{
-		DB: db,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create category repository: %w", err)
-	}
-
-	categoryService, err := categoryservice.New(categoryservice.Config{
-		Repository: categoryRepository,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create category service: %w", err)
-	}
-
-	sectionRepository, err := sectionpostgresql.New(sectionpostgresql.Config{
-		DB: db,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section repository: %w", err)
-	}
-
-	websitePlacementRepository, err := sectionpostgresql.NewWebsitePlacementRepository(sectionpostgresql.Config{
-		DB: db,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create website placement repository: %w", err)
-	}
-
-	sectionService, err := sectionservice.New(sectionservice.Config{
-		Repository:                 sectionRepository,
-		WebsitePlacementRepository: websitePlacementRepository,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section service: %w", err)
-	}
-
-	sectionValidationData, err := sectionvalidationdata.New(sectionvalidationdata.Config{
-		Service: sectionService,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section validation data: %w", err)
-	}
-
-	sectionValidationRequest, err := sectionvalidationrequest.New(sectionvalidationrequest.Config{
-		Service: sectionValidationData,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section validation request: %w", err)
-	}
-
-	tagRepository, err := tagpostgresql.New(tagpostgresql.Config{
-		DB: db,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create tag repository: %w", err)
-	}
-
-	tagService, err := tagservice.New(tagservice.Config{
-		Repository: tagRepository,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create tag service: %w", err)
-	}
-
-	searchService, err := searchservice.New(searchservice.Config{
+	searchService := searchservice.New(searchservice.Config{
 		TagService:  tagService,
 		GameService: gameService,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create search service: %w", err)
-	}
 
-	options := option.WithCredentialsFile(cfg.BigQuery.CredentialsPath)
-	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID, options)
+	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID,
+		option.WithCredentialsFile(cfg.BigQuery.CredentialsPath),
+	)
 	if err != nil {
 		return fmt.Errorf("failed to create bigquery client: %w", err)
 	}
-	defer client.Close()
-
-	sessionRepository := sessionbigquery.New(sessionbigquery.Config{
-		Client:    client,
-		TableID:   tableID,
-		DatasetID: datasetID,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create session repository: %w", err)
-	}
 
 	sessionService := sessionservice.New(sessionservice.Config{
-		Repository: sessionRepository,
+		Repository: sessionbigquery.New(sessionbigquery.Config{
+			Client:    client,
+			TableID:   tableID,
+			DatasetID: datasetID,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create session service: %w", err)
-	}
 
-	emailClient := sendinblue.New(http.Client{
-		Timeout: 10 * time.Second,
-	}, cfg.SendInBlue.Key)
+	emailClient := sendinblue.New(sendinblue.Config{
+		Token: cfg.SendInBlue.Key,
+		Client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
+	})
 
-	fetcherClient, err := fetcher.New(fetcher.Config{
+	fetcherClient := fetcher.New(fetcher.Config{
 		Clients: []fetcherdomain.Client{
 			gamedistribution.New(10),
 			gamemonetize.New(10),
 		},
 	})
-	if err != nil {
-		return fmt.Errorf("failed to new fetcher: %w", err)
-	}
 
 	bucketClient := bunny.New(bunny.Config{
 		URL:       cfg.BunnyStorage.URL,
@@ -216,10 +146,7 @@ func startServer(ctx context.Context) error {
 		},
 	})
 
-	cache, err := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
-	if err != nil {
-		return fmt.Errorf("failed to create cache")
-	}
+	cache := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 
 	c := ory.NewConfiguration()
 	c.Servers = ory.ServerConfigurations{
@@ -228,17 +155,14 @@ func startServer(ctx context.Context) error {
 		},
 	}
 
-	authService, err := authservice.NewOry(authservice.OryConfig{
+	authService := authservice.NewOry(authservice.OryConfig{
 		Client: ory.NewAPIClient(c),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create auth service")
-	}
 
-	resolver, err := graphql.NewResolver(graphql.Config{
+	resolver := graphql.NewResolver(graphql.Config{
 		GameService:     gameService,
 		CategoryService: categoryService,
-		SectionService:  sectionValidationRequest,
+		SectionService:  sectionService,
 		TagService:      tagService,
 		SearchService:   searchService,
 		EmailClient:     emailClient,
@@ -246,9 +170,6 @@ func startServer(ctx context.Context) error {
 		FetcherClient:   fetcherClient,
 		AuthService:     authService,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create resolver %w", err)
-	}
 
 	gqlHandler := handler.New(graphql.NewSchema(&resolver))
 	gqlHandler.AddTransport(transport.Websocket{

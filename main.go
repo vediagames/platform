@@ -42,12 +42,7 @@ func main() {
 
 	ctx := logger.WithContext(context.Background())
 
-	cfg, err := config.New(configFilePathFlag)
-	if err != nil {
-		logger.Fatal().Err(fmt.Errorf("failed to load config: %w", err)).Send()
-	}
-
-	ctx = context.WithValue(ctx, config.ContextKey, cfg)
+	ctx = context.WithValue(ctx, config.ContextKey, config.New(configFilePathFlag))
 	rootCmd.SetContext(ctx)
 
 	if err := rootCmd.Execute(); err != nil {

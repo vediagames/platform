@@ -4,13 +4,10 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/section/domain"
 )
-
-type service struct {
-	repository             domain.Repository
-	webPlacementRepository domain.WebsitePlacementRepository
-}
 
 type Config struct {
 	Repository                 domain.Repository
@@ -18,26 +15,28 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.Repository == nil {
-		return fmt.Errorf("repository is required")
-	}
+	var err zeroerror.Error
 
-	if c.WebsitePlacementRepository == nil {
-		return fmt.Errorf("website placement repository is required")
-	}
+	err.AddIf(c.Repository == nil, fmt.Errorf("empty repository"))
+	err.AddIf(c.WebsitePlacementRepository == nil, fmt.Errorf("empty web placement repository"))
 
-	return nil
+	return err.Err()
 }
 
-func New(cfg Config) (domain.Service, error) {
+type service struct {
+	repository             domain.Repository
+	webPlacementRepository domain.WebsitePlacementRepository
+}
+
+func New(cfg Config) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{
 		repository:             cfg.Repository,
 		webPlacementRepository: cfg.WebsitePlacementRepository,
-	}, nil
+	}
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {

@@ -76,18 +76,22 @@ func (c Config) Validate() error {
 	return err.Err()
 }
 
-func New(path string) (Config, error) {
+func New(path string) Config {
 	viper.SetConfigFile(path)
 	viper.AutomaticEnv()
 
 	if err := viper.ReadInConfig(); err != nil {
-		return Config{}, fmt.Errorf("failed to read config: %w", err)
+		panic(fmt.Errorf("failed to read config: %w", err))
 	}
 
 	var config Config
 	if err := viper.Unmarshal(&config); err != nil {
-		return Config{}, fmt.Errorf("failed to unmarshal config: %w", err)
+		panic(fmt.Errorf("failed to unmarshal config: %w", err))
 	}
 
-	return config, nil
+	if err := config.Validate(); err != nil {
+		panic(fmt.Errorf("invalid config: %w", err))
+	}
+
+	return config
 }

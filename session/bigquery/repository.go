@@ -7,6 +7,7 @@ import (
 
 	"cloud.google.com/go/bigquery"
 	"github.com/google/uuid"
+	"github.com/vediagames/zeroerror"
 
 	"github.com/vediagames/vediagames.com/session/domain"
 )
@@ -24,19 +25,13 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.Client == nil {
-		return fmt.Errorf("empty db")
-	}
+	var err zeroerror.Error
 
-	if c.TableID == "" {
-		return fmt.Errorf("empty table id")
-	}
+	err.AddIf(c.Client == nil, fmt.Errorf("empty client"))
+	err.AddIf(c.TableID == "", fmt.Errorf("empty table ID"))
+	err.AddIf(c.DatasetID == "", fmt.Errorf("empty dataset ID"))
 
-	if c.DatasetID == "" {
-		return fmt.Errorf("empty dataset id")
-	}
-
-	return nil
+	return err.Err()
 }
 
 func New(cfg Config) domain.Repository {
