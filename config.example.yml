@@ -11,13 +11,6 @@ postgresql:
 sendinblue:
   key: "empty"
 
-bucket:
-  key: "empty"
-  secret: "empty"
-  region: "us-west-004"
-  endpoint: "https://s3.us-west-004.backblazeb2.com"
-  bucket: "vg-images"
-
 cors:
   allowedOrigins:
     - "*"

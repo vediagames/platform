@@ -4,9 +4,7 @@ go 1.18
 
 require (
 	cloud.google.com/go/bigquery v1.47.0
-	cloud.google.com/go/storage v1.29.0
 	github.com/99designs/gqlgen v0.17.24
-	github.com/aws/aws-sdk-go v1.44.214
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-migrate/migrate/v4 v4.15.2
@@ -53,7 +51,6 @@ require (
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/inconshreveable/mousetrap v1.1.0 // indirect
-	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/klauspost/asmfmt v1.3.2 // indirect
 	github.com/klauspost/compress v1.15.15 // indirect
 	github.com/klauspost/cpuid/v2 v2.0.9 // indirect
