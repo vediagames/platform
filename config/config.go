@@ -59,94 +59,30 @@ type Config struct {
 func (c Config) Validate() error {
 	var err zeroerror.Error
 
-	if c.Environment == "" {
-		err.Add(fmt.Errorf("environment is not set"))
-	}
-
-	if c.LogLevel == "" {
-		err.Add(fmt.Errorf("logLevel is not set"))
-	}
-
-	if c.Port == 0 {
-		err.Add(fmt.Errorf("port is not set"))
-	}
-
-	if c.PostgreSQL.ConnectionString == "" {
-		err.Add(fmt.Errorf("postgresql.connectionString is not set"))
-	}
-
-	if c.SendInBlue.Key == "" {
-		err.Add(fmt.Errorf("sendinblue.key is not set"))
-	}
-
-	if c.Bucket.Key == "" {
-		err.Add(fmt.Errorf("bucket.key is not set"))
-	}
-
-	if c.Bucket.Secret == "" {
-		err.Add(fmt.Errorf("bucket.secret is not set"))
-	}
-
-	if c.Bucket.Region == "" {
-		err.Add(fmt.Errorf("bucket.region is not set"))
-	}
-
-	if c.Bucket.EndPoint == "" {
-		err.Add(fmt.Errorf("bucket.endpoint is not set"))
-	}
-
-	if c.Bucket.Name == "" {
-		err.Add(fmt.Errorf("bucket.name is not set"))
-	}
-
-	if len(c.CORS.AllowedOrigins) == 0 {
-		err.Add(fmt.Errorf("cors.allowedOrigins is not set"))
-	}
+	err.AddIf(c.Environment == "", fmt.Errorf("environment is not set"))
+	err.AddIf(c.LogLevel == "", fmt.Errorf("logLevel is not set"))
+	err.AddIf(c.Port == 0, fmt.Errorf("port is not set"))
+	err.AddIf(c.PostgreSQL.ConnectionString == "", fmt.Errorf("postgresql.connectionString is not set"))
+	err.AddIf(c.SendInBlue.Key == "", fmt.Errorf("sendinblue.key is not set"))
+	err.AddIf(c.Bucket.Key == "", fmt.Errorf("bucket.key is not set"))
+	err.AddIf(c.Bucket.Secret == "", fmt.Errorf("bucket.secret is not set"))
+	err.AddIf(c.Bucket.Region == "", fmt.Errorf("bucket.region is not set"))
+	err.AddIf(c.Bucket.EndPoint == "", fmt.Errorf("bucket.endpoint is not set"))
+	err.AddIf(c.Bucket.Name == "", fmt.Errorf("bucket.name is not set"))
+	err.AddIf(len(c.CORS.AllowedOrigins) == 0, fmt.Errorf("cors.allowedOrigins is not set"))
+	err.AddIf(c.PostgreSQL.Path.Migration == "", fmt.Errorf("postgresql.path.migration is not set"))
+	err.AddIf(c.PostgreSQL.Path.Stub == "", fmt.Errorf("postgresql.path.stub is not set"))
+	err.AddIf(c.RedisAddress == "", fmt.Errorf("redisAddress is not set"))
+	err.AddIf(c.Auth.KratosURL == "", fmt.Errorf("auth.kratusURL is not set"))
+	err.AddIf(c.BigQuery.ProjectID == "", fmt.Errorf("bigquery.projectID is not set"))
+	err.AddIf(c.BigQuery.CredentialsPath == "", fmt.Errorf("bigquery.credentialsPath is not set"))
+	err.AddIf(c.BunnyStorage.URL == "", fmt.Errorf("bunnyStorage url key is not set"))
+	err.AddIf(c.BunnyStorage.AccessKey == "", fmt.Errorf("bunnyStorage.accessKey is not set"))
+	err.AddIf(c.Imagor.URL == "", fmt.Errorf("imagor.URL is not set"))
+	err.AddIf(c.Imagor.Secret == "", fmt.Errorf("imagor.secret is not set"))
 
 	for _, origin := range c.CORS.AllowedOrigins {
-		if origin == "" {
-			err.Add(fmt.Errorf("cors.allowedOrigins includes empty origin"))
-		}
-	}
-
-	if c.PostgreSQL.Path.Migration == "" {
-		err.Add(fmt.Errorf("postgresql.path.migration is not set"))
-	}
-
-	if c.PostgreSQL.Path.Stub == "" {
-		err.Add(fmt.Errorf("postgresql.path.stub is not set"))
-	}
-
-	if c.RedisAddress == "" {
-		err.Add(fmt.Errorf("redisAddress is not set"))
-	}
-
-	if c.Auth.KratosURL == "" {
-		err.Add(fmt.Errorf("auth.kratusURL is not set"))
-	}
-
-	if c.BigQuery.ProjectID == "" {
-		err.Add(fmt.Errorf("bigquery.projectID is not set"))
-	}
-
-	if c.BigQuery.CredentialsPath == "" {
-		err.Add(fmt.Errorf("bigquery.credentialsPath is not set"))
-	}
-
-	if c.BunnyStorage.URL == "" {
-		err.Add(fmt.Errorf("bunnyStorage url key is not set"))
-	}
-
-	if c.BunnyStorage.AccessKey == "" {
-		err.Add(fmt.Errorf("bunnyStorage.accessKey is not set"))
-	}
-
-	if c.Imagor.URL == "" {
-		err.Add(fmt.Errorf("imagor.URL is not set"))
-	}
-
-	if c.Imagor.Secret == "" {
-		err.Add(fmt.Errorf("imagor.secret is not set"))
+		err.AddIf(origin == "", fmt.Errorf("cors.allowedOrigins includes empty origin"))
 	}
 
 	return err.Err()
