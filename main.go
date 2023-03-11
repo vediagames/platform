@@ -3,9 +3,11 @@ package main
 import (
 	"context"
 	"fmt"
+	"os"
 
+	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
-	"github.com/vediagames/environment"
+	"github.com/spf13/viper"
 
 	"github.com/vediagames/vediagames.com/cmd"
 	"github.com/vediagames/vediagames.com/config"
@@ -26,7 +28,17 @@ func main() {
 	rootCmd.AddCommand(cmd.StubCmd())
 	rootCmd.AddCommand(cmd.RefreshCmd())
 
-	logger := environment.InitLogger()
+	zerolog.TimestampFieldName = "t"
+	zerolog.LevelFieldName = "l"
+	zerolog.MessageFieldName = "m"
+
+	if viper.GetString("env") != "development" {
+		zerolog.TimeFieldFormat = zerolog.TimeFormatUnix
+	}
+
+	logger := zerolog.New(os.Stdout).With().
+		Timestamp().
+		Logger()
 
 	ctx := logger.WithContext(context.Background())
 
