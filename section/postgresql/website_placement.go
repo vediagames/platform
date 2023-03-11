@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
 	"github.com/vediagames/vediagames.com/section/domain"
 )
 
@@ -12,14 +13,14 @@ type websitePlacementRepository struct {
 	db *sqlx.DB
 }
 
-func NewWebsitePlacementRepository(cfg Config) (domain.WebsitePlacementRepository, error) {
+func NewWebsitePlacementRepository(cfg Config) domain.WebsitePlacementRepository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &websitePlacementRepository{
 		db: cfg.DB,
-	}, nil
+	}
 }
 
 func (r websitePlacementRepository) Find(ctx context.Context, q domain.WebsitePlacementFindQuery) (domain.WebsitePlacementFindResult, error) {

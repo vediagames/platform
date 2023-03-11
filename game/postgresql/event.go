@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
 	"github.com/vediagames/vediagames.com/game/domain"
 )
 
@@ -12,12 +13,12 @@ type eventRepository struct {
 	db *sqlx.DB
 }
 
-func NewEventRepository(cfg Config) (domain.EventRepository, error) {
+func NewEventRepository(cfg Config) domain.EventRepository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
-	return eventRepository{db: cfg.DB}, nil
+	return eventRepository{db: cfg.DB}
 }
 
 var logEventTables = map[domain.Event]string{

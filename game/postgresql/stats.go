@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
+
 	"github.com/vediagames/vediagames.com/game/domain"
 )
 
@@ -12,12 +13,12 @@ type statsRepository struct {
 	db *sqlx.DB
 }
 
-func NewStatsRepository(cfg Config) (domain.StatsRepository, error) {
+func NewStatsRepository(cfg Config) domain.StatsRepository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
-	return statsRepository{db: cfg.DB}, nil
+	return statsRepository{db: cfg.DB}
 }
 
 func (r statsRepository) FindMostPlayedIDsByDate(ctx context.Context, q domain.FindMostPlayedIDsByDateQuery) (domain.FindMostPlayedIDsByDateResult, error) {

@@ -7,30 +7,18 @@ import (
 	"github.com/vediagames/vediagames.com/section/domain"
 )
 
-type service struct {
-	svc domain.Service
-}
-
-type Config struct {
-	Service domain.Service
-}
-
-func (c Config) Validate() error {
-	if c.Service == nil {
-		return fmt.Errorf("service is required")
-	}
-
-	return nil
-}
-
-func New(cfg Config) (domain.Service, error) {
-	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+func New(svc domain.Service) domain.Service {
+	if svc == nil {
+		panic("empty service")
 	}
 
 	return &service{
-		svc: cfg.Service,
-	}, nil
+		svc: svc,
+	}
+}
+
+type service struct {
+	svc domain.Service
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {

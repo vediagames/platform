@@ -5,8 +5,9 @@ import (
 	"fmt"
 
 	ory "github.com/ory/kratos-client-go"
-	"github.com/vediagames/vediagames.com/auth/domain"
 	"github.com/vediagames/zeroerror"
+
+	"github.com/vediagames/vediagames.com/auth/domain"
 )
 
 type oryService struct {
@@ -27,14 +28,14 @@ func (c OryConfig) Validate() error {
 	return err.Err()
 }
 
-func NewOry(cfg OryConfig) (domain.Service, error) {
+func NewOry(cfg OryConfig) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &oryService{
 		client: cfg.Client,
-	}, nil
+	}
 }
 
 func (s oryService) Authenticate(ctx context.Context, req domain.AuthenticateRequest) (domain.AuthenticateResponse, error) {

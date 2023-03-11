@@ -10,6 +10,8 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/category/domain"
 )
 
@@ -22,25 +24,25 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.DB == nil {
-		return fmt.Errorf("missing db")
+	var err zeroerror.Error
+
+	err.AddIf(c.DB == nil, fmt.Errorf("empty DB"))
+
+	if pingErr := c.DB.Ping(); pingErr != nil {
+		err.Add(fmt.Errorf("failed to ping: %w", pingErr))
 	}
 
-	if err := c.DB.Ping(); err != nil {
-		return fmt.Errorf("failed to ping db: %w", err)
-	}
-
-	return nil
+	return err.Err()
 }
 
-func New(cfg Config) (*repository, error) {
+func New(cfg Config) domain.Repository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &repository{
 		db: cfg.DB,
-	}, nil
+	}
 }
 
 type category struct {
@@ -140,7 +142,7 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		SELECT * FROM mat_categories_view 
+		SELECT * FROM mat_categories_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 

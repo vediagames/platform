@@ -11,6 +11,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
+
 	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	"github.com/vediagames/vediagames.com/bff/graphql/generated"
 	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
@@ -87,9 +88,9 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func NewResolver(cfg Config) (Resolver, error) {
+func NewResolver(cfg Config) Resolver {
 	if err := cfg.Validate(); err != nil {
-		return Resolver{}, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return Resolver{
@@ -102,7 +103,7 @@ func NewResolver(cfg Config) (Resolver, error) {
 		bucketClient:    cfg.BucketClient,
 		fetcherClient:   cfg.FetcherClient,
 		authService:     cfg.AuthService,
-	}, nil
+	}
 }
 
 func NewSchema(r *Resolver) graphql.ExecutableSchema {

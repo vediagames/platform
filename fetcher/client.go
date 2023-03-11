@@ -23,14 +23,14 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func New(cfg Config) (domain.Client, error) {
+func New(cfg Config) domain.Client {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &client{
 		clients: cfg.Clients,
-	}, nil
+	}
 }
 
 func (c client) Fetch() (domain.FetchedGame, error) {

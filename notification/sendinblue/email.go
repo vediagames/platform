@@ -8,36 +8,39 @@ import (
 	"net/http"
 
 	"github.com/rs/zerolog"
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/notification/domain"
 )
 
-type emailRequest struct {
-	Subject     string `json:"subject"`
-	Sender      sender `json:"sender"`
-	To          []to   `json:"to"`
-	HTMLContent string `json:"htmlContent"`
+type Config struct {
+	Token  string
+	Client *http.Client
 }
 
-type sender struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
+func (c Config) Validate() error {
+	var err zeroerror.Error
+
+	err.AddIf(c.Token == "", fmt.Errorf("empty token"))
+	err.AddIf(c.Client == nil, fmt.Errorf("empty client"))
+
+	return err.Err()
 }
 
-type to struct {
-	Email string `json:"email"`
-	Name  string `json:"name"`
+func New(c Config) domain.EmailClient {
+	if err := c.Validate(); err != nil {
+		panic(fmt.Errorf("invalid config: %w", err))
+	}
+
+	return &service{
+		client: c.Client,
+		token:  c.Token,
+	}
 }
 
 type service struct {
-	client http.Client
+	client *http.Client
 	token  string
-}
-
-func New(client http.Client, token string) domain.EmailClient {
-	return &service{
-		client: client,
-		token:  token,
-	}
 }
 
 func (s service) Email(ctx context.Context, req domain.EmailRequest) error {
@@ -90,4 +93,21 @@ func (s service) Email(ctx context.Context, req domain.EmailRequest) error {
 	}
 
 	return nil
+}
+
+type emailRequest struct {
+	Subject     string `json:"subject"`
+	Sender      sender `json:"sender"`
+	To          []to   `json:"to"`
+	HTMLContent string `json:"htmlContent"`
+}
+
+type sender struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
+}
+
+type to struct {
+	Email string `json:"email"`
+	Name  string `json:"name"`
 }
