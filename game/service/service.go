@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/vediagames/zeroerror"
+
 	"github.com/vediagames/vediagames.com/game/domain"
 )
 
@@ -19,15 +21,12 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.Repository == nil {
-		return fmt.Errorf("repository is required")
-	}
+	var err zeroerror.Error
 
-	if c.EventRepository == nil {
-		return fmt.Errorf("event repository is required")
-	}
+	err.AddIf(c.Repository == nil, fmt.Errorf("empty repository"))
+	err.AddIf(c.EventRepository == nil, fmt.Errorf("empty event repository"))
 
-	return nil
+	return err.Err()
 }
 
 func New(config Config) domain.Service {

@@ -11,6 +11,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+	"github.com/vediagames/zeroerror"
 
 	"github.com/vediagames/vediagames.com/game/domain"
 )
@@ -24,12 +25,12 @@ type Config struct {
 }
 
 func (c Config) Validate() error {
-	if c.DB == nil {
-		return fmt.Errorf("missing db")
-	}
+	var err zeroerror.Error
 
-	if err := c.DB.Ping(); err != nil {
-		return fmt.Errorf("failed to ping db: %w", err)
+	err.AddIf(c.DB == nil, fmt.Errorf("empty DB"))
+
+	if pingErr := c.DB.Ping(); pingErr != nil {
+		err.Add(fmt.Errorf("failed to ping: %w", pingErr))
 	}
 
 	return nil

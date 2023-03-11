@@ -13,14 +13,14 @@ type placedRepository struct {
 	db *sqlx.DB
 }
 
-func NewPlaced(cfg Config) (domain.PlacedRepository, error) {
+func NewPlaced(cfg Config) domain.PlacedRepository {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &placedRepository{
 		db: cfg.DB,
-	}, nil
+	}
 }
 
 func (r placedRepository) Find(ctx context.Context, q domain.PlacedFindQuery) (domain.PlacedFindResult, error) {

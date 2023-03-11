@@ -2,10 +2,12 @@ package cmd
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
 
+	"cloud.google.com/go/bigquery"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -15,11 +17,12 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
+	"google.golang.org/api/option"
 
 	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	authservice "github.com/vediagames/vediagames.com/auth/service"
 	"github.com/vediagames/vediagames.com/bff/graphql"
-	"github.com/vediagames/vediagames.com/bucket/s3"
+	"github.com/vediagames/vediagames.com/bucket/bunny"
 	categorypostgresql "github.com/vediagames/vediagames.com/category/postgresql"
 	categoryservice "github.com/vediagames/vediagames.com/category/service"
 	"github.com/vediagames/vediagames.com/config"
@@ -35,8 +38,16 @@ import (
 	sectionservice "github.com/vediagames/vediagames.com/section/service"
 	sectionvalidationdata "github.com/vediagames/vediagames.com/section/service/validation/data"
 	sectionvalidationrequest "github.com/vediagames/vediagames.com/section/service/validation/request"
+	sessionbigquery "github.com/vediagames/vediagames.com/session/bigquery"
+	sessiondomain "github.com/vediagames/vediagames.com/session/domain"
+	sessionservice "github.com/vediagames/vediagames.com/session/service"
 	tagpostgresql "github.com/vediagames/vediagames.com/tag/postgresql"
 	tagservice "github.com/vediagames/vediagames.com/tag/service"
+)
+
+const (
+	tableID   = "tableID"
+	datasetID = "datasetID"
 )
 
 func ServerCmd() *cobra.Command {
@@ -54,117 +65,88 @@ func startServer(ctx context.Context) error {
 
 	db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
 	if err != nil {
-		return fmt.Errorf("failed to open db connection: %w", err)
+		return fmt.Errorf("failed to open: %w", err)
 	}
 
-	gameRepository := gamepostgresql.New(gamepostgresql.Config{
-		DB: db,
-	})
-
-	gameEventRepository := gamepostgresql.NewEvent(gamepostgresql.Config{
-		DB: db,
-	})
-
 	gameService := gameservice.New(gameservice.Config{
-		Repository:      gameRepository,
-		EventRepository: gameEventRepository,
-	})
-
-	categoryRepository := categorypostgresql.New(categorypostgresql.Config{
-		DB: db,
+		Repository: gamepostgresql.New(gamepostgresql.Config{
+			DB: db,
+		}),
+		StatsRepository: gamepostgresql.NewStatsRepository(gamepostgresql.Config{
+			DB: db,
+		}),
+		EventRepository: gamepostgresql.NewEventRepository(gamepostgresql.Config{
+			DB: db,
+		}),
 	})
 
 	categoryService := categoryservice.New(categoryservice.Config{
-		Repository: categoryRepository,
+		Repository: categorypostgresql.New(categorypostgresql.Config{
+			DB: db,
+		}),
 	})
 
-	sectionRepository, err := sectionpostgresql.New(sectionpostgresql.Config{
-		DB: db,
+	sectionService := sectionservice.New(sectionservice.Config{
+		Repository: sectionpostgresql.New(sectionpostgresql.Config{
+			DB: db,
+		}),
+		WebsitePlacementRepository: sectionpostgresql.NewWebsitePlacementRepository(sectionpostgresql.Config{
+			DB: db,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create section repository: %w", err)
-	}
 
-	websitePlacementRepository, err := sectionpostgresql.NewPlaced(sectionpostgresql.Config{
-		DB: db,
+	sectionService = sectionvalidationrequest.New(sectionvalidationdata.New(sectionService))
+
+	tagService := tagservice.New(tagservice.Config{
+		Repository: tagpostgresql.New(tagpostgresql.Config{
+			DB: db,
+		}),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create website placement repository: %w", err)
-	}
 
-	sectionService, err := sectionservice.New(sectionservice.Config{
-		Repository:       sectionRepository,
-		PlacedRepository: websitePlacementRepository,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section service: %w", err)
-	}
-
-	sectionValidationData, err := sectionvalidationdata.New(sectionvalidationdata.Config{
-		Service: sectionService,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section validation data: %w", err)
-	}
-
-	sectionValidationRequest, err := sectionvalidationrequest.New(sectionvalidationrequest.Config{
-		Service: sectionValidationData,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create section validation request: %w", err)
-	}
-
-	tagRepository, err := tagpostgresql.New(tagpostgresql.Config{
-		DB: db,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create tag repository: %w", err)
-	}
-
-	tagService, err := tagservice.New(tagservice.Config{
-		Repository: tagRepository,
-	})
-	if err != nil {
-		return fmt.Errorf("failed to create tag service: %w", err)
-	}
-
-	searchService, err := searchservice.New(searchservice.Config{
+	searchService := searchservice.New(searchservice.Config{
 		TagService:  tagService,
 		GameService: gameService,
 	})
+
+	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID,
+		option.WithCredentialsFile(cfg.BigQuery.CredentialsPath),
+	)
 	if err != nil {
-		return fmt.Errorf("failed to create search service: %w", err)
+		return fmt.Errorf("failed to create bigquery client: %w", err)
 	}
 
-	emailClient := sendinblue.New(http.Client{
-		Timeout: 10 * time.Second,
-	}, cfg.SendInBlue.Key)
+	sessionService := sessionservice.New(sessionservice.Config{
+		Repository: sessionbigquery.New(sessionbigquery.Config{
+			Client:    client,
+			TableID:   tableID,
+			DatasetID: datasetID,
+		}),
+	})
 
-	fetcherClient, err := fetcher.New(fetcher.Config{
+	emailClient := sendinblue.New(sendinblue.Config{
+		Token: cfg.SendInBlue.Key,
+		Client: &http.Client{
+			Timeout: 10 * time.Second,
+		},
+	})
+
+	fetcherClient := fetcher.New(fetcher.Config{
 		Clients: []fetcherdomain.Client{
 			gamedistribution.New(10),
 			gamemonetize.New(10),
 		},
 	})
-	if err != nil {
-		return fmt.Errorf("failed to new fetcher: %w", err)
-	}
 
-	bucketClient, err := s3.New(s3.Config{
-		Key:      cfg.Bucket.Key,
-		Secret:   cfg.Bucket.Secret,
-		Region:   cfg.Bucket.Region,
-		EndPoint: cfg.Bucket.EndPoint,
-		Bucket:   cfg.Bucket.Bucket,
+	bucketClient := bunny.New(bunny.Config{
+		URL:       cfg.BunnyStorage.URL,
+		AccessKey: cfg.BunnyStorage.AccessKey,
+		Zone:      cfg.BunnyStorage.Zone,
+		Client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create bucket client: %w", err)
-	}
 
-	cache, err := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
-	if err != nil {
-		return fmt.Errorf("failed to create cache")
-	}
+	cache := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 
 	c := ory.NewConfiguration()
 	c.Servers = ory.ServerConfigurations{
@@ -173,17 +155,14 @@ func startServer(ctx context.Context) error {
 		},
 	}
 
-	authService, err := authservice.NewOry(authservice.OryConfig{
+	authService := authservice.NewOry(authservice.OryConfig{
 		Client: ory.NewAPIClient(c),
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create auth service")
-	}
 
-	resolver, err := graphql.NewResolver(graphql.Config{
+	resolver := graphql.NewResolver(graphql.Config{
 		GameService:     gameService,
 		CategoryService: categoryService,
-		SectionService:  sectionValidationRequest,
+		SectionService:  sectionService,
 		TagService:      tagService,
 		SearchService:   searchService,
 		EmailClient:     emailClient,
@@ -191,9 +170,6 @@ func startServer(ctx context.Context) error {
 		FetcherClient:   fetcherClient,
 		AuthService:     authService,
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create resolver %w", err)
-	}
 
 	gqlHandler := handler.New(graphql.NewSchema(&resolver))
 	gqlHandler.AddTransport(transport.Websocket{
@@ -220,9 +196,10 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
-	//router.Use(authMiddleware(authService))
+	router.Use(authMiddleware(authService))
 
 	router.Handle("/graph", gqlHandler)
+	router.Handle("/session/new", createSessionHandler(sessionService))
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
 		w.WriteHeader(http.StatusOK)
@@ -287,11 +264,80 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 			if err != nil {
 				zerolog.Ctx(r.Context()).Error().Msgf("failed to authenticate: %s", err)
 				next.ServeHTTP(w, r)
+				return
 			}
 
 			next.ServeHTTP(w, r.WithContext(
 				s.ToContext(r.Context(), res.User),
 			))
 		})
+	}
+}
+
+type sessionNewResponse struct {
+	ID         string    `json:"id"`
+	IP         string    `json:"ip"`
+	Device     string    `json:"device"`
+	PageURL    string    `json:"page_url"`
+	CreatedAt  time.Time `json:"createdAt"`
+	InsertedAt time.Time `json:"insertedAt"`
+}
+
+type sessionNewRequest struct {
+	IP        string `json:"ip"`
+	Device    string `json:"device"`
+	PageURL   string `json:"page_url"`
+	CreatedAt string `json:"created_at"`
+}
+
+func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var req sessionNewRequest
+
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to decode: %s", err)
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+
+		createdAt, err := time.Parse(time.RFC3339, req.CreatedAt)
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to parse: %s", err)
+			http.Error(w, sessiondomain.ErrInvalidCreatedAt.Error(), http.StatusBadRequest)
+			return
+		}
+
+		res, err := s.Create(r.Context(), sessiondomain.CreateRequest{
+			IP:        sessiondomain.IP(req.IP),
+			Device:    sessiondomain.Device(req.Device),
+			PageURL:   req.PageURL,
+			CreatedAt: createdAt,
+		})
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to create: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		jsonRes, err := json.Marshal(sessionNewResponse{
+			ID:         res.Session.ID,
+			IP:         res.Session.IP.String(),
+			Device:     res.Session.Device.String(),
+			PageURL:    res.Session.PageURL,
+			CreatedAt:  res.Session.CreatedAt,
+			InsertedAt: res.Session.InsertedAt,
+		})
+		if err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusCreated)
+		if _, err = w.Write(jsonRes); err != nil {
+			zerolog.Ctx(r.Context()).Error().Msgf("failed to write: %s", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
 	}
 }

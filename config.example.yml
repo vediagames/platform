@@ -11,13 +11,6 @@ postgresql:
 sendinblue:
   key: "empty"
 
-bucket:
-  key: "empty"
-  secret: "empty"
-  region: "us-west-004"
-  endpoint: "https://s3.us-west-004.backblazeb2.com"
-  bucket: "vg-images"
-
 cors:
   allowedOrigins:
     - "*"
@@ -26,3 +19,18 @@ redisAddress: "localhost:6379"
 
 auth:
   kratosURL: "http://localhost:4433"
+
+bigquery:
+  projectID: "your-project-id"
+  credentialsPath: "path/to/your/credentials.json"
+  tableID: "table"
+  datasetID: "dataset"
+
+imagor:
+  URL: "localhost:8000"
+  secret: "vediagames"
+
+bunnyStorage:
+  URL: "storage.bunnycdn.com"
+  zone: "vediagames"
+  accessKey: "UUID"
