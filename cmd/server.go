@@ -22,7 +22,7 @@ import (
 	authdomain "github.com/vediagames/vediagames.com/auth/domain"
 	authservice "github.com/vediagames/vediagames.com/auth/service"
 	"github.com/vediagames/vediagames.com/bff/graphql"
-	"github.com/vediagames/vediagames.com/bucket/s3"
+	"github.com/vediagames/vediagames.com/bucket/bunny"
 	categorypostgresql "github.com/vediagames/vediagames.com/category/postgresql"
 	categoryservice "github.com/vediagames/vediagames.com/category/service"
 	"github.com/vediagames/vediagames.com/config"
@@ -207,16 +207,14 @@ func startServer(ctx context.Context) error {
 		return fmt.Errorf("failed to new fetcher: %w", err)
 	}
 
-	bucketClient, err := s3.New(s3.Config{
-		Key:      cfg.Bucket.Key,
-		Secret:   cfg.Bucket.Secret,
-		Region:   cfg.Bucket.Region,
-		EndPoint: cfg.Bucket.EndPoint,
-		Bucket:   cfg.Bucket.Name,
+	bucketClient := bunny.New(bunny.Config{
+		URL:       cfg.BunnyStorage.URL,
+		AccessKey: cfg.BunnyStorage.AccessKey,
+		Zone:      cfg.BunnyStorage.Zone,
+		Client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
 	})
-	if err != nil {
-		return fmt.Errorf("failed to create bucket client: %w", err)
-	}
 
 	cache, err := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 	if err != nil {

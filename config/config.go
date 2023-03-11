@@ -27,13 +27,6 @@ type Config struct {
 	SendInBlue struct {
 		Key string `mapstructure:"key"`
 	} `mapstructure:"sendinblue"`
-	Bucket struct {
-		Key      string `mapstructure:"key"`
-		Secret   string `mapstructure:"secret"`
-		Region   string `mapstructure:"region"`
-		EndPoint string `mapstructure:"endpoint"`
-		Name     string `mapstructure:"name"`
-	} `mapstructure:"bucket"`
 	CORS struct {
 		AllowedOrigins []string `mapstructure:"allowedOrigins"`
 	} `mapstructure:"cors"`
@@ -64,11 +57,6 @@ func (c Config) Validate() error {
 	err.AddIf(c.Port == 0, fmt.Errorf("port is not set"))
 	err.AddIf(c.PostgreSQL.ConnectionString == "", fmt.Errorf("postgresql.connectionString is not set"))
 	err.AddIf(c.SendInBlue.Key == "", fmt.Errorf("sendinblue.key is not set"))
-	err.AddIf(c.Bucket.Key == "", fmt.Errorf("bucket.key is not set"))
-	err.AddIf(c.Bucket.Secret == "", fmt.Errorf("bucket.secret is not set"))
-	err.AddIf(c.Bucket.Region == "", fmt.Errorf("bucket.region is not set"))
-	err.AddIf(c.Bucket.EndPoint == "", fmt.Errorf("bucket.endpoint is not set"))
-	err.AddIf(c.Bucket.Name == "", fmt.Errorf("bucket.name is not set"))
 	err.AddIf(len(c.CORS.AllowedOrigins) == 0, fmt.Errorf("cors.allowedOrigins is not set"))
 	err.AddIf(c.PostgreSQL.Path.Migration == "", fmt.Errorf("postgresql.path.migration is not set"))
 	err.AddIf(c.PostgreSQL.Path.Stub == "", fmt.Errorf("postgresql.path.stub is not set"))
