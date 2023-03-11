@@ -212,7 +212,7 @@ func startServer(ctx context.Context) error {
 		Secret:   cfg.Bucket.Secret,
 		Region:   cfg.Bucket.Region,
 		EndPoint: cfg.Bucket.EndPoint,
-		Bucket:   cfg.Bucket.Bucket,
+		Bucket:   cfg.Bucket.Name,
 	})
 	if err != nil {
 		return fmt.Errorf("failed to create bucket client: %w", err)

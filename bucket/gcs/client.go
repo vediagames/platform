@@ -7,6 +7,7 @@ import (
 	"time"
 
 	"cloud.google.com/go/storage"
+
 	"github.com/vediagames/vediagames.com/bucket/domain"
 )
 
@@ -65,11 +66,11 @@ func (c client) Upload(ctx context.Context, path string, reader io.Reader) error
 
 	_, err := io.Copy(w, reader)
 	if err != nil {
-		return fmt.Errorf("could not write data to object, %w", err)
+		return fmt.Errorf("failed to copy: %w", err)
 	}
 
 	if err := w.Close(); err != nil {
-		return fmt.Errorf("could not close writer, %w", err)
+		return fmt.Errorf("failed to close: %w", err)
 	}
 
 	return nil
