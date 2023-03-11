@@ -26,9 +26,7 @@ type Config struct {
 func (c Config) Validate() error {
 	var err zeroerror.Error
 
-	if c.DB == nil {
-		err.Add(fmt.Errorf("empty DB"))
-	}
+	err.AddIf(c.DB == nil, fmt.Errorf("empty DB"))
 
 	return err.Err()
 }
