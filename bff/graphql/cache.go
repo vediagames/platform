@@ -25,7 +25,10 @@ func NewCache(ctx context.Context, redisAddress string, ttl time.Duration) Cache
 		panic(fmt.Errorf("failed to ping: %w", err))
 	}
 
-	return Cache{client: client, ttl: ttl}
+	return Cache{
+		client: client,
+		ttl:    ttl,
+	}
 }
 
 func (c Cache) Add(ctx context.Context, key string, value interface{}) {
