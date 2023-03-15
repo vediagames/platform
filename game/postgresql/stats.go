@@ -6,7 +6,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 
-	"github.com/vediagames/vediagames.com/game/domain"
+	"github.com/vediagames/platform/game/domain"
 )
 
 type statsRepository struct {

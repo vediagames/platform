@@ -8,14 +8,14 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vediagames/vediagames.com/bff/graphql/generated"
-	"github.com/vediagames/vediagames.com/bff/graphql/model"
-	categorydomain "github.com/vediagames/vediagames.com/category/domain"
-	gamedomain "github.com/vediagames/vediagames.com/game/domain"
-	notificationdomain "github.com/vediagames/vediagames.com/notification/domain"
-	searchdomain "github.com/vediagames/vediagames.com/search/domain"
-	sectiondomain "github.com/vediagames/vediagames.com/section/domain"
-	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
+	"github.com/vediagames/platform/bff/graphql/generated"
+	"github.com/vediagames/platform/bff/graphql/model"
+	categorydomain "github.com/vediagames/platform/category/domain"
+	gamedomain "github.com/vediagames/platform/game/domain"
+	notificationdomain "github.com/vediagames/platform/notification/domain"
+	searchdomain "github.com/vediagames/platform/search/domain"
+	sectiondomain "github.com/vediagames/platform/section/domain"
+	tagdomain "github.com/vediagames/platform/tag/domain"
 )
 
 // SendEmail is the resolver for the sendEmail field.

@@ -10,9 +10,9 @@ import (
 	"strconv"
 
 	"github.com/rs/zerolog"
-	"github.com/vediagames/vediagames.com/bff/domain"
-	"github.com/vediagames/vediagames.com/bff/graphql/model"
-	gamedomain "github.com/vediagames/vediagames.com/game/domain"
+	"github.com/vediagames/platform/bff/domain"
+	"github.com/vediagames/platform/bff/graphql/model"
+	gamedomain "github.com/vediagames/platform/game/domain"
 )
 
 // GetHomePage is the resolver for the getHomePage field.

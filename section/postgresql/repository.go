@@ -13,7 +13,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/section/domain"
+	"github.com/vediagames/platform/section/domain"
 )
 
 type repository struct {

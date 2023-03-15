@@ -6,8 +6,8 @@ import (
 	"github.com/jmoiron/sqlx"
 	"github.com/spf13/cobra"
 
-	"github.com/vediagames/vediagames.com/config"
-	"github.com/vediagames/vediagames.com/migrator"
+	"github.com/vediagames/platform/config"
+	"github.com/vediagames/platform/migrator"
 )
 
 func StubCmd() *cobra.Command {

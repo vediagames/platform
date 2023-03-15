@@ -12,16 +12,16 @@ import (
 
 	"github.com/99designs/gqlgen/graphql"
 
-	authdomain "github.com/vediagames/vediagames.com/auth/domain"
-	"github.com/vediagames/vediagames.com/bff/graphql/generated"
-	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
-	categorydomain "github.com/vediagames/vediagames.com/category/domain"
-	fetcherdomain "github.com/vediagames/vediagames.com/fetcher/domain"
-	gamedomain "github.com/vediagames/vediagames.com/game/domain"
-	notificationdomain "github.com/vediagames/vediagames.com/notification/domain"
-	searchdomain "github.com/vediagames/vediagames.com/search/domain"
-	sectiondomain "github.com/vediagames/vediagames.com/section/domain"
-	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
+	authdomain "github.com/vediagames/platform/auth/domain"
+	"github.com/vediagames/platform/bff/graphql/generated"
+	bucketdomain "github.com/vediagames/platform/bucket/domain"
+	categorydomain "github.com/vediagames/platform/category/domain"
+	fetcherdomain "github.com/vediagames/platform/fetcher/domain"
+	gamedomain "github.com/vediagames/platform/game/domain"
+	notificationdomain "github.com/vediagames/platform/notification/domain"
+	searchdomain "github.com/vediagames/platform/search/domain"
+	sectiondomain "github.com/vediagames/platform/section/domain"
+	tagdomain "github.com/vediagames/platform/tag/domain"
 )
 
 type Resolver struct {

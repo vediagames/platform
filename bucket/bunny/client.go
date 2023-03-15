@@ -9,7 +9,7 @@ import (
 
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/bucket/domain"
+	"github.com/vediagames/platform/bucket/domain"
 )
 
 type client struct {

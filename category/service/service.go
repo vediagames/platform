@@ -6,7 +6,7 @@ import (
 
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/category/domain"
+	"github.com/vediagames/platform/category/domain"
 )
 
 type service struct {

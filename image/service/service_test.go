@@ -7,9 +7,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/vediagames/vediagames.com/bucket/bunny"
-	"github.com/vediagames/vediagames.com/image/domain"
-	"github.com/vediagames/vediagames.com/image/processor/imagor"
+	"github.com/vediagames/platform/bucket/bunny"
+	"github.com/vediagames/platform/image/domain"
+	"github.com/vediagames/platform/image/processor/imagor"
 )
 
 func TestService_Get(t *testing.T) {
