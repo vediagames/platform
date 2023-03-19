@@ -9,6 +9,7 @@ import (
 	"fmt"
 	"strconv"
 	"sync"
+	"sync/atomic"
 
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/introspection"
@@ -2357,7 +2358,7 @@ func (ec *executionContext) field_Mutation_sendEmail_args(ctx context.Context, r
 	var arg0 model.SendEmailRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNSendEmailRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSendEmailRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNSendEmailRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSendEmailRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2387,7 +2388,7 @@ func (ec *executionContext) field_Query_fullSearch_args(ctx context.Context, raw
 	var arg0 model.FullSearchRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNFullSearchRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFullSearchRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNFullSearchRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐFullSearchRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2402,7 +2403,7 @@ func (ec *executionContext) field_Query_getCategoriesPage_args(ctx context.Conte
 	var arg0 model.GetCategoriesPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetCategoriesPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetCategoriesPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2417,7 +2418,7 @@ func (ec *executionContext) field_Query_getCategoryPage_args(ctx context.Context
 	var arg0 model.GetCategoryPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetCategoryPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetCategoryPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2432,7 +2433,7 @@ func (ec *executionContext) field_Query_getCategory_args(ctx context.Context, ra
 	var arg0 model.BaseGetRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2447,7 +2448,7 @@ func (ec *executionContext) field_Query_getContinuePlayingPage_args(ctx context.
 	var arg0 model.GetContinuePlayingPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetContinuePlayingPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetContinuePlayingPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2462,7 +2463,7 @@ func (ec *executionContext) field_Query_getFilterPage_args(ctx context.Context, 
 	var arg0 model.GetFilterPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetFilterPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFilterPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetFilterPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFilterPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2477,7 +2478,7 @@ func (ec *executionContext) field_Query_getFreshGames_args(ctx context.Context, 
 	var arg0 model.GetFreshGamesRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetFreshGamesRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFreshGamesRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetFreshGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFreshGamesRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2492,7 +2493,7 @@ func (ec *executionContext) field_Query_getGamePage_args(ctx context.Context, ra
 	var arg0 model.GetGamePageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetGamePageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGamePageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetGamePageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGamePageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2507,7 +2508,7 @@ func (ec *executionContext) field_Query_getGame_args(ctx context.Context, rawArg
 	var arg0 model.BaseGetRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2522,7 +2523,7 @@ func (ec *executionContext) field_Query_getHomePage_args(ctx context.Context, ra
 	var arg0 model.GetHomePageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetHomePageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetHomePageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetHomePageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetHomePageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2537,7 +2538,7 @@ func (ec *executionContext) field_Query_getMostPlayedGames_args(ctx context.Cont
 	var arg0 model.GetMostPlayedGamesRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetMostPlayedGamesRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetMostPlayedGamesRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetMostPlayedGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetMostPlayedGamesRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2552,7 +2553,7 @@ func (ec *executionContext) field_Query_getSearchPage_args(ctx context.Context, 
 	var arg0 model.GetSearchPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetSearchPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSearchPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetSearchPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSearchPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2567,7 +2568,7 @@ func (ec *executionContext) field_Query_getSection_args(ctx context.Context, raw
 	var arg0 model.BaseGetRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2582,7 +2583,7 @@ func (ec *executionContext) field_Query_getSiteMapPage_args(ctx context.Context,
 	var arg0 model.GetSiteMapPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetSiteMapPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetSiteMapPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2597,7 +2598,7 @@ func (ec *executionContext) field_Query_getTagPage_args(ctx context.Context, raw
 	var arg0 model.GetTagPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetTagPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetTagPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2612,7 +2613,7 @@ func (ec *executionContext) field_Query_getTag_args(ctx context.Context, rawArgs
 	var arg0 model.BaseGetRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2627,7 +2628,7 @@ func (ec *executionContext) field_Query_getTagsPage_args(ctx context.Context, ra
 	var arg0 model.GetTagsPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetTagsPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagsPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetTagsPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagsPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2642,7 +2643,7 @@ func (ec *executionContext) field_Query_getWebsiteSectionsPlacement_args(ctx con
 	var arg0 model.Language
 	if tmp, ok := rawArgs["language"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
+		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2657,7 +2658,7 @@ func (ec *executionContext) field_Query_getWizardPage_args(ctx context.Context, 
 	var arg0 model.GetWizardPageRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNGetWizardPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWizardPageRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNGetWizardPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWizardPageRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2672,7 +2673,7 @@ func (ec *executionContext) field_Query_listCategories_args(ctx context.Context,
 	var arg0 model.BaseListRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNBaseListRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNBaseListRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2687,7 +2688,7 @@ func (ec *executionContext) field_Query_listGames_args(ctx context.Context, rawA
 	var arg0 model.ListGamesRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNListGamesRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNListGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2702,7 +2703,7 @@ func (ec *executionContext) field_Query_listSections_args(ctx context.Context, r
 	var arg0 model.BaseListRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNBaseListRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNBaseListRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2717,7 +2718,7 @@ func (ec *executionContext) field_Query_listTags_args(ctx context.Context, rawAr
 	var arg0 model.ListTagsRequest
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
-		arg0, err = ec.unmarshalNListTagsRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsRequest(ctx, tmp)
+		arg0, err = ec.unmarshalNListTagsRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2732,7 +2733,7 @@ func (ec *executionContext) field_Query_search_args(ctx context.Context, rawArgs
 	var arg0 model.Language
 	if tmp, ok := rawArgs["language"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
+		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2896,7 +2897,7 @@ func (ec *executionContext) _Category_language(ctx context.Context, field graphq
 	}
 	res := resTmp.(model.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Category_language(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3151,7 +3152,7 @@ func (ec *executionContext) _Category_status(ctx context.Context, field graphql.
 	}
 	res := resTmp.(model.Status)
 	fc.Result = res
-	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
+	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Category_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3409,7 +3410,7 @@ func (ec *executionContext) _ComplimentaryCategories_data(ctx context.Context, f
 	}
 	res := resTmp.([]model.ComplimentaryCategory)
 	fc.Result = res
-	return ec.marshalNComplimentaryCategory2ᚕgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategoryᚄ(ctx, field.Selections, res)
+	return ec.marshalNComplimentaryCategory2ᚕgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ComplimentaryCategories_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -3943,7 +3944,7 @@ func (ec *executionContext) _ComplimentaryTags_data(ctx context.Context, field g
 	}
 	res := resTmp.([]model.ComplimentaryTag)
 	fc.Result = res
-	return ec.marshalNComplimentaryTag2ᚕgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTagᚄ(ctx, field.Selections, res)
+	return ec.marshalNComplimentaryTag2ᚕgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTagᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ComplimentaryTags_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4485,7 +4486,7 @@ func (ec *executionContext) _Game_language(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(model.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Game_language(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4617,7 +4618,7 @@ func (ec *executionContext) _Game_status(ctx context.Context, field graphql.Coll
 	}
 	res := resTmp.(model.Status)
 	fc.Result = res
-	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
+	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Game_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5300,7 +5301,7 @@ func (ec *executionContext) _Game_tags(ctx context.Context, field graphql.Collec
 	}
 	res := resTmp.(*model.ComplimentaryTags)
 	fc.Result = res
-	return ec.marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTags(ctx, field.Selections, res)
+	return ec.marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTags(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Game_tags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5348,7 +5349,7 @@ func (ec *executionContext) _Game_categories(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.ComplimentaryCategories)
 	fc.Result = res
-	return ec.marshalNComplimentaryCategories2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategories(ctx, field.Selections, res)
+	return ec.marshalNComplimentaryCategories2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategories(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Game_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5616,7 +5617,7 @@ func (ec *executionContext) _GetCategoriesPageResponse_data(ctx context.Context,
 	}
 	res := resTmp.(*model.ListCategoriesResponse)
 	fc.Result = res
-	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
+	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoriesPageResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5666,7 +5667,7 @@ func (ec *executionContext) _GetCategoryPageResponse_category(ctx context.Contex
 	}
 	res := resTmp.(*model.GetCategoryResponse)
 	fc.Result = res
-	return ec.marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx, field.Selections, res)
+	return ec.marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoryPageResponse_category(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5714,7 +5715,7 @@ func (ec *executionContext) _GetCategoryPageResponse_firstSectionGames(ctx conte
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoryPageResponse_firstSectionGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5764,7 +5765,7 @@ func (ec *executionContext) _GetCategoryPageResponse_tagSections(ctx context.Con
 	}
 	res := resTmp.([]*model.TagSection)
 	fc.Result = res
-	return ec.marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoryPageResponse_tagSections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5814,7 +5815,7 @@ func (ec *executionContext) _GetCategoryPageResponse_tags(ctx context.Context, f
 	}
 	res := resTmp.(*model.ListTagsResponse)
 	fc.Result = res
-	return ec.marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx, field.Selections, res)
+	return ec.marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoryPageResponse_tags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5864,7 +5865,7 @@ func (ec *executionContext) _GetCategoryPageResponse_otherGames(ctx context.Cont
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoryPageResponse_otherGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5911,7 +5912,7 @@ func (ec *executionContext) _GetCategoryResponse_data(ctx context.Context, field
 	}
 	res := resTmp.(*model.Category)
 	fc.Result = res
-	return ec.marshalOCategory2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐCategory(ctx, field.Selections, res)
+	return ec.marshalOCategory2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐCategory(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetCategoryResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -5983,7 +5984,7 @@ func (ec *executionContext) _GetContinuePlayingPageResponse_data(ctx context.Con
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetContinuePlayingPageResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6033,7 +6034,7 @@ func (ec *executionContext) _GetFilterPageResponse_data(ctx context.Context, fie
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetFilterPageResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6083,7 +6084,7 @@ func (ec *executionContext) _GetGamePageResponse_game(ctx context.Context, field
 	}
 	res := resTmp.(*model.GetGameResponse)
 	fc.Result = res
-	return ec.marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx, field.Selections, res)
+	return ec.marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetGamePageResponse_game(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6131,7 +6132,7 @@ func (ec *executionContext) _GetGamePageResponse_otherGames(ctx context.Context,
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetGamePageResponse_otherGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6266,7 +6267,7 @@ func (ec *executionContext) _GetGameResponse_data(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.Game)
 	fc.Result = res
-	return ec.marshalOGame2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGame(ctx, field.Selections, res)
+	return ec.marshalOGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetGameResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6454,7 +6455,7 @@ func (ec *executionContext) _GetHomePageResponse_mostPlayedGamesInLast7Days(ctx 
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetHomePageResponse_mostPlayedGamesInLast7Days(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6504,7 +6505,7 @@ func (ec *executionContext) _GetHomePageResponse_gamesAddedInLast7Days(ctx conte
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetHomePageResponse_gamesAddedInLast7Days(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6554,7 +6555,7 @@ func (ec *executionContext) _GetHomePageResponse_mostPlayedGames(ctx context.Con
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetHomePageResponse_mostPlayedGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6604,7 +6605,7 @@ func (ec *executionContext) _GetHomePageResponse_sections(ctx context.Context, f
 	}
 	res := resTmp.(*model.GetWebsiteSectionsPlacementResponse)
 	fc.Result = res
-	return ec.marshalNGetWebsiteSectionsPlacementResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx, field.Selections, res)
+	return ec.marshalNGetWebsiteSectionsPlacementResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetHomePageResponse_sections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6652,7 +6653,7 @@ func (ec *executionContext) _GetHomePageResponse_tagSection(ctx context.Context,
 	}
 	res := resTmp.([]*model.TagSection)
 	fc.Result = res
-	return ec.marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetHomePageResponse_tagSection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6699,7 +6700,7 @@ func (ec *executionContext) _GetSearchPageResponse_items(ctx context.Context, fi
 	}
 	res := resTmp.([]*model.SearchItem)
 	fc.Result = res
-	return ec.marshalOSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx, field.Selections, res)
+	return ec.marshalOSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetSearchPageResponse_items(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6842,7 +6843,7 @@ func (ec *executionContext) _GetSectionResponse_data(ctx context.Context, field 
 	}
 	res := resTmp.(*model.Section)
 	fc.Result = res
-	return ec.marshalOSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSection(ctx, field.Selections, res)
+	return ec.marshalOSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetSectionResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6918,7 +6919,7 @@ func (ec *executionContext) _GetSiteMapPageResponse_categories(ctx context.Conte
 	}
 	res := resTmp.(*model.ListCategoriesResponse)
 	fc.Result = res
-	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
+	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetSiteMapPageResponse_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6968,7 +6969,7 @@ func (ec *executionContext) _GetTagPageResponse_tag(ctx context.Context, field g
 	}
 	res := resTmp.(*model.GetTagResponse)
 	fc.Result = res
-	return ec.marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx, field.Selections, res)
+	return ec.marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetTagPageResponse_tag(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7016,7 +7017,7 @@ func (ec *executionContext) _GetTagPageResponse_games(ctx context.Context, field
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetTagPageResponse_games(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7063,7 +7064,7 @@ func (ec *executionContext) _GetTagResponse_data(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.Tag)
 	fc.Result = res
-	return ec.marshalOTag2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTag(ctx, field.Selections, res)
+	return ec.marshalOTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTag(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetTagResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7139,7 +7140,7 @@ func (ec *executionContext) _GetTagsPageResponse_data(ctx context.Context, field
 	}
 	res := resTmp.(*model.ListTagsResponse)
 	fc.Result = res
-	return ec.marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx, field.Selections, res)
+	return ec.marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetTagsPageResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7189,7 +7190,7 @@ func (ec *executionContext) _GetWebsiteSectionPlacement_section(ctx context.Cont
 	}
 	res := resTmp.(*model.Section)
 	fc.Result = res
-	return ec.marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSection(ctx, field.Selections, res)
+	return ec.marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSection(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetWebsiteSectionPlacement_section(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7309,7 +7310,7 @@ func (ec *executionContext) _GetWebsiteSectionsPlacementResponse_data(ctx contex
 	}
 	res := resTmp.([]*model.GetWebsiteSectionPlacement)
 	fc.Result = res
-	return ec.marshalNGetWebsiteSectionPlacement2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacementᚄ(ctx, field.Selections, res)
+	return ec.marshalNGetWebsiteSectionPlacement2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacementᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetWebsiteSectionsPlacementResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7359,7 +7360,7 @@ func (ec *executionContext) _GetWizardPageResponse_categories(ctx context.Contex
 	}
 	res := resTmp.(*model.ListCategoriesResponse)
 	fc.Result = res
-	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
+	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetWizardPageResponse_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7409,7 +7410,7 @@ func (ec *executionContext) _GetWizardPageResponse_games(ctx context.Context, fi
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_GetWizardPageResponse_games(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7459,7 +7460,7 @@ func (ec *executionContext) _LanguageItem_code(ctx context.Context, field graphq
 	}
 	res := resTmp.(model.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_LanguageItem_code(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7547,7 +7548,7 @@ func (ec *executionContext) _ListCategoriesResponse_data(ctx context.Context, fi
 	}
 	res := resTmp.([]*model.Category)
 	fc.Result = res
-	return ec.marshalNCategory2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐCategoryᚄ(ctx, field.Selections, res)
+	return ec.marshalNCategory2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐCategoryᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ListCategoriesResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7663,7 +7664,7 @@ func (ec *executionContext) _ListGamesResponse_data(ctx context.Context, field g
 	}
 	res := resTmp.([]model.Game)
 	fc.Result = res
-	return ec.marshalNGame2ᚕgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGameᚄ(ctx, field.Selections, res)
+	return ec.marshalNGame2ᚕgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGameᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ListGamesResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7807,7 +7808,7 @@ func (ec *executionContext) _ListSectionsResponse_data(ctx context.Context, fiel
 	}
 	res := resTmp.([]*model.Section)
 	fc.Result = res
-	return ec.marshalNSection2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSectionᚄ(ctx, field.Selections, res)
+	return ec.marshalNSection2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSectionᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ListSectionsResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7927,7 +7928,7 @@ func (ec *executionContext) _ListTagsResponse_data(ctx context.Context, field gr
 	}
 	res := resTmp.([]*model.Tag)
 	fc.Result = res
-	return ec.marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagᚄ(ctx, field.Selections, res)
+	return ec.marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_ListTagsResponse_data(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8037,6 +8038,7 @@ func (ec *executionContext) _Mutation_sendEmail(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -8088,6 +8090,7 @@ func (ec *executionContext) _Mutation_refreshMaterializedViews(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -8128,6 +8131,7 @@ func (ec *executionContext) _Query_getMostPlayedGames(ctx context.Context, field
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8137,7 +8141,7 @@ func (ec *executionContext) _Query_getMostPlayedGames(ctx context.Context, field
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getMostPlayedGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8188,6 +8192,7 @@ func (ec *executionContext) _Query_getFreshGames(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8197,7 +8202,7 @@ func (ec *executionContext) _Query_getFreshGames(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getFreshGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8248,6 +8253,7 @@ func (ec *executionContext) _Query_availableLanguages(ctx context.Context, field
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8257,7 +8263,7 @@ func (ec *executionContext) _Query_availableLanguages(ctx context.Context, field
 	}
 	res := resTmp.([]*model.LanguageItem)
 	fc.Result = res
-	return ec.marshalNLanguageItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguageItemᚄ(ctx, field.Selections, res)
+	return ec.marshalNLanguageItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguageItemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_availableLanguages(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8297,6 +8303,7 @@ func (ec *executionContext) _Query_listGames(ctx context.Context, field graphql.
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8306,7 +8313,7 @@ func (ec *executionContext) _Query_listGames(ctx context.Context, field graphql.
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_listGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8357,6 +8364,7 @@ func (ec *executionContext) _Query_getGame(ctx context.Context, field graphql.Co
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8366,7 +8374,7 @@ func (ec *executionContext) _Query_getGame(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.GetGameResponse)
 	fc.Result = res
-	return ec.marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx, field.Selections, res)
+	return ec.marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8415,6 +8423,7 @@ func (ec *executionContext) _Query_listCategories(ctx context.Context, field gra
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8424,7 +8433,7 @@ func (ec *executionContext) _Query_listCategories(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.ListCategoriesResponse)
 	fc.Result = res
-	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
+	return ec.marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_listCategories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8475,6 +8484,7 @@ func (ec *executionContext) _Query_getCategory(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8484,7 +8494,7 @@ func (ec *executionContext) _Query_getCategory(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.GetCategoryResponse)
 	fc.Result = res
-	return ec.marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx, field.Selections, res)
+	return ec.marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getCategory(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8533,6 +8543,7 @@ func (ec *executionContext) _Query_listTags(ctx context.Context, field graphql.C
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8542,7 +8553,7 @@ func (ec *executionContext) _Query_listTags(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.ListTagsResponse)
 	fc.Result = res
-	return ec.marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx, field.Selections, res)
+	return ec.marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_listTags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8593,6 +8604,7 @@ func (ec *executionContext) _Query_getTag(ctx context.Context, field graphql.Col
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8602,7 +8614,7 @@ func (ec *executionContext) _Query_getTag(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*model.GetTagResponse)
 	fc.Result = res
-	return ec.marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx, field.Selections, res)
+	return ec.marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getTag(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8651,6 +8663,7 @@ func (ec *executionContext) _Query_listSections(ctx context.Context, field graph
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8660,7 +8673,7 @@ func (ec *executionContext) _Query_listSections(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.ListSectionsResponse)
 	fc.Result = res
-	return ec.marshalNListSectionsResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListSectionsResponse(ctx, field.Selections, res)
+	return ec.marshalNListSectionsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListSectionsResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_listSections(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8711,6 +8724,7 @@ func (ec *executionContext) _Query_getSection(ctx context.Context, field graphql
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8720,7 +8734,7 @@ func (ec *executionContext) _Query_getSection(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.GetSectionResponse)
 	fc.Result = res
-	return ec.marshalNGetSectionResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSectionResponse(ctx, field.Selections, res)
+	return ec.marshalNGetSectionResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSectionResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getSection(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8769,6 +8783,7 @@ func (ec *executionContext) _Query_getWebsiteSectionsPlacement(ctx context.Conte
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8778,7 +8793,7 @@ func (ec *executionContext) _Query_getWebsiteSectionsPlacement(ctx context.Conte
 	}
 	res := resTmp.(*model.GetWebsiteSectionsPlacementResponse)
 	fc.Result = res
-	return ec.marshalNGetWebsiteSectionsPlacementResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx, field.Selections, res)
+	return ec.marshalNGetWebsiteSectionsPlacementResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getWebsiteSectionsPlacement(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8827,6 +8842,7 @@ func (ec *executionContext) _Query_fetchRandomGame(ctx context.Context, field gr
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8836,7 +8852,7 @@ func (ec *executionContext) _Query_fetchRandomGame(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.FetchedGame)
 	fc.Result = res
-	return ec.marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFetchedGame(ctx, field.Selections, res)
+	return ec.marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐFetchedGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_fetchRandomGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8892,6 +8908,7 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8901,7 +8918,7 @@ func (ec *executionContext) _Query_search(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*model.SearchResponse)
 	fc.Result = res
-	return ec.marshalNSearchResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx, field.Selections, res)
+	return ec.marshalNSearchResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_search(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -8954,6 +8971,7 @@ func (ec *executionContext) _Query_fullSearch(ctx context.Context, field graphql
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -8963,7 +8981,7 @@ func (ec *executionContext) _Query_fullSearch(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.SearchResponse)
 	fc.Result = res
-	return ec.marshalNSearchResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx, field.Selections, res)
+	return ec.marshalNSearchResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_fullSearch(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9016,6 +9034,7 @@ func (ec *executionContext) _Query_getHomePage(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9025,7 +9044,7 @@ func (ec *executionContext) _Query_getHomePage(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.GetHomePageResponse)
 	fc.Result = res
-	return ec.marshalNGetHomePageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetHomePageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetHomePageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetHomePageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getHomePage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9086,6 +9105,7 @@ func (ec *executionContext) _Query_getGamePage(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9095,7 +9115,7 @@ func (ec *executionContext) _Query_getGamePage(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.GetGamePageResponse)
 	fc.Result = res
-	return ec.marshalNGetGamePageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGamePageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetGamePageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGamePageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getGamePage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9150,6 +9170,7 @@ func (ec *executionContext) _Query_getContinuePlayingPage(ctx context.Context, f
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9159,7 +9180,7 @@ func (ec *executionContext) _Query_getContinuePlayingPage(ctx context.Context, f
 	}
 	res := resTmp.(*model.GetContinuePlayingPageResponse)
 	fc.Result = res
-	return ec.marshalNGetContinuePlayingPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetContinuePlayingPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getContinuePlayingPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9208,6 +9229,7 @@ func (ec *executionContext) _Query_getFilterPage(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9217,7 +9239,7 @@ func (ec *executionContext) _Query_getFilterPage(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.GetFilterPageResponse)
 	fc.Result = res
-	return ec.marshalNGetFilterPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFilterPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetFilterPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFilterPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getFilterPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9266,6 +9288,7 @@ func (ec *executionContext) _Query_getSearchPage(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9275,7 +9298,7 @@ func (ec *executionContext) _Query_getSearchPage(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.GetSearchPageResponse)
 	fc.Result = res
-	return ec.marshalNGetSearchPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSearchPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetSearchPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSearchPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getSearchPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9328,6 +9351,7 @@ func (ec *executionContext) _Query_getSiteMapPage(ctx context.Context, field gra
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9337,7 +9361,7 @@ func (ec *executionContext) _Query_getSiteMapPage(ctx context.Context, field gra
 	}
 	res := resTmp.(*model.GetSiteMapPageResponse)
 	fc.Result = res
-	return ec.marshalNGetSiteMapPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetSiteMapPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getSiteMapPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9386,6 +9410,7 @@ func (ec *executionContext) _Query_getWizardPage(ctx context.Context, field grap
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9395,7 +9420,7 @@ func (ec *executionContext) _Query_getWizardPage(ctx context.Context, field grap
 	}
 	res := resTmp.(*model.GetWizardPageResponse)
 	fc.Result = res
-	return ec.marshalNGetWizardPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWizardPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetWizardPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWizardPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getWizardPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9446,6 +9471,7 @@ func (ec *executionContext) _Query_getTagPage(ctx context.Context, field graphql
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9455,7 +9481,7 @@ func (ec *executionContext) _Query_getTagPage(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.GetTagPageResponse)
 	fc.Result = res
-	return ec.marshalNGetTagPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetTagPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getTagPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9506,6 +9532,7 @@ func (ec *executionContext) _Query_getTagsPage(ctx context.Context, field graphq
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9515,7 +9542,7 @@ func (ec *executionContext) _Query_getTagsPage(ctx context.Context, field graphq
 	}
 	res := resTmp.(*model.GetTagsPageResponse)
 	fc.Result = res
-	return ec.marshalNGetTagsPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagsPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetTagsPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagsPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getTagsPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9564,6 +9591,7 @@ func (ec *executionContext) _Query_getCategoryPage(ctx context.Context, field gr
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9573,7 +9601,7 @@ func (ec *executionContext) _Query_getCategoryPage(ctx context.Context, field gr
 	}
 	res := resTmp.(*model.GetCategoryPageResponse)
 	fc.Result = res
-	return ec.marshalNGetCategoryPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetCategoryPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getCategoryPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9630,6 +9658,7 @@ func (ec *executionContext) _Query_getCategoriesPage(ctx context.Context, field 
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9639,7 +9668,7 @@ func (ec *executionContext) _Query_getCategoriesPage(ctx context.Context, field 
 	}
 	res := resTmp.(*model.GetCategoriesPageResponse)
 	fc.Result = res
-	return ec.marshalNGetCategoriesPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageResponse(ctx, field.Selections, res)
+	return ec.marshalNGetCategoriesPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_getCategoriesPage(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -9688,6 +9717,7 @@ func (ec *executionContext) _Query__service(ctx context.Context, field graphql.C
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		if !graphql.HasFieldError(ctx, fc) {
@@ -9735,6 +9765,7 @@ func (ec *executionContext) _Query___type(ctx context.Context, field graphql.Col
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -9808,6 +9839,7 @@ func (ec *executionContext) _Query___schema(ctx context.Context, field graphql.C
 	})
 	if err != nil {
 		ec.Error(ctx, err)
+		return graphql.Null
 	}
 	if resTmp == nil {
 		return graphql.Null
@@ -10004,7 +10036,7 @@ func (ec *executionContext) _SearchItem_type(ctx context.Context, field graphql.
 	}
 	res := resTmp.(model.SearchItemType)
 	fc.Result = res
-	return ec.marshalNSearchItemType2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemType(ctx, field.Selections, res)
+	return ec.marshalNSearchItemType2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemType(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SearchItem_type(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10136,7 +10168,7 @@ func (ec *executionContext) _SearchResponse_games(ctx context.Context, field gra
 	}
 	res := resTmp.([]*model.SearchItem)
 	fc.Result = res
-	return ec.marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx, field.Selections, res)
+	return ec.marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SearchResponse_games(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10194,7 +10226,7 @@ func (ec *executionContext) _SearchResponse_tags(ctx context.Context, field grap
 	}
 	res := resTmp.([]*model.SearchItem)
 	fc.Result = res
-	return ec.marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx, field.Selections, res)
+	return ec.marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_SearchResponse_tags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10340,7 +10372,7 @@ func (ec *executionContext) _Section_language(ctx context.Context, field graphql
 	}
 	res := resTmp.(model.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_language(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10472,7 +10504,7 @@ func (ec *executionContext) _Section_status(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(model.Status)
 	fc.Result = res
-	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
+	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10765,7 +10797,7 @@ func (ec *executionContext) _Section_tags(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(*model.ComplimentaryTags)
 	fc.Result = res
-	return ec.marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTags(ctx, field.Selections, res)
+	return ec.marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTags(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_tags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10813,7 +10845,7 @@ func (ec *executionContext) _Section_categories(ctx context.Context, field graph
 	}
 	res := resTmp.(*model.ComplimentaryCategories)
 	fc.Result = res
-	return ec.marshalNComplimentaryCategories2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategories(ctx, field.Selections, res)
+	return ec.marshalNComplimentaryCategories2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategories(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10861,7 +10893,7 @@ func (ec *executionContext) _Section_games(ctx context.Context, field graphql.Co
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_games(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -10999,7 +11031,7 @@ func (ec *executionContext) _Tag_language(ctx context.Context, field graphql.Col
 	}
 	res := resTmp.(model.Language)
 	fc.Result = res
-	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
+	return ec.marshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Tag_language(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11254,7 +11286,7 @@ func (ec *executionContext) _Tag_status(ctx context.Context, field graphql.Colle
 	}
 	res := resTmp.(model.Status)
 	fc.Result = res
-	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
+	return ec.marshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐStatus(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Tag_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11597,7 +11629,7 @@ func (ec *executionContext) _TagSection_games(ctx context.Context, field graphql
 	}
 	res := resTmp.(*model.ListGamesResponse)
 	fc.Result = res
-	return ec.marshalOListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
+	return ec.marshalOListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TagSection_games(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -11647,7 +11679,7 @@ func (ec *executionContext) _TagSection_tag(ctx context.Context, field graphql.C
 	}
 	res := resTmp.(*model.Tag)
 	fc.Result = res
-	return ec.marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTag(ctx, field.Selections, res)
+	return ec.marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTag(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_TagSection_tag(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -13527,7 +13559,7 @@ func (ec *executionContext) unmarshalInputBaseGetRequest(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("field"))
-			it.Field, err = ec.unmarshalNGetByField2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx, v)
+			it.Field, err = ec.unmarshalNGetByField2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13543,7 +13575,7 @@ func (ec *executionContext) unmarshalInputBaseGetRequest(ctx context.Context, ob
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13571,7 +13603,7 @@ func (ec *executionContext) unmarshalInputBaseListRequest(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13631,7 +13663,7 @@ func (ec *executionContext) unmarshalInputFullSearchRequest(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13663,7 +13695,7 @@ func (ec *executionContext) unmarshalInputFullSearchRequest(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sort"))
-			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
+			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13707,7 +13739,7 @@ func (ec *executionContext) unmarshalInputGetCategoriesPageRequest(ctx context.C
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13735,7 +13767,7 @@ func (ec *executionContext) unmarshalInputGetCategoryPageRequest(ctx context.Con
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13795,7 +13827,7 @@ func (ec *executionContext) unmarshalInputGetContinuePlayingPageRequest(ctx cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13831,7 +13863,7 @@ func (ec *executionContext) unmarshalInputGetFilterPageRequest(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sort"))
-			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
+			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13863,7 +13895,7 @@ func (ec *executionContext) unmarshalInputGetFilterPageRequest(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13891,7 +13923,7 @@ func (ec *executionContext) unmarshalInputGetFreshGamesRequest(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13943,7 +13975,7 @@ func (ec *executionContext) unmarshalInputGetGamePageRequest(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14003,7 +14035,7 @@ func (ec *executionContext) unmarshalInputGetHomePageRequest(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14039,7 +14071,7 @@ func (ec *executionContext) unmarshalInputGetMostPlayedGamesRequest(ctx context.
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14091,7 +14123,7 @@ func (ec *executionContext) unmarshalInputGetSearchPageRequest(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14115,7 +14147,7 @@ func (ec *executionContext) unmarshalInputGetSearchPageRequest(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sort"))
-			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
+			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14143,7 +14175,7 @@ func (ec *executionContext) unmarshalInputGetSiteMapPageRequest(ctx context.Cont
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14171,7 +14203,7 @@ func (ec *executionContext) unmarshalInputGetTagPageRequest(ctx context.Context,
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14215,7 +14247,7 @@ func (ec *executionContext) unmarshalInputGetTagsPageRequest(ctx context.Context
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14251,7 +14283,7 @@ func (ec *executionContext) unmarshalInputGetWizardPageRequest(ctx context.Conte
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
-			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
+			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14287,7 +14319,7 @@ func (ec *executionContext) unmarshalInputListGamesRequest(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("base"))
-			it.Base, err = ec.unmarshalNBaseListRequest2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, v)
+			it.Base, err = ec.unmarshalNBaseListRequest2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14295,7 +14327,7 @@ func (ec *executionContext) unmarshalInputListGamesRequest(ctx context.Context, 
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sort"))
-			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
+			it.Sort, err = ec.unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14355,7 +14387,7 @@ func (ec *executionContext) unmarshalInputListTagsRequest(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("base"))
-			it.Base, err = ec.unmarshalNBaseListRequest2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, v)
+			it.Base, err = ec.unmarshalNBaseListRequest2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -14363,7 +14395,7 @@ func (ec *executionContext) unmarshalInputListTagsRequest(ctx context.Context, o
 			var err error
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("sort"))
-			it.Sort, err = ec.unmarshalOTagSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSortingMethod(ctx, v)
+			it.Sort, err = ec.unmarshalOTagSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSortingMethod(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -15750,6 +15782,7 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 	})
 
 	out := graphql.NewFieldSet(fields)
+	var invalids uint32
 	for i, field := range fields {
 		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
 			Object: field.Name,
@@ -15776,6 +15809,9 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 		}
 	}
 	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
 	return out
 }
 
@@ -15788,6 +15824,7 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 	})
 
 	out := graphql.NewFieldSet(fields)
+	var invalids uint32
 	for i, field := range fields {
 		innerCtx := graphql.WithRootFieldContext(ctx, &graphql.RootFieldContext{
 			Object: field.Name,
@@ -15807,6 +15844,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getMostPlayedGames(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15827,6 +15867,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getFreshGames(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15847,6 +15890,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_availableLanguages(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15867,6 +15913,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_listGames(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15887,6 +15936,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getGame(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15907,6 +15959,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_listCategories(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15927,6 +15982,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getCategory(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15947,6 +16005,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_listTags(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15967,6 +16028,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getTag(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -15987,6 +16051,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_listSections(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16007,6 +16074,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getSection(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16027,6 +16097,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getWebsiteSectionsPlacement(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16047,6 +16120,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_fetchRandomGame(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16067,6 +16143,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_search(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16087,6 +16166,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_fullSearch(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16107,6 +16189,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getHomePage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16127,6 +16212,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getGamePage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16147,6 +16235,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getContinuePlayingPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16167,6 +16258,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getFilterPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16187,6 +16281,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getSearchPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16207,6 +16304,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getSiteMapPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16227,6 +16327,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getWizardPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16247,6 +16350,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getTagPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16267,6 +16373,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getTagsPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16287,6 +16396,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getCategoryPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16307,6 +16419,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_getCategoriesPage(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16327,6 +16442,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query__service(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
 				return res
 			}
 
@@ -16354,6 +16472,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		}
 	}
 	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
 	return out
 }
 
@@ -17059,17 +17180,17 @@ func (ec *executionContext) ___Type(ctx context.Context, sel ast.SelectionSet, o
 
 // region    ***************************** type.gotpl *****************************
 
-func (ec *executionContext) unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx context.Context, v interface{}) (model.BaseGetRequest, error) {
+func (ec *executionContext) unmarshalNBaseGetRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseGetRequest(ctx context.Context, v interface{}) (model.BaseGetRequest, error) {
 	res, err := ec.unmarshalInputBaseGetRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNBaseListRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx context.Context, v interface{}) (model.BaseListRequest, error) {
+func (ec *executionContext) unmarshalNBaseListRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx context.Context, v interface{}) (model.BaseListRequest, error) {
 	res, err := ec.unmarshalInputBaseListRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNBaseListRequest2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx context.Context, v interface{}) (*model.BaseListRequest, error) {
+func (ec *executionContext) unmarshalNBaseListRequest2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐBaseListRequest(ctx context.Context, v interface{}) (*model.BaseListRequest, error) {
 	res, err := ec.unmarshalInputBaseListRequest(ctx, v)
 	return &res, graphql.ErrorOnPath(ctx, err)
 }
@@ -17089,7 +17210,7 @@ func (ec *executionContext) marshalNBoolean2bool(ctx context.Context, sel ast.Se
 	return res
 }
 
-func (ec *executionContext) marshalNCategory2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Category) graphql.Marshaler {
+func (ec *executionContext) marshalNCategory2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Category) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17113,7 +17234,7 @@ func (ec *executionContext) marshalNCategory2ᚕᚖgithubᚗcomᚋvediagamesᚋv
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNCategory2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐCategory(ctx, sel, v[i])
+			ret[i] = ec.marshalNCategory2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐCategory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17133,7 +17254,7 @@ func (ec *executionContext) marshalNCategory2ᚕᚖgithubᚗcomᚋvediagamesᚋv
 	return ret
 }
 
-func (ec *executionContext) marshalNCategory2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
+func (ec *executionContext) marshalNCategory2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17143,7 +17264,7 @@ func (ec *executionContext) marshalNCategory2ᚖgithubᚗcomᚋvediagamesᚋvedi
 	return ec._Category(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNComplimentaryCategories2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategories(ctx context.Context, sel ast.SelectionSet, v *model.ComplimentaryCategories) graphql.Marshaler {
+func (ec *executionContext) marshalNComplimentaryCategories2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategories(ctx context.Context, sel ast.SelectionSet, v *model.ComplimentaryCategories) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17153,11 +17274,11 @@ func (ec *executionContext) marshalNComplimentaryCategories2ᚖgithubᚗcomᚋve
 	return ec._ComplimentaryCategories(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNComplimentaryCategory2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategory(ctx context.Context, sel ast.SelectionSet, v model.ComplimentaryCategory) graphql.Marshaler {
+func (ec *executionContext) marshalNComplimentaryCategory2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategory(ctx context.Context, sel ast.SelectionSet, v model.ComplimentaryCategory) graphql.Marshaler {
 	return ec._ComplimentaryCategory(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNComplimentaryCategory2ᚕgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []model.ComplimentaryCategory) graphql.Marshaler {
+func (ec *executionContext) marshalNComplimentaryCategory2ᚕgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategoryᚄ(ctx context.Context, sel ast.SelectionSet, v []model.ComplimentaryCategory) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17181,7 +17302,7 @@ func (ec *executionContext) marshalNComplimentaryCategory2ᚕgithubᚗcomᚋvedi
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNComplimentaryCategory2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategory(ctx, sel, v[i])
+			ret[i] = ec.marshalNComplimentaryCategory2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryCategory(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17201,11 +17322,11 @@ func (ec *executionContext) marshalNComplimentaryCategory2ᚕgithubᚗcomᚋvedi
 	return ret
 }
 
-func (ec *executionContext) marshalNComplimentaryTag2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTag(ctx context.Context, sel ast.SelectionSet, v model.ComplimentaryTag) graphql.Marshaler {
+func (ec *executionContext) marshalNComplimentaryTag2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTag(ctx context.Context, sel ast.SelectionSet, v model.ComplimentaryTag) graphql.Marshaler {
 	return ec._ComplimentaryTag(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNComplimentaryTag2ᚕgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTagᚄ(ctx context.Context, sel ast.SelectionSet, v []model.ComplimentaryTag) graphql.Marshaler {
+func (ec *executionContext) marshalNComplimentaryTag2ᚕgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTagᚄ(ctx context.Context, sel ast.SelectionSet, v []model.ComplimentaryTag) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17229,7 +17350,7 @@ func (ec *executionContext) marshalNComplimentaryTag2ᚕgithubᚗcomᚋvediagame
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNComplimentaryTag2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTag(ctx, sel, v[i])
+			ret[i] = ec.marshalNComplimentaryTag2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTag(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17249,7 +17370,7 @@ func (ec *executionContext) marshalNComplimentaryTag2ᚕgithubᚗcomᚋvediagame
 	return ret
 }
 
-func (ec *executionContext) marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐComplimentaryTags(ctx context.Context, sel ast.SelectionSet, v *model.ComplimentaryTags) graphql.Marshaler {
+func (ec *executionContext) marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐComplimentaryTags(ctx context.Context, sel ast.SelectionSet, v *model.ComplimentaryTags) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17259,11 +17380,11 @@ func (ec *executionContext) marshalNComplimentaryTags2ᚖgithubᚗcomᚋvediagam
 	return ec._ComplimentaryTags(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNFetchedGame2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFetchedGame(ctx context.Context, sel ast.SelectionSet, v model.FetchedGame) graphql.Marshaler {
+func (ec *executionContext) marshalNFetchedGame2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐFetchedGame(ctx context.Context, sel ast.SelectionSet, v model.FetchedGame) graphql.Marshaler {
 	return ec._FetchedGame(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFetchedGame(ctx context.Context, sel ast.SelectionSet, v *model.FetchedGame) graphql.Marshaler {
+func (ec *executionContext) marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐFetchedGame(ctx context.Context, sel ast.SelectionSet, v *model.FetchedGame) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17273,16 +17394,16 @@ func (ec *executionContext) marshalNFetchedGame2ᚖgithubᚗcomᚋvediagamesᚋv
 	return ec._FetchedGame(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNFullSearchRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐFullSearchRequest(ctx context.Context, v interface{}) (model.FullSearchRequest, error) {
+func (ec *executionContext) unmarshalNFullSearchRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐFullSearchRequest(ctx context.Context, v interface{}) (model.FullSearchRequest, error) {
 	res, err := ec.unmarshalInputFullSearchRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGame2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGame(ctx context.Context, sel ast.SelectionSet, v model.Game) graphql.Marshaler {
+func (ec *executionContext) marshalNGame2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGame(ctx context.Context, sel ast.SelectionSet, v model.Game) graphql.Marshaler {
 	return ec._Game(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGame2ᚕgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGameᚄ(ctx context.Context, sel ast.SelectionSet, v []model.Game) graphql.Marshaler {
+func (ec *executionContext) marshalNGame2ᚕgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGameᚄ(ctx context.Context, sel ast.SelectionSet, v []model.Game) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17306,7 +17427,7 @@ func (ec *executionContext) marshalNGame2ᚕgithubᚗcomᚋvediagamesᚋvediagam
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNGame2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGame(ctx, sel, v[i])
+			ret[i] = ec.marshalNGame2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGame(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17326,26 +17447,26 @@ func (ec *executionContext) marshalNGame2ᚕgithubᚗcomᚋvediagamesᚋvediagam
 	return ret
 }
 
-func (ec *executionContext) unmarshalNGetByField2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx context.Context, v interface{}) (model.GetByField, error) {
+func (ec *executionContext) unmarshalNGetByField2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx context.Context, v interface{}) (model.GetByField, error) {
 	var res model.GetByField
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetByField2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx context.Context, sel ast.SelectionSet, v model.GetByField) graphql.Marshaler {
+func (ec *executionContext) marshalNGetByField2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetByField(ctx context.Context, sel ast.SelectionSet, v model.GetByField) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) unmarshalNGetCategoriesPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageRequest(ctx context.Context, v interface{}) (model.GetCategoriesPageRequest, error) {
+func (ec *executionContext) unmarshalNGetCategoriesPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageRequest(ctx context.Context, v interface{}) (model.GetCategoriesPageRequest, error) {
 	res, err := ec.unmarshalInputGetCategoriesPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetCategoriesPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetCategoriesPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetCategoriesPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetCategoriesPageResponse) graphql.Marshaler {
 	return ec._GetCategoriesPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetCategoriesPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetCategoriesPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetCategoriesPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoriesPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetCategoriesPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17355,16 +17476,16 @@ func (ec *executionContext) marshalNGetCategoriesPageResponse2ᚖgithubᚗcomᚋ
 	return ec._GetCategoriesPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetCategoryPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageRequest(ctx context.Context, v interface{}) (model.GetCategoryPageRequest, error) {
+func (ec *executionContext) unmarshalNGetCategoryPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageRequest(ctx context.Context, v interface{}) (model.GetCategoryPageRequest, error) {
 	res, err := ec.unmarshalInputGetCategoryPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetCategoryPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetCategoryPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetCategoryPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetCategoryPageResponse) graphql.Marshaler {
 	return ec._GetCategoryPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetCategoryPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetCategoryPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetCategoryPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetCategoryPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17374,11 +17495,11 @@ func (ec *executionContext) marshalNGetCategoryPageResponse2ᚖgithubᚗcomᚋve
 	return ec._GetCategoryPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGetCategoryResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx context.Context, sel ast.SelectionSet, v model.GetCategoryResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetCategoryResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx context.Context, sel ast.SelectionSet, v model.GetCategoryResponse) graphql.Marshaler {
 	return ec._GetCategoryResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetCategoryResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetCategoryResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetCategoryResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17388,16 +17509,16 @@ func (ec *executionContext) marshalNGetCategoryResponse2ᚖgithubᚗcomᚋvediag
 	return ec._GetCategoryResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetContinuePlayingPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageRequest(ctx context.Context, v interface{}) (model.GetContinuePlayingPageRequest, error) {
+func (ec *executionContext) unmarshalNGetContinuePlayingPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageRequest(ctx context.Context, v interface{}) (model.GetContinuePlayingPageRequest, error) {
 	res, err := ec.unmarshalInputGetContinuePlayingPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetContinuePlayingPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetContinuePlayingPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetContinuePlayingPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetContinuePlayingPageResponse) graphql.Marshaler {
 	return ec._GetContinuePlayingPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetContinuePlayingPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetContinuePlayingPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetContinuePlayingPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetContinuePlayingPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetContinuePlayingPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17407,16 +17528,16 @@ func (ec *executionContext) marshalNGetContinuePlayingPageResponse2ᚖgithubᚗc
 	return ec._GetContinuePlayingPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetFilterPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFilterPageRequest(ctx context.Context, v interface{}) (model.GetFilterPageRequest, error) {
+func (ec *executionContext) unmarshalNGetFilterPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFilterPageRequest(ctx context.Context, v interface{}) (model.GetFilterPageRequest, error) {
 	res, err := ec.unmarshalInputGetFilterPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetFilterPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFilterPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetFilterPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetFilterPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFilterPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetFilterPageResponse) graphql.Marshaler {
 	return ec._GetFilterPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetFilterPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFilterPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetFilterPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetFilterPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFilterPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetFilterPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17426,21 +17547,21 @@ func (ec *executionContext) marshalNGetFilterPageResponse2ᚖgithubᚗcomᚋvedi
 	return ec._GetFilterPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetFreshGamesRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetFreshGamesRequest(ctx context.Context, v interface{}) (model.GetFreshGamesRequest, error) {
+func (ec *executionContext) unmarshalNGetFreshGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetFreshGamesRequest(ctx context.Context, v interface{}) (model.GetFreshGamesRequest, error) {
 	res, err := ec.unmarshalInputGetFreshGamesRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNGetGamePageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGamePageRequest(ctx context.Context, v interface{}) (model.GetGamePageRequest, error) {
+func (ec *executionContext) unmarshalNGetGamePageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGamePageRequest(ctx context.Context, v interface{}) (model.GetGamePageRequest, error) {
 	res, err := ec.unmarshalInputGetGamePageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetGamePageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGamePageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetGamePageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetGamePageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGamePageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetGamePageResponse) graphql.Marshaler {
 	return ec._GetGamePageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetGamePageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGamePageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetGamePageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetGamePageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGamePageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetGamePageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17450,11 +17571,11 @@ func (ec *executionContext) marshalNGetGamePageResponse2ᚖgithubᚗcomᚋvediag
 	return ec._GetGamePageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGetGameResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx context.Context, sel ast.SelectionSet, v model.GetGameResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetGameResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx context.Context, sel ast.SelectionSet, v model.GetGameResponse) graphql.Marshaler {
 	return ec._GetGameResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetGameResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetGameResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17464,16 +17585,16 @@ func (ec *executionContext) marshalNGetGameResponse2ᚖgithubᚗcomᚋvediagames
 	return ec._GetGameResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetHomePageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetHomePageRequest(ctx context.Context, v interface{}) (model.GetHomePageRequest, error) {
+func (ec *executionContext) unmarshalNGetHomePageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetHomePageRequest(ctx context.Context, v interface{}) (model.GetHomePageRequest, error) {
 	res, err := ec.unmarshalInputGetHomePageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetHomePageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetHomePageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetHomePageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetHomePageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetHomePageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetHomePageResponse) graphql.Marshaler {
 	return ec._GetHomePageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetHomePageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetHomePageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetHomePageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetHomePageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetHomePageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetHomePageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17483,21 +17604,21 @@ func (ec *executionContext) marshalNGetHomePageResponse2ᚖgithubᚗcomᚋvediag
 	return ec._GetHomePageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetMostPlayedGamesRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetMostPlayedGamesRequest(ctx context.Context, v interface{}) (model.GetMostPlayedGamesRequest, error) {
+func (ec *executionContext) unmarshalNGetMostPlayedGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetMostPlayedGamesRequest(ctx context.Context, v interface{}) (model.GetMostPlayedGamesRequest, error) {
 	res, err := ec.unmarshalInputGetMostPlayedGamesRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNGetSearchPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSearchPageRequest(ctx context.Context, v interface{}) (model.GetSearchPageRequest, error) {
+func (ec *executionContext) unmarshalNGetSearchPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSearchPageRequest(ctx context.Context, v interface{}) (model.GetSearchPageRequest, error) {
 	res, err := ec.unmarshalInputGetSearchPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetSearchPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSearchPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetSearchPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetSearchPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSearchPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetSearchPageResponse) graphql.Marshaler {
 	return ec._GetSearchPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetSearchPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSearchPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetSearchPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetSearchPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSearchPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetSearchPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17507,11 +17628,11 @@ func (ec *executionContext) marshalNGetSearchPageResponse2ᚖgithubᚗcomᚋvedi
 	return ec._GetSearchPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGetSectionResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSectionResponse(ctx context.Context, sel ast.SelectionSet, v model.GetSectionResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetSectionResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSectionResponse(ctx context.Context, sel ast.SelectionSet, v model.GetSectionResponse) graphql.Marshaler {
 	return ec._GetSectionResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetSectionResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSectionResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetSectionResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetSectionResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSectionResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetSectionResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17521,16 +17642,16 @@ func (ec *executionContext) marshalNGetSectionResponse2ᚖgithubᚗcomᚋvediaga
 	return ec._GetSectionResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetSiteMapPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageRequest(ctx context.Context, v interface{}) (model.GetSiteMapPageRequest, error) {
+func (ec *executionContext) unmarshalNGetSiteMapPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageRequest(ctx context.Context, v interface{}) (model.GetSiteMapPageRequest, error) {
 	res, err := ec.unmarshalInputGetSiteMapPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetSiteMapPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetSiteMapPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetSiteMapPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetSiteMapPageResponse) graphql.Marshaler {
 	return ec._GetSiteMapPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetSiteMapPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetSiteMapPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetSiteMapPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetSiteMapPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetSiteMapPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17540,16 +17661,16 @@ func (ec *executionContext) marshalNGetSiteMapPageResponse2ᚖgithubᚗcomᚋved
 	return ec._GetSiteMapPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetTagPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagPageRequest(ctx context.Context, v interface{}) (model.GetTagPageRequest, error) {
+func (ec *executionContext) unmarshalNGetTagPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagPageRequest(ctx context.Context, v interface{}) (model.GetTagPageRequest, error) {
 	res, err := ec.unmarshalInputGetTagPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetTagPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetTagPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagPageResponse) graphql.Marshaler {
 	return ec._GetTagPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetTagPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetTagPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetTagPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetTagPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17559,11 +17680,11 @@ func (ec *executionContext) marshalNGetTagPageResponse2ᚖgithubᚗcomᚋvediaga
 	return ec._GetTagPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGetTagResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetTagResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagResponse) graphql.Marshaler {
 	return ec._GetTagResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetTagResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetTagResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17573,16 +17694,16 @@ func (ec *executionContext) marshalNGetTagResponse2ᚖgithubᚗcomᚋvediagames�
 	return ec._GetTagResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetTagsPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagsPageRequest(ctx context.Context, v interface{}) (model.GetTagsPageRequest, error) {
+func (ec *executionContext) unmarshalNGetTagsPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagsPageRequest(ctx context.Context, v interface{}) (model.GetTagsPageRequest, error) {
 	res, err := ec.unmarshalInputGetTagsPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetTagsPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagsPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagsPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetTagsPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagsPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetTagsPageResponse) graphql.Marshaler {
 	return ec._GetTagsPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetTagsPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetTagsPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetTagsPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetTagsPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetTagsPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetTagsPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17592,7 +17713,7 @@ func (ec *executionContext) marshalNGetTagsPageResponse2ᚖgithubᚗcomᚋvediag
 	return ec._GetTagsPageResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacementᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.GetWebsiteSectionPlacement) graphql.Marshaler {
+func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacementᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.GetWebsiteSectionPlacement) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17616,7 +17737,7 @@ func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚕᚖgithubᚗco
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNGetWebsiteSectionPlacement2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacement(ctx, sel, v[i])
+			ret[i] = ec.marshalNGetWebsiteSectionPlacement2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacement(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17636,7 +17757,7 @@ func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚕᚖgithubᚗco
 	return ret
 }
 
-func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacement(ctx context.Context, sel ast.SelectionSet, v *model.GetWebsiteSectionPlacement) graphql.Marshaler {
+func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionPlacement(ctx context.Context, sel ast.SelectionSet, v *model.GetWebsiteSectionPlacement) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17646,11 +17767,11 @@ func (ec *executionContext) marshalNGetWebsiteSectionPlacement2ᚖgithubᚗcom�
 	return ec._GetWebsiteSectionPlacement(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNGetWebsiteSectionsPlacementResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx context.Context, sel ast.SelectionSet, v model.GetWebsiteSectionsPlacementResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetWebsiteSectionsPlacementResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx context.Context, sel ast.SelectionSet, v model.GetWebsiteSectionsPlacementResponse) graphql.Marshaler {
 	return ec._GetWebsiteSectionsPlacementResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetWebsiteSectionsPlacementResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetWebsiteSectionsPlacementResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetWebsiteSectionsPlacementResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWebsiteSectionsPlacementResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetWebsiteSectionsPlacementResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17660,16 +17781,16 @@ func (ec *executionContext) marshalNGetWebsiteSectionsPlacementResponse2ᚖgithu
 	return ec._GetWebsiteSectionsPlacementResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNGetWizardPageRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWizardPageRequest(ctx context.Context, v interface{}) (model.GetWizardPageRequest, error) {
+func (ec *executionContext) unmarshalNGetWizardPageRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWizardPageRequest(ctx context.Context, v interface{}) (model.GetWizardPageRequest, error) {
 	res, err := ec.unmarshalInputGetWizardPageRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNGetWizardPageResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWizardPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetWizardPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetWizardPageResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWizardPageResponse(ctx context.Context, sel ast.SelectionSet, v model.GetWizardPageResponse) graphql.Marshaler {
 	return ec._GetWizardPageResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNGetWizardPageResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGetWizardPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetWizardPageResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNGetWizardPageResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGetWizardPageResponse(ctx context.Context, sel ast.SelectionSet, v *model.GetWizardPageResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17726,17 +17847,17 @@ func (ec *executionContext) marshalNInt2ᚕintᚄ(ctx context.Context, sel ast.S
 	return ret
 }
 
-func (ec *executionContext) unmarshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx context.Context, v interface{}) (model.Language, error) {
+func (ec *executionContext) unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx context.Context, v interface{}) (model.Language, error) {
 	var res model.Language
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNLanguage2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx context.Context, sel ast.SelectionSet, v model.Language) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguage(ctx context.Context, sel ast.SelectionSet, v model.Language) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) marshalNLanguageItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguageItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.LanguageItem) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguageItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguageItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.LanguageItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17760,7 +17881,7 @@ func (ec *executionContext) marshalNLanguageItem2ᚕᚖgithubᚗcomᚋvediagames
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNLanguageItem2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguageItem(ctx, sel, v[i])
+			ret[i] = ec.marshalNLanguageItem2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguageItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17780,7 +17901,7 @@ func (ec *executionContext) marshalNLanguageItem2ᚕᚖgithubᚗcomᚋvediagames
 	return ret
 }
 
-func (ec *executionContext) marshalNLanguageItem2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐLanguageItem(ctx context.Context, sel ast.SelectionSet, v *model.LanguageItem) graphql.Marshaler {
+func (ec *executionContext) marshalNLanguageItem2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐLanguageItem(ctx context.Context, sel ast.SelectionSet, v *model.LanguageItem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17790,11 +17911,11 @@ func (ec *executionContext) marshalNLanguageItem2ᚖgithubᚗcomᚋvediagamesᚋ
 	return ec._LanguageItem(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNListCategoriesResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx context.Context, sel ast.SelectionSet, v model.ListCategoriesResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListCategoriesResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx context.Context, sel ast.SelectionSet, v model.ListCategoriesResponse) graphql.Marshaler {
 	return ec._ListCategoriesResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListCategoriesResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListCategoriesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListCategoriesResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListCategoriesResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17804,16 +17925,16 @@ func (ec *executionContext) marshalNListCategoriesResponse2ᚖgithubᚗcomᚋved
 	return ec._ListCategoriesResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNListGamesRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesRequest(ctx context.Context, v interface{}) (model.ListGamesRequest, error) {
+func (ec *executionContext) unmarshalNListGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesRequest(ctx context.Context, v interface{}) (model.ListGamesRequest, error) {
 	res, err := ec.unmarshalInputListGamesRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNListGamesResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx context.Context, sel ast.SelectionSet, v model.ListGamesResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListGamesResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx context.Context, sel ast.SelectionSet, v model.ListGamesResponse) graphql.Marshaler {
 	return ec._ListGamesResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListGamesResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListGamesResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17823,11 +17944,11 @@ func (ec *executionContext) marshalNListGamesResponse2ᚖgithubᚗcomᚋvediagam
 	return ec._ListGamesResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNListSectionsResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListSectionsResponse(ctx context.Context, sel ast.SelectionSet, v model.ListSectionsResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListSectionsResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListSectionsResponse(ctx context.Context, sel ast.SelectionSet, v model.ListSectionsResponse) graphql.Marshaler {
 	return ec._ListSectionsResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNListSectionsResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListSectionsResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListSectionsResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListSectionsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListSectionsResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListSectionsResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17837,16 +17958,16 @@ func (ec *executionContext) marshalNListSectionsResponse2ᚖgithubᚗcomᚋvedia
 	return ec._ListSectionsResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNListTagsRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsRequest(ctx context.Context, v interface{}) (model.ListTagsRequest, error) {
+func (ec *executionContext) unmarshalNListTagsRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsRequest(ctx context.Context, v interface{}) (model.ListTagsRequest, error) {
 	res, err := ec.unmarshalInputListTagsRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNListTagsResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx context.Context, sel ast.SelectionSet, v model.ListTagsResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListTagsResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx context.Context, sel ast.SelectionSet, v model.ListTagsResponse) graphql.Marshaler {
 	return ec._ListTagsResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListTagsResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListTagsResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListTagsResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17856,7 +17977,7 @@ func (ec *executionContext) marshalNListTagsResponse2ᚖgithubᚗcomᚋvediagame
 	return ec._ListTagsResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SearchItem) graphql.Marshaler {
+func (ec *executionContext) marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SearchItem) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17880,7 +18001,7 @@ func (ec *executionContext) marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagames�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItem(ctx, sel, v[i])
+			ret[i] = ec.marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17900,7 +18021,7 @@ func (ec *executionContext) marshalNSearchItem2ᚕᚖgithubᚗcomᚋvediagames�
 	return ret
 }
 
-func (ec *executionContext) marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItem(ctx context.Context, sel ast.SelectionSet, v *model.SearchItem) graphql.Marshaler {
+func (ec *executionContext) marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItem(ctx context.Context, sel ast.SelectionSet, v *model.SearchItem) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17910,21 +18031,21 @@ func (ec *executionContext) marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋve
 	return ec._SearchItem(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSearchItemType2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemType(ctx context.Context, v interface{}) (model.SearchItemType, error) {
+func (ec *executionContext) unmarshalNSearchItemType2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemType(ctx context.Context, v interface{}) (model.SearchItemType, error) {
 	var res model.SearchItemType
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNSearchItemType2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemType(ctx context.Context, sel ast.SelectionSet, v model.SearchItemType) graphql.Marshaler {
+func (ec *executionContext) marshalNSearchItemType2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemType(ctx context.Context, sel ast.SelectionSet, v model.SearchItemType) graphql.Marshaler {
 	return v
 }
 
-func (ec *executionContext) marshalNSearchResponse2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx context.Context, sel ast.SelectionSet, v model.SearchResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNSearchResponse2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx context.Context, sel ast.SelectionSet, v model.SearchResponse) graphql.Marshaler {
 	return ec._SearchResponse(ctx, sel, &v)
 }
 
-func (ec *executionContext) marshalNSearchResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx context.Context, sel ast.SelectionSet, v *model.SearchResponse) graphql.Marshaler {
+func (ec *executionContext) marshalNSearchResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchResponse(ctx context.Context, sel ast.SelectionSet, v *model.SearchResponse) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17934,7 +18055,7 @@ func (ec *executionContext) marshalNSearchResponse2ᚖgithubᚗcomᚋvediagames�
 	return ec._SearchResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNSection2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Section) graphql.Marshaler {
+func (ec *executionContext) marshalNSection2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Section) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -17958,7 +18079,7 @@ func (ec *executionContext) marshalNSection2ᚕᚖgithubᚗcomᚋvediagamesᚋve
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSection(ctx, sel, v[i])
+			ret[i] = ec.marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -17978,7 +18099,7 @@ func (ec *executionContext) marshalNSection2ᚕᚖgithubᚗcomᚋvediagamesᚋve
 	return ret
 }
 
-func (ec *executionContext) marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSection(ctx context.Context, sel ast.SelectionSet, v *model.Section) graphql.Marshaler {
+func (ec *executionContext) marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSection(ctx context.Context, sel ast.SelectionSet, v *model.Section) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -17988,18 +18109,18 @@ func (ec *executionContext) marshalNSection2ᚖgithubᚗcomᚋvediagamesᚋvedia
 	return ec._Section(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalNSendEmailRequest2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSendEmailRequest(ctx context.Context, v interface{}) (model.SendEmailRequest, error) {
+func (ec *executionContext) unmarshalNSendEmailRequest2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSendEmailRequest(ctx context.Context, v interface{}) (model.SendEmailRequest, error) {
 	res, err := ec.unmarshalInputSendEmailRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) unmarshalNStatus2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐStatus(ctx context.Context, v interface{}) (model.Status, error) {
+func (ec *executionContext) unmarshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐStatus(ctx context.Context, v interface{}) (model.Status, error) {
 	var res model.Status
 	err := res.UnmarshalGQL(v)
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalNStatus2githubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐStatus(ctx context.Context, sel ast.SelectionSet, v model.Status) graphql.Marshaler {
+func (ec *executionContext) marshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐStatus(ctx context.Context, sel ast.SelectionSet, v model.Status) graphql.Marshaler {
 	return v
 }
 
@@ -18050,7 +18171,7 @@ func (ec *executionContext) marshalNString2ᚕstringᚄ(ctx context.Context, sel
 	return ret
 }
 
-func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Tag) graphql.Marshaler {
+func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Tag) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -18074,7 +18195,7 @@ func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋvediag
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTag(ctx, sel, v[i])
+			ret[i] = ec.marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTag(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18094,7 +18215,7 @@ func (ec *executionContext) marshalNTag2ᚕᚖgithubᚗcomᚋvediagamesᚋvediag
 	return ret
 }
 
-func (ec *executionContext) marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTag(ctx context.Context, sel ast.SelectionSet, v *model.Tag) graphql.Marshaler {
+func (ec *executionContext) marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTag(ctx context.Context, sel ast.SelectionSet, v *model.Tag) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -18104,7 +18225,7 @@ func (ec *executionContext) marshalNTag2ᚖgithubᚗcomᚋvediagamesᚋvediagame
 	return ec._Tag(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.TagSection) graphql.Marshaler {
+func (ec *executionContext) marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.TagSection) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
 	isLen1 := len(v) == 1
@@ -18128,7 +18249,7 @@ func (ec *executionContext) marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagames�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNTagSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSection(ctx, sel, v[i])
+			ret[i] = ec.marshalNTagSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSection(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18148,7 +18269,7 @@ func (ec *executionContext) marshalNTagSection2ᚕᚖgithubᚗcomᚋvediagames�
 	return ret
 }
 
-func (ec *executionContext) marshalNTagSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSection(ctx context.Context, sel ast.SelectionSet, v *model.TagSection) graphql.Marshaler {
+func (ec *executionContext) marshalNTagSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSection(ctx context.Context, sel ast.SelectionSet, v *model.TagSection) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
 			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
@@ -18456,14 +18577,14 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
-func (ec *executionContext) marshalOCategory2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
+func (ec *executionContext) marshalOCategory2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐCategory(ctx context.Context, sel ast.SelectionSet, v *model.Category) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Category(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOGame2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐGame(ctx context.Context, sel ast.SelectionSet, v *model.Game) graphql.Marshaler {
+func (ec *executionContext) marshalOGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐGame(ctx context.Context, sel ast.SelectionSet, v *model.Game) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18556,14 +18677,14 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	return res
 }
 
-func (ec *executionContext) marshalOListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListGamesResponse) graphql.Marshaler {
+func (ec *executionContext) marshalOListGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐListGamesResponse(ctx context.Context, sel ast.SelectionSet, v *model.ListGamesResponse) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._ListGamesResponse(ctx, sel, v)
 }
 
-func (ec *executionContext) marshalOSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SearchItem) graphql.Marshaler {
+func (ec *executionContext) marshalOSearchItem2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItemᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.SearchItem) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18590,7 +18711,7 @@ func (ec *executionContext) marshalOSearchItem2ᚕᚖgithubᚗcomᚋvediagames�
 			if !isLen1 {
 				defer wg.Done()
 			}
-			ret[i] = ec.marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSearchItem(ctx, sel, v[i])
+			ret[i] = ec.marshalNSearchItem2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSearchItem(ctx, sel, v[i])
 		}
 		if isLen1 {
 			f(i)
@@ -18610,14 +18731,14 @@ func (ec *executionContext) marshalOSearchItem2ᚕᚖgithubᚗcomᚋvediagames�
 	return ret
 }
 
-func (ec *executionContext) marshalOSection2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSection(ctx context.Context, sel ast.SelectionSet, v *model.Section) graphql.Marshaler {
+func (ec *executionContext) marshalOSection2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSection(ctx context.Context, sel ast.SelectionSet, v *model.Section) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Section(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, v interface{}) (*model.SortingMethod, error) {
+func (ec *executionContext) unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, v interface{}) (*model.SortingMethod, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -18626,7 +18747,7 @@ func (ec *executionContext) unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagames
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, sel ast.SelectionSet, v *model.SortingMethod) graphql.Marshaler {
+func (ec *executionContext) marshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, sel ast.SelectionSet, v *model.SortingMethod) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
@@ -18659,14 +18780,14 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	return res
 }
 
-func (ec *executionContext) marshalOTag2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTag(ctx context.Context, sel ast.SelectionSet, v *model.Tag) graphql.Marshaler {
+func (ec *executionContext) marshalOTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTag(ctx context.Context, sel ast.SelectionSet, v *model.Tag) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
 	return ec._Tag(ctx, sel, v)
 }
 
-func (ec *executionContext) unmarshalOTagSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSortingMethod(ctx context.Context, v interface{}) (*model.TagSortingMethod, error) {
+func (ec *executionContext) unmarshalOTagSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSortingMethod(ctx context.Context, v interface{}) (*model.TagSortingMethod, error) {
 	if v == nil {
 		return nil, nil
 	}
@@ -18675,7 +18796,7 @@ func (ec *executionContext) unmarshalOTagSortingMethod2ᚖgithubᚗcomᚋvediaga
 	return res, graphql.ErrorOnPath(ctx, err)
 }
 
-func (ec *executionContext) marshalOTagSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋvediagamesᚗcomᚋbffᚋgraphqlᚋmodelᚐTagSortingMethod(ctx context.Context, sel ast.SelectionSet, v *model.TagSortingMethod) graphql.Marshaler {
+func (ec *executionContext) marshalOTagSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋbffᚋgraphqlᚋmodelᚐTagSortingMethod(ctx context.Context, sel ast.SelectionSet, v *model.TagSortingMethod) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
 	}
