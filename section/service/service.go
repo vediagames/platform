@@ -6,7 +6,7 @@ import (
 
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/section/domain"
+	"github.com/vediagames/platform/section/domain"
 )
 
 type Config struct {
@@ -30,7 +30,7 @@ type service struct {
 
 func New(cfg Config) domain.Service {
 	if err := cfg.Validate(); err != nil {
-		return nil, fmt.Errorf("invalid config: %w", err)
+		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
 	return &service{

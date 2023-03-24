@@ -6,9 +6,9 @@ import (
 
 	"github.com/vediagames/zeroerror"
 
-	gamedomain "github.com/vediagames/vediagames.com/game/domain"
-	"github.com/vediagames/vediagames.com/search/domain"
-	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
+	gamedomain "github.com/vediagames/platform/game/domain"
+	"github.com/vediagames/platform/search/domain"
+	tagdomain "github.com/vediagames/platform/tag/domain"
 )
 
 type Config struct {

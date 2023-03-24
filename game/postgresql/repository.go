@@ -13,7 +13,7 @@ import (
 	"github.com/lib/pq"
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/game/domain"
+	"github.com/vediagames/platform/game/domain"
 )
 
 type repository struct {
@@ -33,7 +33,7 @@ func (c Config) Validate() error {
 		err.Add(fmt.Errorf("failed to ping: %w", pingErr))
 	}
 
-	return nil
+	return err.Err()
 }
 
 func New(cfg Config) domain.Repository {

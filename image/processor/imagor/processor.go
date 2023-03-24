@@ -11,8 +11,8 @@ import (
 
 	"github.com/vediagames/zeroerror"
 
-	bucketdomain "github.com/vediagames/vediagames.com/bucket/domain"
-	"github.com/vediagames/vediagames.com/image/domain"
+	bucketdomain "github.com/vediagames/platform/bucket/domain"
+	"github.com/vediagames/platform/image/domain"
 )
 
 type Config struct {

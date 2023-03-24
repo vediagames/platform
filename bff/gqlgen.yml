@@ -36,7 +36,7 @@ resolver:
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
-  - "github.com/vediagames/vediagames.com/bff/graphql/model"
+  - "github.com/vediagames/platform/bff/graphql/model"
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -45,27 +45,27 @@ autobind:
 # your liking
 models:
   ComplimentaryCategory:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.ComplimentaryCategory
+    model: github.com/vediagames/platform/bff/graphql/model.ComplimentaryCategory
   ComplimentaryTag:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.ComplimentaryTag
+    model: github.com/vediagames/platform/bff/graphql/model.ComplimentaryTag
   ComplimentaryCategories:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.ComplimentaryCategories
+    model: github.com/vediagames/platform/bff/graphql/model.ComplimentaryCategories
   ComplimentaryTags:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.ComplimentaryTags
+    model: github.com/vediagames/platform/bff/graphql/model.ComplimentaryTags
   ListGamesResponse:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.ListGamesResponse
+    model: github.com/vediagames/platform/bff/graphql/model.ListGamesResponse
   Status:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.Status
+    model: github.com/vediagames/platform/bff/graphql/model.Status
   Category:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.Category
+    model: github.com/vediagames/platform/bff/graphql/model.Category
   SearchItem:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.SearchItem
+    model: github.com/vediagames/platform/bff/graphql/model.SearchItem
   Tag:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.Tag
+    model: github.com/vediagames/platform/bff/graphql/model.Tag
   Game:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.Game
+    model: github.com/vediagames/platform/bff/graphql/model.Game
   Language:
-    model: github.com/vediagames/vediagames.com/bff/graphql/model.Language
+    model: github.com/vediagames/platform/bff/graphql/model.Language
   ID:
     model:
       - github.com/99designs/gqlgen/graphql.ID

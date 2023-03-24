@@ -7,7 +7,7 @@ import (
 	ory "github.com/ory/kratos-client-go"
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/auth/domain"
+	"github.com/vediagames/platform/auth/domain"
 )
 
 type oryService struct {

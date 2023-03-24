@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/vediagames/vediagames.com/fetcher/domain"
+	"github.com/vediagames/platform/fetcher/domain"
 )
 
 const amountOfGames = 19009

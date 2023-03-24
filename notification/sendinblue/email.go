@@ -10,7 +10,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/notification/domain"
+	"github.com/vediagames/platform/notification/domain"
 )
 
 type Config struct {
