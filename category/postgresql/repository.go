@@ -5,6 +5,7 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
+	"strings"
 	"text/template"
 	"time"
 
@@ -78,9 +79,31 @@ func (c category) toDomain() domain.Category {
 }
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	var sqlRes []struct {
-		category
-		TotalCount int `db:"total_count"`
+	tq := templateQuery{
+		"ShouldApplyFilters": false,
+	}
+
+	params := map[string]interface{}{
+		"language_code": q.Language.String(),
+		"limit":         q.Limit,
+		"offset":        (q.Page - 1) * q.Limit,
+	}
+
+	filters := make([]string, 0, 8)
+	if q.AllowDeleted {
+		filters = append(filters, "status != 'deleted'")
+	}
+	if q.AllowInvisible {
+		filters = append(filters, "status != 'invisible'")
+	}
+	if len(q.IDRefs) > 0 {
+		filters = append(filters, "id IN (:id_refs)")
+		params["id_refs"] = q.IDRefs
+	}
+
+	if len(filters) > 0 {
+		tq["ShouldApplyFilters"] = true
+		tq["SQLFilters"] = fmt.Sprintf("AND (%s)", strings.Join(filters, " OR "))
 	}
 
 	sqlQuery, err := templateToSQL(
@@ -107,35 +130,50 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		    COUNT(*) OVER() AS total_count
 		FROM public.categories_view
 		WHERE language_code = $1
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND  status != 'invisible'
+		{{ if .ShouldApplyFilters }}
+			{{ .SQLFilters }}
 		{{ end }}
 		ORDER BY id ASC
-		LIMIT $2 OFFSET $3
+		LIMIT :limit
+		OFFSET :offset;
 	`)
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to create SQL from template: %w", err)
 	}
 
-	offset := (q.Page - 1) * q.Limit
+	query, args, err := sqlx.Named(sqlQuery, params)
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
+	}
 
-	if err := r.db.Select(&sqlRes, sqlQuery, q.Language.String(), q.Limit, offset); err != nil {
-		return domain.FindResult{}, fmt.Errorf("failed to select: %w", err)
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to expand %w", err)
+	}
+
+	query = r.db.Rebind(query)
+
+	var sqlRes []struct {
+		category
+		TotalCount int `db:"total_count"`
+	}
+
+	if err := r.db.Select(&sqlRes, query, args...); err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to select %w", err)
 	}
 
 	res := domain.FindResult{
-		Data:  make([]domain.Category, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Categories{
+			Data:  make([]domain.Category, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 
 		for _, category := range sqlRes {
-			res.Data = append(res.Data, category.toDomain())
+			res.Data.Data = append(res.Data.Data, category.toDomain())
 		}
 	}
 

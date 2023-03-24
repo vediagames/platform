@@ -65,7 +65,7 @@ func (r *Resolver) gameFromDomain(ctx context.Context, domain gamedomain.Game) (
 		Language: categorydomain.Language(domain.Language),
 		Page:     1,
 		Limit:    20,
-		IDs:      categorydomain.IDs(domain.TagIDRefs),
+		IDRefs:   categorydomain.IDs(domain.TagIDRefs),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list categories: %w", err)
@@ -239,7 +239,7 @@ func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.S
 		Language: categorydomain.Language(domain.Language),
 		Page:     1,
 		Limit:    20,
-		IDs:      categorydomain.IDs(domain.TagIDRefs),
+		IDRefs:   categorydomain.IDs(domain.TagIDRefs),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list categories: %w", err)

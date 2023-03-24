@@ -24,5 +24,5 @@ const (
 	ErrEmptyDescription = Error("empty description")
 	ErrNoData           = Error("no data")
 	ErrInvalidData      = Error("invalid data")
-	ErrInvalidIDs       = Error("invalid IDs")
+	ErrInvalidIDs       = Error("invalid IDRefs")
 )

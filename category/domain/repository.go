@@ -32,9 +32,9 @@ type FindQuery struct {
 	Limit          int
 	AllowDeleted   bool
 	AllowInvisible bool
+	IDRefs         IDs
 }
 
 type FindResult struct {
-	Data  []Category
-	Total int
+	Data Categories
 }

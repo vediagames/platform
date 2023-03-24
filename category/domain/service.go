@@ -57,7 +57,7 @@ type ListRequest struct {
 	Limit          int
 	AllowDeleted   bool
 	AllowInvisible bool
-	IDs            IDs
+	IDRefs         IDs
 }
 
 func (r ListRequest) Validate() error {
@@ -75,7 +75,7 @@ func (r ListRequest) Validate() error {
 		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
-	if ve := r.IDs.Validate(); ve != nil {
+	if ve := r.IDRefs.Validate(); ve != nil {
 		err.Add(fmt.Errorf("%s: %w", ErrInvalidIDs, ve))
 	}
 
