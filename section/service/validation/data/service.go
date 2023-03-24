@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/vediagames/vediagames.com/section/domain"
+	"github.com/vediagames/platform/section/domain"
 )
 
 func New(svc domain.Service) domain.Service {

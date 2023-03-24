@@ -6,7 +6,7 @@ import (
 	"math/rand"
 	"net/http"
 
-	"github.com/vediagames/vediagames.com/fetcher/domain"
+	"github.com/vediagames/platform/fetcher/domain"
 )
 
 const amountOfGames = 14999

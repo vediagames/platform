@@ -9,8 +9,8 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 
-	"github.com/vediagames/vediagames.com/cmd"
-	"github.com/vediagames/vediagames.com/config"
+	"github.com/vediagames/platform/cmd"
+	"github.com/vediagames/platform/config"
 )
 
 func main() {

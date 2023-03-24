@@ -14,7 +14,7 @@ import (
 	"github.com/rs/zerolog"
 	"github.com/vediagames/zeroerror"
 
-	"github.com/vediagames/vediagames.com/tag/domain"
+	"github.com/vediagames/platform/tag/domain"
 )
 
 type repository struct {

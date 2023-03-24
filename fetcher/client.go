@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 
-	"github.com/vediagames/vediagames.com/fetcher/domain"
+	"github.com/vediagames/platform/fetcher/domain"
 )
 
 type client struct {
