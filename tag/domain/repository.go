@@ -21,8 +21,7 @@ type SearchQuery struct {
 }
 
 type SearchResult struct {
-	Data  []Tag
-	Total int
+	Data Tags
 }
 
 type FullSearchQuery struct {
@@ -36,8 +35,7 @@ type FullSearchQuery struct {
 }
 
 type FullSearchResult struct {
-	Data  []Tag
-	Total int
+	Data Tags
 }
 
 type FindQuery struct {
@@ -47,11 +45,11 @@ type FindQuery struct {
 	AllowDeleted   bool
 	AllowInvisible bool
 	Sort           SortingMethod
+	IDRefs         IDs
 }
 
 type FindResult struct {
-	Data  []Tag
-	Total int
+	Data Tags
 }
 
 type FindOneQuery struct {

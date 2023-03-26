@@ -26,9 +26,7 @@ func (r GetRequest) Validate() error {
 		err.Add(fmt.Errorf("%w: %w", ErrInvalidField, ve))
 	}
 
-	if r.Value == nil {
-		err.Add(ErrEmptyValue)
-	}
+	err.AddIf(r.Value == nil, ErrEmptyValue)
 
 	if ve := r.Language.Validate(); ve != nil {
 		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))

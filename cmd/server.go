@@ -72,10 +72,7 @@ func startServer(ctx context.Context) error {
 		Repository: gamepostgresql.New(gamepostgresql.Config{
 			DB: db,
 		}),
-		StatsRepository: gamepostgresql.NewStatsRepository(gamepostgresql.Config{
-			DB: db,
-		}),
-		EventRepository: gamepostgresql.NewEventRepository(gamepostgresql.Config{
+		EventRepository: gamepostgresql.NewEvent(gamepostgresql.Config{
 			DB: db,
 		}),
 	})
@@ -90,7 +87,7 @@ func startServer(ctx context.Context) error {
 		Repository: sectionpostgresql.New(sectionpostgresql.Config{
 			DB: db,
 		}),
-		WebsitePlacementRepository: sectionpostgresql.NewWebsitePlacementRepository(sectionpostgresql.Config{
+		PlacedRepository: sectionpostgresql.NewPlaced(sectionpostgresql.Config{
 			DB: db,
 		}),
 	})

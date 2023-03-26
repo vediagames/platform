@@ -59,7 +59,7 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 		MobileOnly:     req.MobileOnly,
 	})
 	if err != nil {
-		return domain.ListResponse{}, fmt.Errorf("failed to list games: %w", err)
+		return domain.ListResponse{}, fmt.Errorf("failed to find: %w", err)
 	}
 
 	res := domain.ListResponse(repoRes)
@@ -77,7 +77,7 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 
 	repoRes, err := s.repository.FindOne(ctx, domain.FindOneQuery(req))
 	if err != nil {
-		return domain.GetResponse{}, fmt.Errorf("failed to get game: %w", err)
+		return domain.GetResponse{}, fmt.Errorf("failed to find one: %w", err)
 	}
 
 	res := domain.GetResponse(repoRes)
@@ -99,7 +99,7 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 		DateLimit: time.Now().AddDate(0, 0, -req.MaxDays),
 	})
 	if err != nil {
-		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to find most played ids: %w", err)
+		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to find most played IDs by date: %w", err)
 	}
 
 	listRes, err := s.repository.Find(ctx, domain.FindQuery{
@@ -113,9 +113,7 @@ func (s service) GetMostPlayedByDays(ctx context.Context, req domain.GetMostPlay
 		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("failed to find: %w", err)
 	}
 
-	res := domain.GetMostPlayedByDaysResponse{
-		Data: domain.ListResponse(listRes),
-	}
+	res := domain.GetMostPlayedByDaysResponse(listRes)
 	if err := res.Validate(); err != nil {
 		return domain.GetMostPlayedByDaysResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
@@ -138,12 +136,10 @@ func (s service) GetFresh(ctx context.Context, req domain.GetFreshRequest) (doma
 		Sort:            domain.SortingMethodNewest,
 	})
 	if err != nil {
-		return domain.GetFreshResponse{}, fmt.Errorf("failed to get fresh: %w", err)
+		return domain.GetFreshResponse{}, fmt.Errorf("failed to find: %w", err)
 	}
 
-	res := domain.GetFreshResponse{
-		Data: domain.ListResponse(repoRes),
-	}
+	res := domain.GetFreshResponse(repoRes)
 	if err := res.Validate(); err != nil {
 		return domain.GetFreshResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
@@ -158,7 +154,7 @@ func (s service) LogEvent(ctx context.Context, req domain.LogEventRequest) error
 
 	err := s.eventRepository.Log(ctx, domain.LogQuery(req))
 	if err != nil {
-		return fmt.Errorf("failed to log event: %w", err)
+		return fmt.Errorf("failed to log: %w", err)
 	}
 
 	return nil

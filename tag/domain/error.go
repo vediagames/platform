@@ -25,5 +25,5 @@ const (
 	ErrInvalidMax       = Error("invalid max")
 	ErrQueryTooShort    = Error("query too short")
 	ErrInvalidData      = Error("invalid data")
-	ErrInvalidIDs       = Error("invalid IDRefs")
+	ErrInvalidIDRefs    = Error("invalid ID refs")
 )

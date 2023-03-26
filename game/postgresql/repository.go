@@ -123,12 +123,11 @@ var orderByOptions = map[domain.SortingMethod]string{
 }
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	val, shouldOrderBy := orderByOptions[q.Sort]
+	val := orderByOptions[q.Sort]
 
 	tq := templateQuery{
-		"ShouldOrderBy":      shouldOrderBy,
-		"OrderBy":            val,
-		"ShouldApplyFilters": false,
+		"OrderBy":    val,
+		"SQLFilters": "",
 	}
 
 	params := map[string]interface{}{
@@ -169,7 +168,6 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 	}
 
 	if len(filters) > 0 {
-		tq["ShouldApplyFilters"] = true
 		tq["SQLFilters"] = fmt.Sprintf("AND (%s)", strings.Join(filters, " OR "))
 	}
 
@@ -204,12 +202,8 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 			COUNT(*) OVER() AS total_count
 		FROM games_view gv
 		WHERE language_code = :language_code
-		{{ if .ShouldApplyFilters }}
 			{{ .SQLFilters }}
-		{{ end }}
-		{{ if .ShouldOrderBy }}
 		ORDER BY {{ .OrderBy }}
-		{{ end }}
 		LIMIT :limit
 		OFFSET :offset;
 	`)
@@ -236,12 +230,14 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 	}
 
 	res := domain.FindResult{
-		Data:  make([]domain.Game, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Games{
+			Data:  make([]domain.Game, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 	}
 
 	for i, g := range sqlRes {
@@ -250,7 +246,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 			return domain.FindResult{}, fmt.Errorf("failed to convert to domain: %w at index %d", err, i)
 		}
 
-		res.Data = append(res.Data, gg)
+		res.Data.Data = append(res.Data.Data, gg)
 	}
 
 	return res, nil
@@ -476,12 +472,14 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 	sqlRes.removeDuplicates(ctx)
 
 	res := domain.SearchResult{
-		Data:  make([]domain.Game, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Games{
+			Data:  make([]domain.Game, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[len(sqlRes)-1].TotalCount
+		res.Data.Total = sqlRes[len(sqlRes)-1].TotalCount
 	}
 
 	if len(sqlRes) > q.Max {
@@ -494,7 +492,7 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 			return domain.SearchResult{}, fmt.Errorf("failed to convert to domain: %w at index %d", err, i)
 		}
 
-		res.Data = append(res.Data, gg)
+		res.Data.Data = append(res.Data.Data, gg)
 	}
 
 	return res, nil
@@ -578,12 +576,14 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 	}
 
 	res := domain.FullSearchResult{
-		Data:  make([]domain.Game, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Games{
+			Data:  make([]domain.Game, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 	}
 
 	for i, g := range sqlRes {
@@ -592,7 +592,7 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 			return domain.FullSearchResult{}, fmt.Errorf("failed to convert to domain: %w at index %d", err, i)
 		}
 
-		res.Data = append(res.Data, gg)
+		res.Data.Data = append(res.Data.Data, gg)
 	}
 
 	return res, nil

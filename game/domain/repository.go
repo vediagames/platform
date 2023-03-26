@@ -27,8 +27,7 @@ type SearchQuery struct {
 }
 
 type SearchResult struct {
-	Data  []Game
-	Total int
+	Data Games
 }
 
 type FullSearchQuery struct {
@@ -42,8 +41,7 @@ type FullSearchQuery struct {
 }
 
 type FullSearchResult struct {
-	Data  []Game
-	Total int
+	Data Games
 }
 
 type LogQuery struct {
@@ -83,8 +81,7 @@ type FindQuery struct {
 }
 
 type FindResult struct {
-	Data  []Game
-	Total int
+	Data Games
 }
 
 type FindMostPlayedIDsByDateQuery struct {

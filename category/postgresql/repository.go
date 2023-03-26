@@ -43,7 +43,7 @@ func New(cfg Config) domain.Repository {
 
 	return &repository{
 		db: cfg.DB,
-	}, nil
+	}
 }
 
 type category struct {
@@ -80,7 +80,7 @@ func (c category) toDomain() domain.Category {
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
 	tq := templateQuery{
-		"ShouldApplyFilters": false,
+		"SQLFilters": "",
 	}
 
 	params := map[string]interface{}{
@@ -102,7 +102,6 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 	}
 
 	if len(filters) > 0 {
-		tq["ShouldApplyFilters"] = true
 		tq["SQLFilters"] = fmt.Sprintf("AND (%s)", strings.Join(filters, " OR "))
 	}
 
@@ -130,9 +129,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		    COUNT(*) OVER() AS total_count
 		FROM public.categories_view
 		WHERE language_code = $1
-		{{ if .ShouldApplyFilters }}
 			{{ .SQLFilters }}
-		{{ end }}
 		ORDER BY id ASC
 		LIMIT :limit
 		OFFSET :offset;
