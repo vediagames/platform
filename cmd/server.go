@@ -276,8 +276,8 @@ type sessionNewResponse struct {
 	IP         string    `json:"ip"`
 	Device     string    `json:"device"`
 	PageURL    string    `json:"page_url"`
-	CreatedAt  time.Time `json:"createdAt"`
-	InsertedAt time.Time `json:"insertedAt"`
+	CreatedAt  time.Time `json:"created_at"`
+	InsertedAt time.Time `json:"inserted_at"`
 }
 
 type sessionNewRequest struct {
