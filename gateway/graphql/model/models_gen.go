@@ -14,7 +14,7 @@ type AvailableLanguage struct {
 }
 
 type AvailableLanguagesResponse struct {
-	Languages []*AvailableLanguage `json:"Languages"`
+	Languages []*AvailableLanguage `json:"Languages,omitempty"`
 }
 
 type Categories struct {
@@ -39,14 +39,14 @@ type Category struct {
 	Language         Language `json:"language"`
 	Slug             string   `json:"slug"`
 	Name             string   `json:"name"`
-	ShortDescription *string  `json:"shortDescription"`
-	Description      *string  `json:"description"`
-	Content          *string  `json:"content"`
+	ShortDescription *string  `json:"shortDescription,omitempty"`
+	Description      *string  `json:"description,omitempty"`
+	Content          *string  `json:"content,omitempty"`
 	Status           Status   `json:"status"`
 	Clicks           int      `json:"clicks"`
 	CreatedAt        string   `json:"createdAt"`
-	DeletedAt        *string  `json:"deletedAt"`
-	PublishedAt      *string  `json:"publishedAt"`
+	DeletedAt        *string  `json:"deletedAt,omitempty"`
+	PublishedAt      *string  `json:"publishedAt,omitempty"`
 	PageURL          string   `json:"pageUrl"`
 }
 
@@ -76,14 +76,9 @@ type FullSearchRequest struct {
 	Query          string         `json:"query"`
 	Page           int            `json:"page"`
 	Limit          int            `json:"limit"`
-	Sort           *SortingMethod `json:"sort"`
+	Sort           *SortingMethod `json:"sort,omitempty"`
 	AllowDeleted   bool           `json:"allowDeleted"`
 	AllowInvisible bool           `json:"allowInvisible"`
-}
-
-type FullSearchResponse struct {
-	SearchItems []*SearchItem `json:"searchItems"`
-	Total       int           `json:"total"`
 }
 
 type Game struct {
@@ -93,20 +88,20 @@ type Game struct {
 	Name              string      `json:"name"`
 	Status            Status      `json:"status"`
 	CreatedAt         string      `json:"createdAt"`
-	DeletedAt         *string     `json:"deletedAt"`
-	PublishedAt       *string     `json:"publishedAt"`
+	DeletedAt         *string     `json:"deletedAt,omitempty"`
+	PublishedAt       *string     `json:"publishedAt,omitempty"`
 	URL               string      `json:"url"`
 	Width             int         `json:"width"`
 	Height            int         `json:"height"`
-	ShortDescription  *string     `json:"shortDescription"`
-	Description       *string     `json:"description"`
-	Content           *string     `json:"content"`
+	ShortDescription  *string     `json:"shortDescription,omitempty"`
+	Description       *string     `json:"description,omitempty"`
+	Content           *string     `json:"content,omitempty"`
 	Likes             int         `json:"likes"`
 	Dislikes          int         `json:"dislikes"`
 	Plays             int         `json:"plays"`
 	Weight            int         `json:"weight"`
-	Player1Controls   *string     `json:"player1Controls"`
-	Player2Controls   *string     `json:"player2Controls"`
+	Player1Controls   *string     `json:"player1Controls,omitempty"`
+	Player2Controls   *string     `json:"player2Controls,omitempty"`
 	Tags              *Tags       `json:"tags"`
 	Categories        *Categories `json:"categories"`
 	Mobile            bool        `json:"mobile"`
@@ -137,11 +132,11 @@ type GamesRequest struct {
 	Limit           int            `json:"limit"`
 	AllowDeleted    bool           `json:"allowDeleted"`
 	AllowInvisible  bool           `json:"allowInvisible"`
-	Sort            *SortingMethod `json:"sort"`
-	Categories      []int          `json:"categories"`
-	Tags            []int          `json:"tags"`
-	Ids             []int          `json:"ids"`
-	ExcludedGameIDs []int          `json:"excludedGameIDs"`
+	Sort            *SortingMethod `json:"sort,omitempty"`
+	Categories      []int          `json:"categories,omitempty"`
+	Tags            []int          `json:"tags,omitempty"`
+	Ids             []int          `json:"ids,omitempty"`
+	ExcludedGameIDs []int          `json:"excludedGameIDs,omitempty"`
 }
 
 type GamesResponse struct {
@@ -164,17 +159,12 @@ type PlacedSection struct {
 	Placement int      `json:"placement"`
 }
 
-type PlacedSections struct {
-	Data  []*PlacedSection `json:"data"`
-	Total int              `json:"total"`
-}
-
 type PlacedSectionsRequest struct {
 	Language Language `json:"language"`
 }
 
 type PlacedSectionsResponse struct {
-	PlacedSections *PlacedSections `json:"placedSections"`
+	PlacedSections []*PlacedSection `json:"placedSections"`
 }
 
 type RandomProviderGameResponse struct {
@@ -220,11 +210,11 @@ type Section struct {
 	Name             string      `json:"name"`
 	Status           Status      `json:"status"`
 	CreatedAt        string      `json:"createdAt"`
-	DeletedAt        *string     `json:"deletedAt"`
-	PublishedAt      *string     `json:"publishedAt"`
-	ShortDescription *string     `json:"shortDescription"`
-	Description      *string     `json:"description"`
-	Content          *string     `json:"content"`
+	DeletedAt        *string     `json:"deletedAt,omitempty"`
+	PublishedAt      *string     `json:"publishedAt,omitempty"`
+	ShortDescription *string     `json:"shortDescription,omitempty"`
+	Description      *string     `json:"description,omitempty"`
+	Content          *string     `json:"content,omitempty"`
 	Tags             *Tags       `json:"tags"`
 	Categories       *Categories `json:"categories"`
 	Games            *Games      `json:"games"`
@@ -270,14 +260,14 @@ type Tag struct {
 	Language         Language `json:"language"`
 	Slug             string   `json:"slug"`
 	Name             string   `json:"name"`
-	ShortDescription *string  `json:"shortDescription"`
-	Description      *string  `json:"description"`
-	Content          *string  `json:"content"`
+	ShortDescription *string  `json:"shortDescription,omitempty"`
+	Description      *string  `json:"description,omitempty"`
+	Content          *string  `json:"content,omitempty"`
 	Status           Status   `json:"status"`
 	Clicks           int      `json:"clicks"`
 	CreatedAt        string   `json:"createdAt"`
-	DeletedAt        *string  `json:"deletedAt"`
-	PublishedAt      *string  `json:"publishedAt"`
+	DeletedAt        *string  `json:"deletedAt,omitempty"`
+	PublishedAt      *string  `json:"publishedAt,omitempty"`
 	Thumbnail512x384 string   `json:"thumbnail512x384"`
 	Thumbnail128x128 string   `json:"thumbnail128x128"`
 	PageURL          string   `json:"pageUrl"`
@@ -294,7 +284,7 @@ type TagResponse struct {
 }
 
 type TagSection struct {
-	Games *Games `json:"games"`
+	Games *Games `json:"games,omitempty"`
 	Tag   *Tag   `json:"tag"`
 }
 
@@ -309,12 +299,12 @@ type Tags struct {
 }
 
 type TagsRequest struct {
-	Language       Language          `json:"language"`
-	Page           int               `json:"page"`
-	Limit          int               `json:"limit"`
-	AllowDeleted   bool              `json:"allowDeleted"`
-	AllowInvisible bool              `json:"allowInvisible"`
-	Sort           *TagSortingMethod `json:"sort"`
+	Language       Language       `json:"language"`
+	Page           int            `json:"page"`
+	Limit          int            `json:"limit"`
+	AllowDeleted   bool           `json:"allowDeleted"`
+	AllowInvisible bool           `json:"allowInvisible"`
+	Sort           *SortingMethod `json:"sort,omitempty"`
 }
 
 type TagsResponse struct {
@@ -588,56 +578,5 @@ func (e *Status) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Status) MarshalGQL(w io.Writer) {
-	fmt.Fprint(w, strconv.Quote(e.String()))
-}
-
-type TagSortingMethod string
-
-const (
-	TagSortingMethodID           TagSortingMethod = "id"
-	TagSortingMethodName         TagSortingMethod = "name"
-	TagSortingMethodRandom       TagSortingMethod = "random"
-	TagSortingMethodMostPopular  TagSortingMethod = "most_popular"
-	TagSortingMethodLeastPopular TagSortingMethod = "least_popular"
-	TagSortingMethodNewest       TagSortingMethod = "newest"
-	TagSortingMethodOldest       TagSortingMethod = "oldest"
-)
-
-var AllTagSortingMethod = []TagSortingMethod{
-	TagSortingMethodID,
-	TagSortingMethodName,
-	TagSortingMethodRandom,
-	TagSortingMethodMostPopular,
-	TagSortingMethodLeastPopular,
-	TagSortingMethodNewest,
-	TagSortingMethodOldest,
-}
-
-func (e TagSortingMethod) IsValid() bool {
-	switch e {
-	case TagSortingMethodID, TagSortingMethodName, TagSortingMethodRandom, TagSortingMethodMostPopular, TagSortingMethodLeastPopular, TagSortingMethodNewest, TagSortingMethodOldest:
-		return true
-	}
-	return false
-}
-
-func (e TagSortingMethod) String() string {
-	return string(e)
-}
-
-func (e *TagSortingMethod) UnmarshalGQL(v interface{}) error {
-	str, ok := v.(string)
-	if !ok {
-		return fmt.Errorf("enums must be strings")
-	}
-
-	*e = TagSortingMethod(str)
-	if !e.IsValid() {
-		return fmt.Errorf("%s is not a valid TagSortingMethod", str)
-	}
-	return nil
-}
-
-func (e TagSortingMethod) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }

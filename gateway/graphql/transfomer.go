@@ -8,12 +8,12 @@ import (
 	"net/url"
 	"strings"
 
-	categorydomain "github.com/vediagames/vediagames.com/category/domain"
-	gamedomain "github.com/vediagames/vediagames.com/game/domain"
-	"github.com/vediagames/vediagames.com/gateway/graphql/model"
-	searchdomain "github.com/vediagames/vediagames.com/search/domain"
-	sectiondomain "github.com/vediagames/vediagames.com/section/domain"
-	tagdomain "github.com/vediagames/vediagames.com/tag/domain"
+	categorydomain "github.com/vediagames/platform/category/domain"
+	gamedomain "github.com/vediagames/platform/game/domain"
+	"github.com/vediagames/platform/gateway/graphql/model"
+	searchdomain "github.com/vediagames/platform/search/domain"
+	sectiondomain "github.com/vediagames/platform/section/domain"
+	tagdomain "github.com/vediagames/platform/tag/domain"
 )
 
 func (r *Resolver) gamesFromDomain(ctx context.Context, domain gamedomain.Games) (*model.Games, error) {
@@ -50,7 +50,7 @@ func (r *Resolver) gameFromDomain(ctx context.Context, domain gamedomain.Game) (
 		Page:     1,
 		Limit:    20,
 		Sort:     tagdomain.SortingMethodName,
-		IDs:      tagdomain.IDs(domain.TagIDRefs),
+		IDRefs:   tagdomain.IDs(domain.TagIDRefs),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list tags: %w", err)
@@ -224,7 +224,7 @@ func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.S
 		Page:     1,
 		Limit:    20,
 		Sort:     tagdomain.SortingMethodName,
-		IDs:      tagdomain.IDs(domain.TagIDRefs),
+		IDRefs:   tagdomain.IDs(domain.TagIDRefs),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list tags: %w", err)
@@ -292,6 +292,67 @@ func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.S
 	}, nil
 }
 
+func (r *Resolver) placedSectionsFromDomain(ctx context.Context, domain sectiondomain.GetPlacedResponse) (*model.PlacedSectionsResponse, error) {
+	placedSections := &model.PlacedSectionsResponse{
+		PlacedSections: make([]*model.PlacedSection, 0, len(domain.Data)),
+	}
+
+	for _, domainSection := range domain.Data {
+		section, err := r.sectionFromDomain(ctx, domainSection.Section)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert section: %w", err)
+		}
+
+		placedSections.PlacedSections = append(placedSections.PlacedSections, &model.PlacedSection{
+			Section:   section,
+			Placement: domainSection.PlacementNumber,
+		})
+	}
+
+	return placedSections, nil
+}
+
+func (r *Resolver) searchFromDomain(domain searchdomain.SearchResponse) (*model.SearchResponse, error) {
+	searchResponse := &model.SearchResponse{
+		SearchItems: make([]*model.SearchItem, 0, len(domain.Games)+len(domain.Tags)),
+		Total:       domain.Total,
+	}
+
+	for _, domainItem := range domain.Games {
+		thumb512x384, err := pathGame.Thumbnail(domainItem.Slug, thumbnail512x384)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get 512x384 thumbnail for %q: %w", domainItem.Slug, err)
+		}
+
+		searchResponse.SearchItems = append(searchResponse.SearchItems, &model.SearchItem{
+			ShortDescription: domainItem.ShortDescription,
+			Name:             domainItem.Slug,
+			Slug:             domainItem.Slug,
+			Type:             model.SearchItemTypeGame,
+			PageURL:          fmt.Sprintf("/game/%s", domainItem.Slug),
+			Thumbnail512x384: thumb512x384,
+		})
+	}
+
+	for _, domainItem := range domain.Tags {
+		thumb512x384, err := pathTag.Thumbnail(domainItem.Slug, thumbnail512x384)
+		if err != nil {
+			return nil, fmt.Errorf("failed to get 512x384 thumbnail for %q: %w", domainItem.Slug, err)
+		}
+
+		searchResponse.SearchItems = append(searchResponse.SearchItems, &model.SearchItem{
+			ShortDescription: domainItem.ShortDescription,
+			Name:             domainItem.Slug,
+			Slug:             domainItem.Slug,
+			Type:             model.SearchItemTypeTag,
+			PageURL:          fmt.Sprintf("/tag/%s", domainItem.Slug),
+			Thumbnail512x384: thumb512x384,
+		})
+	}
+
+	return searchResponse, nil
+}
+
 func pointerTrue() *bool {
 	v := true
 	return &v
@@ -317,7 +378,7 @@ func filterParamsInBase64(p filterParams) (string, error) {
 	return base64.StdEncoding.EncodeToString(body), nil
 }
 
-func sortingMethodToDomain[T gamedomain.SortingMethod | searchdomain.SortingMethod](s *model.SortingMethod) T {
+func sortingMethodToDomain[T gamedomain.SortingMethod | searchdomain.SortingMethod | tagdomain.SortingMethod](s *model.SortingMethod) T {
 	if s == nil {
 		return T(model.SortingMethodID.String())
 	}

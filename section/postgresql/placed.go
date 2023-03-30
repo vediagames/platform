@@ -45,9 +45,9 @@ func (r placedRepository) Find(ctx context.Context, q domain.PlacedFindQuery) (d
 		       sv.categories as categories,
 		       sv.games as games,
 		       ws.placement_number as placement_number
-		FROM website_sections_placement as ws
-        	LEFT JOIN mat_sections_view as sv on ws.section_id = sv.id
-		WHERE sv.language_code = $1 AND status = 'published'
+		FROM public.website_sections_placement as ws
+        	LEFT JOIN public.sections_view as sv on ws.section_id = sv.id
+		WHERE sv.language_code = $1 AND sv.status = 'published'
 		ORDER BY ws.placement_number;
 	`
 
@@ -80,7 +80,7 @@ func (r placedRepository) Update(ctx context.Context, q domain.PlacedUpdateQuery
 	}
 
 	_, err = tx.Exec(`
-		DELETE FROM website_sections_placement;
+		DELETE FROM public.website_sections_placement;
 	`)
 	if err != nil {
 		return txError(tx, fmt.Errorf("failed to insert: %w", err))
@@ -88,9 +88,10 @@ func (r placedRepository) Update(ctx context.Context, q domain.PlacedUpdateQuery
 
 	for placement, sectionID := range q.Placements {
 		_, err = tx.Exec(`
-			INSERT INTO website_sections_placement (section_id, placement_number)
+			INSERT INTO public.website_sections_placement (section_id, placement_number)
 			VALUES ($1, $2);
 		`, sectionID, int(placement))
+
 		if err != nil {
 			return txError(tx, fmt.Errorf("failed to insert: %w", err))
 		}

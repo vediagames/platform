@@ -27,7 +27,7 @@ type Config struct {
 func (c Config) Validate() error {
 	var err zeroerror.Error
 
-	err.AddIf(c.Client == nil, fmt.Errorf("empty client"))
+	//err.AddIf(c.Client == nil, fmt.Errorf("empty client"))
 	err.AddIf(c.TableID == "", fmt.Errorf("empty table ID"))
 	err.AddIf(c.DatasetID == "", fmt.Errorf("empty dataset ID"))
 

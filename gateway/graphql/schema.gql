@@ -15,7 +15,7 @@ type Query {
     placedSections(request: PlacedSectionsRequest!): PlacedSectionsResponse!
 
     search(request: SearchRequest!): SearchResponse!
-    fullSearch(request: FullSearchRequest!): FullSearchResponse!
+    fullSearch(request: FullSearchRequest!): SearchResponse!
 
     randomProviderGame: RandomProviderGameResponse
     availableLanguages: AvailableLanguagesResponse!
@@ -102,7 +102,7 @@ input TagsRequest {
     limit: Int!
     allowDeleted: Boolean!
     allowInvisible: Boolean!
-    sort: TagSortingMethod
+    sort: SortingMethod
 }
 
 type TagsResponse {
@@ -146,7 +146,7 @@ input PlacedSectionsRequest {
 }
 
 type PlacedSectionsResponse {
-    placedSections: PlacedSections!
+    placedSections: [PlacedSection!]!
 }
 
 input SearchRequest {
@@ -171,11 +171,6 @@ input FullSearchRequest {
     sort: SortingMethod
     allowDeleted: Boolean!
     allowInvisible: Boolean!
-}
-
-type FullSearchResponse {
-    searchItems: [SearchItem!]!
-    total: Int!
 }
 
 type RandomProviderGameResponse {
@@ -239,16 +234,6 @@ enum SortingMethod {
     most_relevant
 }
 
-enum TagSortingMethod {
-    id
-    name
-    random
-    most_popular
-    least_popular
-    newest
-    oldest
-}
-
 enum SearchItemType {
     game
     tag
@@ -287,11 +272,6 @@ type Game {
     thumbnail512x512: String!
     pageUrl: String!
     fullScreenPageUrl: String!
-}
-
-type PlacedSections{
-    data: [PlacedSection!]!
-    total: Int!
 }
 
 type PlacedSection {

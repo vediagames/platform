@@ -27,8 +27,7 @@ type FindQuery struct {
 }
 
 type FindResult struct {
-	Data  []Section
-	Total int
+	Data Sections
 }
 
 type FindOneQuery struct {

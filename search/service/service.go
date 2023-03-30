@@ -68,7 +68,7 @@ func (s service) Search(ctx context.Context, req domain.SearchRequest) (domain.S
 		return domain.SearchResponse{}, fmt.Errorf("failed to search tags: %w", err)
 	}
 
-	return populateSearchItemsFromImplementations(gameRes.Data, tagRes.Data, tagRes.Total+gameRes.Total), nil
+	return populateSearchItemsFromImplementations(gameRes.Data.Data, tagRes.Data.Data, tagRes.Data.Total+gameRes.Data.Total), nil
 }
 
 func (s service) FullSearch(ctx context.Context, req domain.FullSearchRequest) (domain.SearchResponse, error) {
@@ -102,7 +102,7 @@ func (s service) FullSearch(ctx context.Context, req domain.FullSearchRequest) (
 		return domain.SearchResponse{}, fmt.Errorf("failed to search tags: %w", err)
 	}
 
-	return populateSearchItemsFromImplementations(gameRes.Data, tagRes.Data, tagRes.Total+gameRes.Total), nil
+	return populateSearchItemsFromImplementations(gameRes.Data.Data, tagRes.Data.Data, tagRes.Data.Total+gameRes.Data.Total), nil
 }
 
 func populateSearchItemsFromImplementations(games []gamedomain.Game, tag []tagdomain.Tag, total int) domain.SearchResponse {

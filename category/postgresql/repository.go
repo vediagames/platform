@@ -5,7 +5,6 @@ import (
 	"context"
 	"database/sql"
 	"fmt"
-	"strings"
 	"text/template"
 	"time"
 
@@ -77,68 +76,53 @@ func (c category) toDomain() domain.Category {
 		PublishedAt:      c.PublishedAt.Time,
 	}
 }
-
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	tq := templateQuery{
-		"SQLFilters": "",
-	}
-
-	params := map[string]interface{}{
-		"language_code": q.Language.String(),
-		"limit":         q.Limit,
-		"offset":        (q.Page - 1) * q.Limit,
-	}
-
-	filters := make([]string, 0, 8)
-	if q.AllowDeleted {
-		filters = append(filters, "status != 'deleted'")
-	}
-	if q.AllowInvisible {
-		filters = append(filters, "status != 'invisible'")
-	}
-	if len(q.IDRefs) > 0 {
-		filters = append(filters, "id IN (:id_refs)")
-		params["id_refs"] = q.IDRefs
-	}
-
-	if len(filters) > 0 {
-		tq["SQLFilters"] = fmt.Sprintf("AND (%s)", strings.Join(filters, " OR "))
-	}
-
 	sqlQuery, err := templateToSQL(
 		"find_categories",
 		templateQuery{
 			"AllowDeleted":   q.AllowDeleted,
 			"AllowInvisible": q.AllowInvisible,
+			"FilterByIDRefs": len(q.IDRefs) > 0,
 		},
 		`
-		SELECT
-			id,
-			language_code,
-			slug,
-			name,
-			short_description,
-			description,
-			content,
-			status,
-			clicks,
-			created_at,
-			deleted_at,
-			deleted_at,
-			published_at,
-		    COUNT(*) OVER() AS total_count
-		FROM public.categories_view
-		WHERE language_code = $1
-			{{ .SQLFilters }}
-		ORDER BY id ASC
-		LIMIT :limit
-		OFFSET :offset;
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				short_description,
+				description,
+				content,
+				status,
+				clicks,
+				created_at,
+				deleted_at,
+				published_at,
+				COUNT(*) OVER() AS total_count
+			FROM public.categories_view
+			WHERE language_code = $1
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND  status != 'invisible'
+			{{ end }}
+			{{ if .FilterByIDRefs }}
+				AND id IN (:id_refs)
+			{{ end }}
+			LIMIT :limit
+			OFFSET :offset;
 	`)
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to create SQL from template: %w", err)
 	}
 
-	query, args, err := sqlx.Named(sqlQuery, params)
+	query, args, err := sqlx.Named(sqlQuery, map[string]interface{}{
+		"language_code": q.Language.String(),
+		"limit":         q.Limit,
+		"offset":        (q.Page - 1) * q.Limit,
+		"id_refs":       q.IDRefs,
+	})
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
 	}
@@ -205,7 +189,7 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 			deleted_at,
 			deleted_at,
 			published_at
-		FROM categories_view
+		FROM public.categories_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 

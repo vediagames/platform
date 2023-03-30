@@ -22,9 +22,9 @@ func NewEvent(cfg Config) domain.EventRepository {
 }
 
 var logEventTables = map[domain.Event]string{
-	domain.EventPlay:    "game_play_events",
-	domain.EventLike:    "game_like_events",
-	domain.EventDislike: "game_dislike_events",
+	domain.EventPlay:    "public.game_play_events",
+	domain.EventLike:    "public.game_like_events",
+	domain.EventDislike: "public.game_dislike_events",
 }
 
 func (r eventRepository) Log(ctx context.Context, q domain.LogQuery) error {
