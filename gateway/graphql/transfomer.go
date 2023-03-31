@@ -46,7 +46,7 @@ func (r *Resolver) gameFromDomain(ctx context.Context, domain gamedomain.Game) (
 	}
 
 	var tags *model.Tags
-	if len(domain.TagIDRefs) == 0 {
+	if len(domain.TagIDRefs) != 0 {
 		tagRes, err := r.tagService.List(ctx, tagdomain.ListRequest{
 			Language: tagdomain.Language(domain.Language),
 			Page:     1,
@@ -64,8 +64,10 @@ func (r *Resolver) gameFromDomain(ctx context.Context, domain gamedomain.Game) (
 		}
 	}
 
+	fmt.Println(tags)
+
 	var categories *model.Categories
-	if len(domain.CategoryIDRefs) == 0 {
+	if len(domain.CategoryIDRefs) != 0 {
 		categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
 			Language: categorydomain.Language(domain.Language),
 			Page:     1,
@@ -210,7 +212,7 @@ func (r *Resolver) sectionsFromDomain(ctx context.Context, domain sectiondomain.
 
 func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.Section) (*model.Section, error) {
 	var games *model.Games
-	if len(domain.GameIDRefs) == 0 {
+	if len(domain.GameIDRefs) != 0 {
 		gameRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
 			Language: gamedomain.Language(domain.Language),
 			Page:     1,
@@ -229,7 +231,7 @@ func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.S
 	}
 
 	var tags *model.Tags
-	if len(domain.TagIDRefs) == 0 {
+	if len(domain.TagIDRefs) != 0 {
 		tagRes, err := r.tagService.List(ctx, tagdomain.ListRequest{
 			Language: tagdomain.Language(domain.Language),
 			Page:     1,
@@ -248,7 +250,7 @@ func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.S
 	}
 
 	var categories *model.Categories
-	if len(domain.CategoryIDRefs) == 0 {
+	if len(domain.CategoryIDRefs) != 0 {
 		categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
 			Language: categorydomain.Language(domain.Language),
 			Page:     1,
