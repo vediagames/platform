@@ -100,7 +100,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 				published_at,
 				COUNT(*) OVER() AS total_count
 			FROM public.categories_view
-			WHERE language_code = $1
+			WHERE language_code = :language_code
 			{{ if not .AllowDeleted }}
 				AND status != 'deleted'
 			{{ end }}
@@ -123,9 +123,6 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		"offset":        (q.Page - 1) * q.Limit,
 		"id_refs":       q.IDRefs,
 	})
-	if err != nil {
-		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
-	}
 
 	query, args, err = sqlx.In(query, args...)
 	if err != nil {

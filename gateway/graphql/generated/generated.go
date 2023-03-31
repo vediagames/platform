@@ -1694,9 +1694,9 @@ type Section {
     shortDescription: String
     description: String
     content: String
-    tags: Tags!
-    categories: Categories!
-    games: Games!
+    tags: Tags
+    categories: Categories
+    games: Games
     pageUrl: String!
 }
 
@@ -7138,14 +7138,11 @@ func (ec *executionContext) _Section_tags(ctx context.Context, field graphql.Col
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.Tags)
 	fc.Result = res
-	return ec.marshalNTags2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTags(ctx, field.Selections, res)
+	return ec.marshalOTags2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTags(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_tags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7188,14 +7185,11 @@ func (ec *executionContext) _Section_categories(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.Categories)
 	fc.Result = res
-	return ec.marshalNCategories2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCategories(ctx, field.Selections, res)
+	return ec.marshalOCategories2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCategories(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_categories(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -7238,14 +7232,11 @@ func (ec *executionContext) _Section_games(ctx context.Context, field graphql.Co
 		return graphql.Null
 	}
 	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
 		return graphql.Null
 	}
 	res := resTmp.(*model.Games)
 	fc.Result = res
-	return ec.marshalNGames2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGames(ctx, field.Selections, res)
+	return ec.marshalOGames2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGames(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Section_games(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -12634,23 +12625,14 @@ func (ec *executionContext) _Section(ctx context.Context, sel ast.SelectionSet, 
 
 			out.Values[i] = ec._Section_tags(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "categories":
 
 			out.Values[i] = ec._Section_categories(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "games":
 
 			out.Values[i] = ec._Section_games(ctx, field, obj)
 
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		case "pageUrl":
 
 			out.Values[i] = ec._Section_pageUrl(ctx, field, obj)
@@ -14514,6 +14496,13 @@ func (ec *executionContext) marshalOBoolean2ᚖbool(ctx context.Context, sel ast
 	return res
 }
 
+func (ec *executionContext) marshalOCategories2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCategories(ctx context.Context, sel ast.SelectionSet, v *model.Categories) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Categories(ctx, sel, v)
+}
+
 func (ec *executionContext) marshalOGames2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGames(ctx context.Context, sel ast.SelectionSet, v *model.Games) graphql.Marshaler {
 	if v == nil {
 		return graphql.Null
@@ -14606,6 +14595,13 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
+}
+
+func (ec *executionContext) marshalOTags2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTags(ctx context.Context, sel ast.SelectionSet, v *model.Tags) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._Tags(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalO__EnumValue2ᚕgithubᚗcomᚋ99designsᚋgqlgenᚋgraphqlᚋintrospectionᚐEnumValueᚄ(ctx context.Context, sel ast.SelectionSet, v []introspection.EnumValue) graphql.Marshaler {

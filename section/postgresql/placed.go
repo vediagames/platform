@@ -41,9 +41,9 @@ func (r placedRepository) Find(ctx context.Context, q domain.PlacedFindQuery) (d
 		       sv.created_at as created_at,
 		       sv.deleted_at as deleted_at,
 		       sv.published_at as published_at,
-		       sv.tags as tags,
-		       sv.categories as categories,
-		       sv.games as games,
+		       sv.tag_id_refs as tag_id_refs,
+		       sv.category_id_refs as category_id_refs,
+		       sv.game_id_refs as game_id_refs,
 		       ws.placement_number as placement_number
 		FROM public.website_sections_placement as ws
         	LEFT JOIN public.sections_view as sv on ws.section_id = sv.id

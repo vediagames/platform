@@ -167,10 +167,10 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 				FROM public.games_view
 				WHERE language_code = :language_code
 				{{ if .FilterByCategoryIDRefs }}
-					AND category_id_refs && ARRAY[:category_id_refs]
+					AND category_id_refs && CAST(:category_id_refs AS INTEGER[])
 				{{ end }}
 				{{ if .FilterByTagIDRefs }}
-					AND tag_id_refs && ARRAY[:tag_id_refs]
+    				AND tag_id_refs && CAST(:tag_id_refs AS INTEGER[])
 				{{ end }}
 				{{ if .FilterByIDRefs }}
 					AND id IN (:id_refs)
@@ -202,8 +202,8 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		"language_code":     q.Language.String(),
 		"limit":             q.Limit,
 		"offset":            (q.Page - 1) * q.Limit,
-		"category_id_refs":  q.CategoryIDRefs,
-		"tag_id_refs":       q.TagIDRefs,
+		"category_id_refs":  pq.Array(q.CategoryIDRefs),
+		"tag_id_refs":       pq.Array(q.TagIDRefs),
 		"id_refs":           q.IDRefs,
 		"excluded_id_refs":  q.ExcludedIDRefs,
 		"create_date_limit": q.CreateDateLimit,

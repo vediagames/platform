@@ -120,7 +120,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 				published_at,
 				COUNT(*) OVER() AS total_count
 			FROM public.tags_view
-			WHERE language_code = $1
+			WHERE language_code = :language_code
 			{{ if not .AllowDeleted }}
 				AND status != 'deleted'
 			{{ end }}
@@ -159,7 +159,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 
 	var sqlRes []tagWithTotalCount
 
-	if err := r.db.Select(&sqlRes, sqlQuery, args); err != nil {
+	if err := r.db.Select(&sqlRes, query, args...); err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to select: %w", err)
 	}
 
@@ -236,7 +236,7 @@ func (r repository) IncreaseField(ctx context.Context, q domain.IncreaseFieldQue
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		UPDATE tags
+		UPDATE public.tags
 		SET %s = %s + $1
 		WHERE id = $2;
 	`, val, val)

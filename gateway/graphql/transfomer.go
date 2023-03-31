@@ -45,33 +45,39 @@ func (r *Resolver) gameFromDomain(ctx context.Context, domain gamedomain.Game) (
 		return nil, fmt.Errorf("failed to get 512x512 thumbnail: %w", err)
 	}
 
-	tagRes, err := r.tagService.List(ctx, tagdomain.ListRequest{
-		Language: tagdomain.Language(domain.Language),
-		Page:     1,
-		Limit:    20,
-		Sort:     tagdomain.SortingMethodName,
-		IDRefs:   tagdomain.IDs(domain.TagIDRefs),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to list tags: %w", err)
+	var tags *model.Tags
+	if len(domain.TagIDRefs) == 0 {
+		tagRes, err := r.tagService.List(ctx, tagdomain.ListRequest{
+			Language: tagdomain.Language(domain.Language),
+			Page:     1,
+			Limit:    20,
+			Sort:     tagdomain.SortingMethodName,
+			IDRefs:   tagdomain.IDs(domain.TagIDRefs),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to list tags: %w", err)
+		}
+
+		tags, err = r.tagsFromDomain(tagRes.Data)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert tags: %w", err)
+		}
 	}
 
-	tags, err := r.tagsFromDomain(tagRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert tags: %w", err)
-	}
+	var categories *model.Categories
+	if len(domain.CategoryIDRefs) == 0 {
+		categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
+			Language: categorydomain.Language(domain.Language),
+			Page:     1,
+			Limit:    20,
+			IDRefs:   categorydomain.IDs(domain.TagIDRefs),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to list categories: %w", err)
+		}
 
-	categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
-		Language: categorydomain.Language(domain.Language),
-		Page:     1,
-		Limit:    20,
-		IDRefs:   categorydomain.IDs(domain.TagIDRefs),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to list categories: %w", err)
+		categories = r.categoriesFromDomain(categoryRes.Data)
 	}
-
-	categories := r.categoriesFromDomain(categoryRes.Data)
 
 	return &model.Game{
 		ID:                domain.ID,
@@ -203,49 +209,58 @@ func (r *Resolver) sectionsFromDomain(ctx context.Context, domain sectiondomain.
 }
 
 func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.Section) (*model.Section, error) {
-	gameRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
-		Language: gamedomain.Language(domain.Language),
-		Page:     1,
-		Limit:    30,
-		Sort:     gamedomain.SortingMethodMostLiked,
-		IDRefs:   gamedomain.IDs(domain.GameIDRefs),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to list games: %w", err)
+	var games *model.Games
+	if len(domain.GameIDRefs) == 0 {
+		gameRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
+			Language: gamedomain.Language(domain.Language),
+			Page:     1,
+			Limit:    30,
+			Sort:     gamedomain.SortingMethodMostLiked,
+			IDRefs:   gamedomain.IDs(domain.GameIDRefs),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to list games: %w", err)
+		}
+
+		games, err = r.gamesFromDomain(ctx, gameRes.Data)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert games: %w", err)
+		}
 	}
 
-	games, err := r.gamesFromDomain(ctx, gameRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert games: %w", err)
+	var tags *model.Tags
+	if len(domain.TagIDRefs) == 0 {
+		tagRes, err := r.tagService.List(ctx, tagdomain.ListRequest{
+			Language: tagdomain.Language(domain.Language),
+			Page:     1,
+			Limit:    20,
+			Sort:     tagdomain.SortingMethodName,
+			IDRefs:   tagdomain.IDs(domain.TagIDRefs),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to list tags: %w", err)
+		}
+
+		tags, err = r.tagsFromDomain(tagRes.Data)
+		if err != nil {
+			return nil, fmt.Errorf("failed to convert tags: %w", err)
+		}
 	}
 
-	tagRes, err := r.tagService.List(ctx, tagdomain.ListRequest{
-		Language: tagdomain.Language(domain.Language),
-		Page:     1,
-		Limit:    20,
-		Sort:     tagdomain.SortingMethodName,
-		IDRefs:   tagdomain.IDs(domain.TagIDRefs),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to list tags: %w", err)
-	}
+	var categories *model.Categories
+	if len(domain.CategoryIDRefs) == 0 {
+		categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
+			Language: categorydomain.Language(domain.Language),
+			Page:     1,
+			Limit:    20,
+			IDRefs:   categorydomain.IDs(domain.TagIDRefs),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to list categories: %w", err)
+		}
 
-	tags, err := r.tagsFromDomain(tagRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert tags: %w", err)
+		categories = r.categoriesFromDomain(categoryRes.Data)
 	}
-
-	categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
-		Language: categorydomain.Language(domain.Language),
-		Page:     1,
-		Limit:    20,
-		IDRefs:   categorydomain.IDs(domain.TagIDRefs),
-	})
-	if err != nil {
-		return nil, fmt.Errorf("failed to list categories: %w", err)
-	}
-
-	categories := r.categoriesFromDomain(categoryRes.Data)
 
 	pageURL := "/continue-playing"
 

@@ -215,9 +215,9 @@ type Section struct {
 	ShortDescription *string     `json:"shortDescription,omitempty"`
 	Description      *string     `json:"description,omitempty"`
 	Content          *string     `json:"content,omitempty"`
-	Tags             *Tags       `json:"tags"`
-	Categories       *Categories `json:"categories"`
-	Games            *Games      `json:"games"`
+	Tags             *Tags       `json:"tags,omitempty"`
+	Categories       *Categories `json:"categories,omitempty"`
+	Games            *Games      `json:"games,omitempty"`
 	PageURL          string      `json:"pageUrl"`
 }
 

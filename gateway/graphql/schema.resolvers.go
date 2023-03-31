@@ -86,8 +86,6 @@ func (r *queryResolver) FreshGames(ctx context.Context, request model.FreshGames
 
 // Games is the resolver for the games field.
 func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (*model.GamesResponse, error) {
-	fmt.Println("start")
-
 	gameRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
 		Language:       gamedomain.Language(request.Language),
 		Page:           request.Page,

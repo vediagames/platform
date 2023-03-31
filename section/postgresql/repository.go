@@ -177,6 +177,7 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	sqlQuery := fmt.Sprintf(`
 		SELECT
 			id,
+			language_code,
 			slug,
 			name,
 			short_description,
@@ -188,8 +189,7 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 			published_at,
 			game_id_refs,
 			tag_id_refs,
-			category_id_refs,
-			COUNT(*) OVER() AS total_count
+			category_id_refs
 		FROM public.sections_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)

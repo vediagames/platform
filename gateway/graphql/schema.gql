@@ -296,9 +296,9 @@ type Section {
     shortDescription: String
     description: String
     content: String
-    tags: Tags!
-    categories: Categories!
-    games: Games!
+    tags: Tags
+    categories: Categories
+    games: Games
     pageUrl: String!
 }
 
