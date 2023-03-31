@@ -8,7 +8,7 @@ export $(shell sed 's/=.*//' $(env_file))
 PATH := $(PATH):$(GOPATH)/bin
 
 gqlgen/%:
-	cd $* && go get github.com/99designs/gqlgen && go run github.com/99designs/gqlgen generate
+	go get github.com/99designs/gqlgen && go run github.com/99designs/gqlgen generate --config=$*/graphql/gqlgen.yml
 
 dev:
 	echo "Starting dev environment in docker"

@@ -159,12 +159,16 @@ type PlacedSection struct {
 	Placement int      `json:"placement"`
 }
 
+type PlacedSections struct {
+	Data []*PlacedSection `json:"data"`
+}
+
 type PlacedSectionsRequest struct {
 	Language Language `json:"language"`
 }
 
 type PlacedSectionsResponse struct {
-	PlacedSections []*PlacedSection `json:"placedSections"`
+	PlacedSections *PlacedSections `json:"placedSections"`
 }
 
 type RandomProviderGameResponse struct {
@@ -189,6 +193,11 @@ type SearchItem struct {
 	Thumbnail512x384 string         `json:"thumbnail512x384"`
 }
 
+type SearchItems struct {
+	Data  []*SearchItem `json:"data"`
+	Total int           `json:"total"`
+}
+
 type SearchRequest struct {
 	Language       Language `json:"language"`
 	Query          string   `json:"query"`
@@ -199,8 +208,7 @@ type SearchRequest struct {
 }
 
 type SearchResponse struct {
-	SearchItems []*SearchItem `json:"searchItems"`
-	Total       int           `json:"total"`
+	SearchItems *SearchItems `json:"searchItems,omitempty"`
 }
 
 type Section struct {

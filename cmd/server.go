@@ -29,7 +29,7 @@ import (
 	"github.com/vediagames/platform/fetcher/gamemonetize"
 	gamepostgresql "github.com/vediagames/platform/game/postgresql"
 	gameservice "github.com/vediagames/platform/game/service"
-	"github.com/vediagames/platform/gateway/graphql"
+	gatewaygraphql "github.com/vediagames/platform/gateway/graphql"
 	"github.com/vediagames/platform/notification/sendinblue"
 	searchservice "github.com/vediagames/platform/search/service"
 	sectionpostgresql "github.com/vediagames/platform/section/postgresql"
@@ -41,6 +41,8 @@ import (
 	sessionservice "github.com/vediagames/platform/session/service"
 	tagpostgresql "github.com/vediagames/platform/tag/postgresql"
 	tagservice "github.com/vediagames/platform/tag/service"
+	"github.com/vediagames/platform/webproxy"
+	vediagamesgraphql "github.com/vediagames/platform/webproxy/vediagames/graphql"
 )
 
 const (
@@ -141,7 +143,7 @@ func startServer(ctx context.Context) error {
 		},
 	})
 
-	cache := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
+	cache := webproxy.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 
 	c := ory.NewConfiguration()
 	c.Servers = ory.ServerConfigurations{
@@ -154,7 +156,7 @@ func startServer(ctx context.Context) error {
 		Client: ory.NewAPIClient(c),
 	})
 
-	resolver := graphql.NewResolver(graphql.Config{
+	gatewayResolver := gatewaygraphql.NewResolver(gatewaygraphql.Config{
 		GameService:     gameService,
 		CategoryService: categoryService,
 		SectionService:  sectionService,
@@ -166,16 +168,33 @@ func startServer(ctx context.Context) error {
 		AuthService:     authService,
 	})
 
-	gqlHandler := handler.New(graphql.NewSchema(&resolver))
-	gqlHandler.AddTransport(transport.Websocket{
+	gatewayHandler := handler.New(gatewaygraphql.NewSchema(&gatewayResolver))
+	gatewayHandler.AddTransport(transport.Websocket{
 		KeepAlivePingInterval: 10 * time.Second,
 	})
-	gqlHandler.AddTransport(transport.Options{})
-	gqlHandler.AddTransport(transport.GET{})
-	gqlHandler.AddTransport(transport.POST{})
-	gqlHandler.AddTransport(transport.MultipartForm{})
-	gqlHandler.Use(extension.Introspection{})
-	gqlHandler.Use(extension.AutomaticPersistedQuery{
+	gatewayHandler.AddTransport(transport.Options{})
+	gatewayHandler.AddTransport(transport.GET{})
+	gatewayHandler.AddTransport(transport.POST{})
+	gatewayHandler.AddTransport(transport.MultipartForm{})
+	gatewayHandler.Use(extension.Introspection{})
+
+	vediagamesResolver := vediagamesgraphql.NewResolver(vediagamesgraphql.Config{
+		GameService:     gameService,
+		CategoryService: categoryService,
+		SectionService:  sectionService,
+		TagService:      tagService,
+		SearchService:   searchService,
+		AuthService:     authService,
+		GatewayResolver: gatewayResolver.Query(),
+	})
+
+	vediagamesHandler := handler.New(vediagamesgraphql.NewSchema(&vediagamesResolver))
+	vediagamesHandler.AddTransport(transport.Options{})
+	vediagamesHandler.AddTransport(transport.GET{})
+	vediagamesHandler.AddTransport(transport.POST{})
+	vediagamesHandler.AddTransport(transport.MultipartForm{})
+	vediagamesHandler.Use(extension.Introspection{})
+	vediagamesHandler.Use(extension.AutomaticPersistedQuery{
 		Cache: cache,
 	})
 
@@ -193,7 +212,8 @@ func startServer(ctx context.Context) error {
 	router.Use(loggerMiddleware(&logger))
 	router.Use(authMiddleware(authService))
 
-	router.Handle("/graph", gqlHandler)
+	router.Handle("/gateway/graph", gatewayHandler)
+	router.Handle("/vediagames/graph", vediagamesHandler)
 	router.Handle("/session/new", createSessionHandler(sessionService))
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")

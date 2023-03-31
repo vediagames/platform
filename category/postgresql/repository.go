@@ -123,6 +123,9 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		"offset":        (q.Page - 1) * q.Limit,
 		"id_refs":       q.IDRefs,
 	})
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
+	}
 
 	query, args, err = sqlx.In(query, args...)
 	if err != nil {

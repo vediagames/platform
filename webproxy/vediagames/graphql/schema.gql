@@ -1,0 +1,138 @@
+type Query {
+    getHomePage(request: GetHomePageRequest!): GetHomePageResponse!
+    getGamePage(request: GetGamePageRequest!): GetGamePageResponse!
+    getContinuePlayingPage(request: GetContinuePlayingPageRequest!): GetContinuePlayingPageResponse!
+    getFilterPage(request: GetFilterPageRequest!): GetFilterPageResponse!
+    getSearchPage(request: GetSearchPageRequest!): GetSearchPageResponse!
+    getSiteMapPage(request: GetSiteMapPageRequest!): GetSiteMapPageResponse!
+    getWizardPage(request: GetWizardPageRequest!): GetWizardPageResponse!
+    getTagPage(request: GetTagPageRequest!): GetTagPageResponse!
+    getTagsPage(request: GetTagsPageRequest!): GetTagsPageResponse!
+    getCategoryPage(request: GetCategoryPageRequest!): GetCategoryPageResponse!
+    getCategoriesPage(request: GetCategoriesPageRequest!): GetCategoriesPageResponse!
+}
+
+input GetCategoriesPageRequest {
+    language: Language!
+}
+
+type GetCategoriesPageResponse {
+    categories: Categories!
+}
+
+input GetTagsPageRequest {
+    language: Language!
+    page: Int!
+}
+
+type GetTagsPageResponse {
+    tags: Tags!
+}
+
+input GetTagPageRequest {
+    language: Language!
+    tagID: Int!
+    page: Int!
+}
+
+type GetTagPageResponse {
+    tag: Tag!
+    games: Games!
+}
+
+input GetWizardPageRequest {
+    language: Language!
+    categoryIDs: [Int!]!
+}
+
+type GetWizardPageResponse {
+    categories: Categories!
+    games: Games!
+}
+
+input GetSiteMapPageRequest {
+    language: Language!
+}
+
+type GetSiteMapPageResponse {
+    categories: Categories!
+}
+
+input GetSearchPageRequest {
+    language: Language!
+    query: String!
+    page: Int!
+    sort: SortingMethod
+}
+
+type GetSearchPageResponse {
+    items: SearchItems!
+    showingRange: String!
+}
+
+input GetContinuePlayingPageRequest{
+    lastPlayedGameIDs: [Int!]!
+    page: Int!
+    language: Language!
+}
+
+type GetContinuePlayingPageResponse {
+    games: Games!
+}
+
+input GetFilterPageRequest {
+    categoryIDs: [Int!]
+    sort: SortingMethod
+    tagIDs: [Int!]
+    gameIDs: [Int!]
+    page: Int!
+    language: Language!
+}
+
+type GetFilterPageResponse {
+    games: Games!
+}
+
+type GetCategoryPageResponse {
+    category: Category!
+    firstSectionGames: Games!
+    tagSections: TagSections!
+    tags: Tags!
+    otherGames: Games!
+}
+
+type GetHomePageResponse {
+    totalGames: Int!
+    totalGamesAddedInLast7Days: Int!
+    mostPlayedGamesInLast7Days: Games!
+    gamesAddedInLast7Days: Games!
+    mostPlayedGames: Games!
+    sections: PlacedSections!
+    tagSections: TagSections!
+}
+
+type GetGamePageResponse {
+    game: Game!
+    otherGames: Games!
+    isLiked: Boolean!
+    isDisliked: Boolean!
+}
+
+input GetHomePageRequest {
+    language: Language!
+    lastPlayedGameIDs: [Int!]
+}
+
+input GetCategoryPageRequest {
+    language: Language!
+    slug: String!
+    id: Int!
+}
+
+input GetGamePageRequest {
+    language: Language!
+    slug: String!
+    lastPlayedGameIDs: [Int]
+    likedGameIDs: [Int]
+    dislikedGameIDs: [Int]
+}

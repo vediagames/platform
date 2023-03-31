@@ -64,8 +64,6 @@ func (r *Resolver) gameFromDomain(ctx context.Context, domain gamedomain.Game) (
 		}
 	}
 
-	fmt.Println(tags)
-
 	var categories *model.Categories
 	if len(domain.CategoryIDRefs) != 0 {
 		categoryRes, err := r.categoryService.List(ctx, categorydomain.ListRequest{
@@ -311,7 +309,9 @@ func (r *Resolver) sectionFromDomain(ctx context.Context, domain sectiondomain.S
 
 func (r *Resolver) placedSectionsFromDomain(ctx context.Context, domain sectiondomain.GetPlacedResponse) (*model.PlacedSectionsResponse, error) {
 	placedSections := &model.PlacedSectionsResponse{
-		PlacedSections: make([]*model.PlacedSection, 0, len(domain.Data)),
+		PlacedSections: &model.PlacedSections{
+			Data: make([]*model.PlacedSection, 0, len(domain.Data)),
+		},
 	}
 
 	for _, domainSection := range domain.Data {
@@ -320,7 +320,7 @@ func (r *Resolver) placedSectionsFromDomain(ctx context.Context, domain sectiond
 			return nil, fmt.Errorf("failed to convert section: %w", err)
 		}
 
-		placedSections.PlacedSections = append(placedSections.PlacedSections, &model.PlacedSection{
+		placedSections.PlacedSections.Data = append(placedSections.PlacedSections.Data, &model.PlacedSection{
 			Section:   section,
 			Placement: domainSection.PlacementNumber,
 		})
@@ -331,8 +331,10 @@ func (r *Resolver) placedSectionsFromDomain(ctx context.Context, domain sectiond
 
 func (r *Resolver) searchFromDomain(domain searchdomain.SearchResponse) (*model.SearchResponse, error) {
 	searchResponse := &model.SearchResponse{
-		SearchItems: make([]*model.SearchItem, 0, len(domain.Games)+len(domain.Tags)),
-		Total:       domain.Total,
+		SearchItems: &model.SearchItems{
+			Data:  make([]*model.SearchItem, 0, len(domain.Games)+len(domain.Tags)),
+			Total: domain.Total,
+		},
 	}
 
 	for _, domainItem := range domain.Games {
@@ -341,7 +343,7 @@ func (r *Resolver) searchFromDomain(domain searchdomain.SearchResponse) (*model.
 			return nil, fmt.Errorf("failed to get 512x384 thumbnail for %q: %w", domainItem.Slug, err)
 		}
 
-		searchResponse.SearchItems = append(searchResponse.SearchItems, &model.SearchItem{
+		searchResponse.SearchItems.Data = append(searchResponse.SearchItems.Data, &model.SearchItem{
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Slug,
 			Slug:             domainItem.Slug,
@@ -357,7 +359,7 @@ func (r *Resolver) searchFromDomain(domain searchdomain.SearchResponse) (*model.
 			return nil, fmt.Errorf("failed to get 512x384 thumbnail for %q: %w", domainItem.Slug, err)
 		}
 
-		searchResponse.SearchItems = append(searchResponse.SearchItems, &model.SearchItem{
+		searchResponse.SearchItems.Data = append(searchResponse.SearchItems.Data, &model.SearchItem{
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Slug,
 			Slug:             domainItem.Slug,

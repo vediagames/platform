@@ -2,7 +2,6 @@ package service
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"testing"
 	"time"
@@ -50,9 +49,6 @@ func TestService_Get(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-
-	fmt.Println(get.URL)
-
 }
 
 func Test_imagePath(t *testing.T) {
