@@ -42,7 +42,7 @@ import (
 	tagpostgresql "github.com/vediagames/platform/tag/postgresql"
 	tagservice "github.com/vediagames/platform/tag/service"
 	"github.com/vediagames/platform/webproxy"
-	vediagamesgraphql "github.com/vediagames/platform/webproxy/vediagames/graphql"
+	vediagamesgraphql "github.com/vediagames/platform/webproxy/graphql"
 )
 
 const (
@@ -168,7 +168,7 @@ func startServer(ctx context.Context) error {
 		AuthService:     authService,
 	})
 
-	gatewayHandler := handler.New(gatewaygraphql.NewSchema(&gatewayResolver))
+	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))
 	gatewayHandler.AddTransport(transport.Websocket{
 		KeepAlivePingInterval: 10 * time.Second,
 	})
@@ -179,13 +179,7 @@ func startServer(ctx context.Context) error {
 	gatewayHandler.Use(extension.Introspection{})
 
 	vediagamesResolver := vediagamesgraphql.NewResolver(vediagamesgraphql.Config{
-		GameService:     gameService,
-		CategoryService: categoryService,
-		SectionService:  sectionService,
-		TagService:      tagService,
-		SearchService:   searchService,
-		AuthService:     authService,
-		GatewayResolver: gatewayResolver.Query(),
+		GatewayResolver: gatewayResolver,
 	})
 
 	vediagamesHandler := handler.New(vediagamesgraphql.NewSchema(&vediagamesResolver))
@@ -197,6 +191,7 @@ func startServer(ctx context.Context) error {
 	vediagamesHandler.Use(extension.AutomaticPersistedQuery{
 		Cache: cache,
 	})
+	vediagamesHandler.Use(extension.FixedComplexityLimit(290))
 
 	httpCors := cors.New(cors.Options{
 		AllowedOrigins:   cfg.CORS.AllowedOrigins,

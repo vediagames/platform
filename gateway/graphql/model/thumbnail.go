@@ -1,4 +1,4 @@
-package graphql
+package model
 
 import "fmt"
 

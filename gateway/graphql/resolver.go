@@ -85,12 +85,12 @@ func (c Config) Validate() error {
 	return nil
 }
 
-func NewResolver(cfg Config) Resolver {
+func NewResolver(cfg Config) *Resolver {
 	if err := cfg.Validate(); err != nil {
 		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
-	return Resolver{
+	return &Resolver{
 		gameService:     cfg.GameService,
 		categoryService: cfg.CategoryService,
 		sectionService:  cfg.SectionService,

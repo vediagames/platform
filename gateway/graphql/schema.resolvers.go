@@ -37,7 +37,8 @@ func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmai
 		return nil, fmt.Errorf("failed to email: %w", err)
 	}
 
-	return pointerTrue(), nil
+	v := true
+	return &v, nil
 }
 
 // MostPlayedGames is the resolver for the mostPlayedGames field.
@@ -52,7 +53,7 @@ func (r *queryResolver) MostPlayedGames(ctx context.Context, request model.MostP
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	games, err := r.gamesFromDomain(ctx, gameRes.Data)
+	games, err := model.Games{}.FromDomain(gameRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -74,7 +75,7 @@ func (r *queryResolver) FreshGames(ctx context.Context, request model.FreshGames
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	games, err := r.gamesFromDomain(ctx, gameRes.Data)
+	games, err := model.Games{}.FromDomain(gameRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -92,7 +93,7 @@ func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (
 		Limit:          request.Limit,
 		AllowDeleted:   request.AllowDeleted,
 		AllowInvisible: request.AllowInvisible,
-		Sort:           sortingMethodToDomain[gamedomain.SortingMethod](request.Sort),
+		Sort:           gamedomain.SortingMethod(request.Sort.Domain()),
 		CategoryIDRefs: request.Categories,
 		TagIDRefs:      request.Tags,
 		IDRefs:         request.Ids,
@@ -102,7 +103,7 @@ func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	games, err := r.gamesFromDomain(ctx, gameRes.Data)
+	games, err := model.Games{}.FromDomain(gameRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -123,7 +124,7 @@ func (r *queryResolver) Game(ctx context.Context, request model.GameRequest) (*m
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	game, err := r.gameFromDomain(ctx, gameRes.Data)
+	game, err := model.Game{}.FromDomain(gameRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -147,7 +148,7 @@ func (r *queryResolver) Categories(ctx context.Context, request model.Categories
 	}
 
 	return &model.CategoriesResponse{
-		Categories: r.categoriesFromDomain(categoryRes.Data),
+		Categories: model.Categories{}.FromDomain(categoryRes.Data),
 	}, nil
 }
 
@@ -163,7 +164,7 @@ func (r *queryResolver) Category(ctx context.Context, request model.CategoryRequ
 	}
 
 	return &model.CategoryResponse{
-		Category: r.categoryFromDomain(categoryRes.Data),
+		Category: model.Category{}.FromDomain(categoryRes.Data),
 	}, nil
 }
 
@@ -175,13 +176,13 @@ func (r *queryResolver) Tags(ctx context.Context, request model.TagsRequest) (*m
 		Limit:          request.Limit,
 		AllowDeleted:   request.AllowDeleted,
 		AllowInvisible: request.AllowInvisible,
-		Sort:           sortingMethodToDomain[tagdomain.SortingMethod](request.Sort),
+		Sort:           tagdomain.SortingMethod(request.Sort.Domain()),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	tags, err := r.tagsFromDomain(tagRes.Data)
+	tags, err := model.Tags{}.FromDomain(tagRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -202,7 +203,7 @@ func (r *queryResolver) Tag(ctx context.Context, request model.TagRequest) (*mod
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	tag, err := r.tagFromDomain(tagRes.Data)
+	tag, err := model.Tag{}.FromDomain(tagRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -225,7 +226,7 @@ func (r *queryResolver) Sections(ctx context.Context, request model.SectionsRequ
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	sections, err := r.sectionsFromDomain(ctx, sectionRes.Data)
+	sections, err := model.Sections{}.FromDomain(sectionRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -246,7 +247,7 @@ func (r *queryResolver) Section(ctx context.Context, request model.SectionReques
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	section, err := r.sectionFromDomain(ctx, sectionRes.Data)
+	section, err := model.Section{}.FromDomain(sectionRes.Data)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
@@ -267,12 +268,14 @@ func (r *queryResolver) PlacedSections(ctx context.Context, request model.Placed
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	sections, err := r.placedSectionsFromDomain(ctx, sectionRes)
+	sections, err := model.PlacedSections{}.FromDomain(sectionRes)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
 
-	return sections, nil
+	return &model.PlacedSectionsResponse{
+		PlacedSections: sections,
+	}, nil
 }
 
 // Search is the resolver for the search field.
@@ -289,12 +292,14 @@ func (r *queryResolver) Search(ctx context.Context, request model.SearchRequest)
 		return nil, fmt.Errorf("failed to search: %w", err)
 	}
 
-	search, err := r.searchFromDomain(searchRes)
+	search, err := model.SearchItems{}.FromDomain(searchRes)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
 
-	return search, nil
+	return &model.SearchResponse{
+		SearchItems: search,
+	}, nil
 }
 
 // FullSearch is the resolver for the fullSearch field.
@@ -305,19 +310,21 @@ func (r *queryResolver) FullSearch(ctx context.Context, request model.FullSearch
 		Limit:          request.Limit,
 		AllowDeleted:   request.AllowDeleted,
 		AllowInvisible: request.AllowInvisible,
-		Sort:           sortingMethodToDomain[searchdomain.SortingMethod](request.Sort),
+		Sort:           searchdomain.SortingMethod(request.Sort.Domain()),
 		Language:       searchdomain.Language(request.Language),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to search: %w", err)
 	}
 
-	search, err := r.searchFromDomain(searchRes)
+	search, err := model.SearchItems{}.FromDomain(searchRes)
 	if err != nil {
 		return nil, fmt.Errorf("failed to convert: %w", err)
 	}
 
-	return search, nil
+	return &model.SearchResponse{
+		SearchItems: search,
+	}, nil
 }
 
 // RandomProviderGame is the resolver for the randomProviderGame field.

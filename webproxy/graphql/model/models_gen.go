@@ -6,39 +6,36 @@ import (
 	"github.com/vediagames/platform/gateway/graphql/model"
 )
 
-type GetCategoriesPageRequest struct {
+type CategoriesPageRequest struct {
 	Language model.Language `json:"language"`
 }
 
-type GetCategoriesPageResponse struct {
+type CategoriesPageResponse struct {
 	Categories *model.Categories `json:"categories"`
 }
 
-type GetCategoryPageRequest struct {
+type CategoryPageGames struct {
+	FirstSectionGames *model.Games `json:"firstSectionGames"`
+	OtherGames        *model.Games `json:"otherGames"`
+}
+
+type CategoryPageRequest struct {
 	Language model.Language `json:"language"`
 	Slug     string         `json:"slug"`
 	ID       int            `json:"id"`
 }
 
-type GetCategoryPageResponse struct {
-	Category          *model.Category    `json:"category"`
-	FirstSectionGames *model.Games       `json:"firstSectionGames"`
-	TagSections       *model.TagSections `json:"tagSections"`
-	Tags              *model.Tags        `json:"tags"`
-	OtherGames        *model.Games       `json:"otherGames"`
-}
-
-type GetContinuePlayingPageRequest struct {
+type ContinuePlayingPageRequest struct {
 	LastPlayedGameIDs []int          `json:"lastPlayedGameIDs"`
 	Page              int            `json:"page"`
 	Language          model.Language `json:"language"`
 }
 
-type GetContinuePlayingPageResponse struct {
+type ContinuePlayingPageResponse struct {
 	Games *model.Games `json:"games"`
 }
 
-type GetFilterPageRequest struct {
+type FilterPageRequest struct {
 	CategoryIDs []int                `json:"categoryIDs,omitempty"`
 	Sort        *model.SortingMethod `json:"sort,omitempty"`
 	TagIDs      []int                `json:"tagIDs,omitempty"`
@@ -47,11 +44,11 @@ type GetFilterPageRequest struct {
 	Language    model.Language       `json:"language"`
 }
 
-type GetFilterPageResponse struct {
+type FilterPageResponse struct {
 	Games *model.Games `json:"games"`
 }
 
-type GetGamePageRequest struct {
+type GamePageRequest struct {
 	Language          model.Language `json:"language"`
 	Slug              string         `json:"slug"`
 	LastPlayedGameIDs []*int         `json:"lastPlayedGameIDs,omitempty"`
@@ -59,74 +56,54 @@ type GetGamePageRequest struct {
 	DislikedGameIDs   []*int         `json:"dislikedGameIDs,omitempty"`
 }
 
-type GetGamePageResponse struct {
+type GamePageResponse struct {
 	Game       *model.Game  `json:"game"`
 	OtherGames *model.Games `json:"otherGames"`
 	IsLiked    bool         `json:"isLiked"`
 	IsDisliked bool         `json:"isDisliked"`
 }
 
-type GetHomePageRequest struct {
+type HomePageRequest struct {
 	Language          model.Language `json:"language"`
 	LastPlayedGameIDs []int          `json:"lastPlayedGameIDs,omitempty"`
 }
 
-type GetHomePageResponse struct {
-	TotalGames                 int                   `json:"totalGames"`
-	TotalGamesAddedInLast7Days int                   `json:"totalGamesAddedInLast7Days"`
-	MostPlayedGamesInLast7Days *model.Games          `json:"mostPlayedGamesInLast7Days"`
-	GamesAddedInLast7Days      *model.Games          `json:"gamesAddedInLast7Days"`
-	MostPlayedGames            *model.Games          `json:"mostPlayedGames"`
-	Sections                   *model.PlacedSections `json:"sections"`
-	TagSections                *model.TagSections    `json:"tagSections"`
-}
-
-type GetSearchPageRequest struct {
+type SearchPageRequest struct {
 	Language model.Language       `json:"language"`
 	Query    string               `json:"query"`
 	Page     int                  `json:"page"`
 	Sort     *model.SortingMethod `json:"sort,omitempty"`
 }
 
-type GetSearchPageResponse struct {
+type SearchPageResponse struct {
 	Items        *model.SearchItems `json:"items"`
 	ShowingRange string             `json:"showingRange"`
 }
 
-type GetSiteMapPageRequest struct {
+type SiteMapPageRequest struct {
 	Language model.Language `json:"language"`
 }
 
-type GetSiteMapPageResponse struct {
+type SiteMapPageResponse struct {
 	Categories *model.Categories `json:"categories"`
 }
 
-type GetTagPageRequest struct {
+type TagPageRequest struct {
 	Language model.Language `json:"language"`
 	TagID    int            `json:"tagID"`
 	Page     int            `json:"page"`
 }
 
-type GetTagPageResponse struct {
-	Tag   *model.Tag   `json:"tag"`
-	Games *model.Games `json:"games"`
-}
-
-type GetTagsPageRequest struct {
+type TagsPageRequest struct {
 	Language model.Language `json:"language"`
 	Page     int            `json:"page"`
 }
 
-type GetTagsPageResponse struct {
+type TagsPageResponse struct {
 	Tags *model.Tags `json:"tags"`
 }
 
-type GetWizardPageRequest struct {
+type WizardPageRequest struct {
 	Language    model.Language `json:"language"`
 	CategoryIDs []int          `json:"categoryIDs"`
-}
-
-type GetWizardPageResponse struct {
-	Categories *model.Categories `json:"categories"`
-	Games      *model.Games      `json:"games"`
 }

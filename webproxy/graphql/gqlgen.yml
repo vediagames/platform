@@ -1,25 +1,26 @@
 # Where are all the schema files located? globs are supported eg  src/**/*.graphqls
 schema:
-  - gateway/graphql/*.gql
+  - webproxy/graphql/*.gql
+  - gateway/graphql/entity.gql
 
 # Where should the generated server code go?
 exec:
-  filename: gateway/graphql/generated/generated.go
+  filename: webproxy/graphql/generated/generated.go
   package: generated
 
 # Uncomment to enable federation
 federation:
-  filename: gateway/graphql/generated/federation.go
+  filename: webproxy/graphql/generated/federation.go
   package: generated
 
 # Where should any generated models go?
 model:
-  filename: gateway/graphql/model/models_gen.go
+  filename: webproxy/graphql/model/models_gen.go
   package: model
 
 # Where should the resolver implementations go?
 resolver:
-  dir: gateway/graphql/
+  dir: webproxy/graphql/
   package: graphql
   filename_template: "{name}.resolvers.go"
   layout: follow-schema
@@ -33,12 +34,12 @@ resolver:
 # Optional: set to speed up generation time by not performing a final validation pass.
 # skip_validation: true
 
-skip_mod_tidy: true
-
 # gqlgen will search for any type names in the schema in these go packages
 # if they match it will use them, otherwise it will generate them.
 autobind:
   - "github.com/vediagames/platform/gateway/graphql/model"
+
+skip_mod_tidy: true
 
 # This section declares type mapping between the GraphQL and go type systems
 #
@@ -59,6 +60,46 @@ models:
       tags:
         resolver: true
       categories:
+        resolver: true
+      games:
+        resolver: true
+  HomePageResponse:
+    model: github.com/vediagames/platform/webproxy/graphql/model.HomePageResponse
+    fields:
+      totalGames:
+        resolver: true
+      mostPlayedGamesInLast7Days:
+        resolver: true
+      gamesAddedInLast7Days:
+        resolver: true
+      mostPlayedGames:
+        resolver: true
+      sections:
+        resolver: true
+      tagSections:
+        resolver: true
+  WizardPageResponse:
+    model: github.com/vediagames/platform/webproxy/graphql/model.WizardPageResponse
+    fields:
+      categories:
+        resolver: true
+      games:
+        resolver: true
+  TagPageResponse:
+    model: github.com/vediagames/platform/webproxy/graphql/model.TagPageResponse
+    fields:
+      tag:
+        resolver: true
+      games:
+        resolver: true
+  CategoryPageResponse:
+    model: github.com/vediagames/platform/webproxy/graphql/model.CategoryPageResponse
+    fields:
+      category:
+        resolver: true
+      tagSections:
+        resolver: true
+      tags:
         resolver: true
       games:
         resolver: true

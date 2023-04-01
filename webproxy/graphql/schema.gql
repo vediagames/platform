@@ -1,0 +1,142 @@
+type Query {
+    homePage(request: HomePageRequest!): HomePageResponse!
+    gamePage(request: GamePageRequest!): GamePageResponse!
+    continuePlayingPage(request: ContinuePlayingPageRequest!): ContinuePlayingPageResponse!
+    filterPage(request: FilterPageRequest!): FilterPageResponse!
+    searchPage(request: SearchPageRequest!): SearchPageResponse!
+    siteMapPage(request: SiteMapPageRequest!): SiteMapPageResponse!
+    wizardPage(request: WizardPageRequest!): WizardPageResponse!
+    tagPage(request: TagPageRequest!): TagPageResponse!
+    tagsPage(request: TagsPageRequest!): TagsPageResponse!
+    categoryPage(request: CategoryPageRequest!): CategoryPageResponse!
+    categoriesPage(request: CategoriesPageRequest!): CategoriesPageResponse!
+}
+
+input CategoriesPageRequest {
+    language: Language!
+}
+
+type CategoriesPageResponse {
+    categories: Categories!
+}
+
+input TagsPageRequest {
+    language: Language!
+    page: Int!
+}
+
+type TagsPageResponse {
+    tags: Tags!
+}
+
+input TagPageRequest {
+    language: Language!
+    tagID: Int!
+    page: Int!
+}
+
+type TagPageResponse {
+    tag: Tag!
+    games: Games!
+}
+
+input WizardPageRequest {
+    language: Language!
+    categoryIDs: [Int!]!
+}
+
+type WizardPageResponse {
+    categories: Categories!
+    games: Games!
+}
+
+input SiteMapPageRequest {
+    language: Language!
+}
+
+type SiteMapPageResponse {
+    categories: Categories!
+}
+
+input SearchPageRequest {
+    language: Language!
+    query: String!
+    page: Int!
+    sort: SortingMethod
+}
+
+type SearchPageResponse {
+    items: SearchItems!
+    showingRange: String!
+}
+
+input ContinuePlayingPageRequest{
+    lastPlayedGameIDs: [Int!]!
+    page: Int!
+    language: Language!
+}
+
+type ContinuePlayingPageResponse {
+    games: Games!
+}
+
+input FilterPageRequest {
+    categoryIDs: [Int!]
+    sort: SortingMethod
+    tagIDs: [Int!]
+    gameIDs: [Int!]
+    page: Int!
+    language: Language!
+}
+
+type FilterPageResponse {
+    games: Games!
+}
+
+type CategoryPageResponse {
+    category: Category!
+    tagSections: TagSections!
+    tags: Tags!
+    games: CategoryPageGames!
+}
+
+type CategoryPageGames {
+    firstSectionGames: Games!
+    otherGames: Games!
+}
+
+type HomePageResponse {
+    totalGames: Int!
+    mostPlayedGamesInLast7Days: Games!
+    gamesAddedInLast7Days: Games!
+    mostPlayedGames: Games!
+    sections: PlacedSections!
+    tagSections: TagSections!
+}
+
+type GamePageResponse {
+    game: Game!
+    otherGames: Games!
+    isLiked: Boolean!
+    isDisliked: Boolean!
+}
+
+input HomePageRequest {
+    language: Language!
+    lastPlayedGameIDs: [Int!]
+}
+
+input CategoryPageRequest {
+    language: Language!
+    slug: String!
+    id: Int!
+}
+
+input GamePageRequest {
+    language: Language!
+    slug: String!
+    lastPlayedGameIDs: [Int]
+    likedGameIDs: [Int]
+    dislikedGameIDs: [Int]
+}
+
