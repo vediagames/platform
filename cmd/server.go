@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"cloud.google.com/go/bigquery"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/handler/extension"
 	"github.com/99designs/gqlgen/graphql/handler/transport"
@@ -16,6 +17,7 @@ import (
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
+	"google.golang.org/api/option"
 
 	authdomain "github.com/vediagames/platform/auth/domain"
 	authservice "github.com/vediagames/platform/auth/service"
@@ -43,11 +45,6 @@ import (
 	tagservice "github.com/vediagames/platform/tag/service"
 	"github.com/vediagames/platform/webproxy"
 	vediagamesgraphql "github.com/vediagames/platform/webproxy/graphql"
-)
-
-const (
-	tableID   = "tableID"
-	datasetID = "datasetID"
 )
 
 func ServerCmd() *cobra.Command {
@@ -104,19 +101,19 @@ func startServer(ctx context.Context) error {
 		TagService:  tagService,
 		GameService: gameService,
 	})
-	//
-	//client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID,
-	//	option.WithCredentialsFile(cfg.BigQuery.CredentialsPath),
-	//)
-	//if err != nil {
-	//	return fmt.Errorf("failed to create bigquery client: %w", err)
-	//}
+
+	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID,
+		option.WithCredentialsFile(cfg.BigQuery.CredentialsPath),
+	)
+	if err != nil {
+		return fmt.Errorf("failed to create bigquery client: %w", err)
+	}
 
 	sessionService := sessionservice.New(sessionservice.Config{
 		Repository: sessionbigquery.New(sessionbigquery.Config{
-			//Client:    client,
-			TableID:   tableID,
-			DatasetID: datasetID,
+			Client:    client,
+			TableID:   "sessions",
+			DatasetID: "vediagames",
 		}),
 	})
 
