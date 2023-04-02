@@ -43,7 +43,7 @@ func (r GetResponse) Validate() error {
 	var err zeroerror.Error
 
 	if ve := r.Data.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%ws: %w", ErrInvalidCategory, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidCategory, ve))
 	}
 
 	return err.Err()
