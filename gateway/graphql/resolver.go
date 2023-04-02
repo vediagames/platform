@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/99designs/gqlgen/graphql"
+	"github.com/vediagames/zeroerror"
 
 	authdomain "github.com/vediagames/platform/auth/domain"
 	bucketdomain "github.com/vediagames/platform/bucket/domain"
@@ -11,6 +12,7 @@ import (
 	fetcherdomain "github.com/vediagames/platform/fetcher/domain"
 	gamedomain "github.com/vediagames/platform/game/domain"
 	"github.com/vediagames/platform/gateway/graphql/generated"
+	imagedomain "github.com/vediagames/platform/image/domain"
 	notificationdomain "github.com/vediagames/platform/notification/domain"
 	searchdomain "github.com/vediagames/platform/search/domain"
 	sectiondomain "github.com/vediagames/platform/section/domain"
@@ -31,6 +33,7 @@ type Resolver struct {
 	bucketClient    bucketdomain.Client
 	fetcherClient   fetcherdomain.Client
 	authService     authdomain.Service
+	imageService    imagedomain.Service
 }
 
 type Config struct {
@@ -43,46 +46,24 @@ type Config struct {
 	BucketClient    bucketdomain.Client
 	FetcherClient   fetcherdomain.Client
 	AuthService     authdomain.Service
+	ImageService    imagedomain.Service
 }
 
 func (c Config) Validate() error {
-	if c.GameService == nil {
-		return fmt.Errorf("game service is required")
-	}
+	var err zeroerror.Error
 
-	if c.CategoryService == nil {
-		return fmt.Errorf("category service is required")
-	}
+	err.AddIf(c.GameService == nil, fmt.Errorf("game service is required"))
+	err.AddIf(c.CategoryService == nil, fmt.Errorf("category service is required"))
+	err.AddIf(c.SectionService == nil, fmt.Errorf("section service is required"))
+	err.AddIf(c.TagService == nil, fmt.Errorf("tag service is required"))
+	err.AddIf(c.SearchService == nil, fmt.Errorf("search service is required"))
+	err.AddIf(c.EmailClient == nil, fmt.Errorf("email client is required"))
+	err.AddIf(c.BucketClient == nil, fmt.Errorf("bucket client is required"))
+	err.AddIf(c.FetcherClient == nil, fmt.Errorf("fetcher client is required"))
+	err.AddIf(c.AuthService == nil, fmt.Errorf("auth service is required"))
+	err.AddIf(c.ImageService == nil, fmt.Errorf("image service is required"))
 
-	if c.SectionService == nil {
-		return fmt.Errorf("section service is required")
-	}
-
-	if c.TagService == nil {
-		return fmt.Errorf("tag service is required")
-	}
-
-	if c.SearchService == nil {
-		return fmt.Errorf("search service is required")
-	}
-
-	if c.EmailClient == nil {
-		return fmt.Errorf("email client is required")
-	}
-
-	if c.BucketClient == nil {
-		return fmt.Errorf("bucket client is required")
-	}
-
-	if c.FetcherClient == nil {
-		return fmt.Errorf("fetcher client is required")
-	}
-
-	if c.AuthService == nil {
-		return fmt.Errorf("auth client is required")
-	}
-
-	return nil
+	return err.Err()
 }
 
 func NewResolver(cfg Config) *Resolver {
@@ -100,6 +81,7 @@ func NewResolver(cfg Config) *Resolver {
 		bucketClient:    cfg.BucketClient,
 		fetcherClient:   cfg.FetcherClient,
 		authService:     cfg.AuthService,
+		imageService:    cfg.ImageService,
 	}
 }
 

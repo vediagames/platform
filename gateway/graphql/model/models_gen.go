@@ -160,7 +160,7 @@ type SearchItem struct {
 	Slug             string         `json:"slug"`
 	Type             SearchItemType `json:"type"`
 	PageURL          string         `json:"pageUrl"`
-	Thumbnail512x384 string         `json:"thumbnail512x384"`
+	Thumbnail        string         `json:"thumbnail"`
 }
 
 type SearchItems struct {
@@ -228,8 +228,7 @@ type Tag struct {
 	CreatedAt        string   `json:"createdAt"`
 	DeletedAt        *string  `json:"deletedAt,omitempty"`
 	PublishedAt      *string  `json:"publishedAt,omitempty"`
-	Thumbnail512x384 string   `json:"thumbnail512x384"`
-	Thumbnail128x128 string   `json:"thumbnail128x128"`
+	Thumbnail        string   `json:"thumbnail"`
 	PageURL          string   `json:"pageUrl"`
 }
 
@@ -269,6 +268,13 @@ type TagsRequest struct {
 
 type TagsResponse struct {
 	Tags *Tags `json:"tags"`
+}
+
+type ThumbnailRequest struct {
+	Original OriginalThumbnail `json:"original"`
+	Width    *int              `json:"width,omitempty"`
+	Height   *int              `json:"height,omitempty"`
+	Format   *ImageFormat      `json:"format,omitempty"`
 }
 
 type GameReaction string
@@ -355,6 +361,49 @@ func (e GetByField) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 
+type ImageFormat string
+
+const (
+	ImageFormatWebp ImageFormat = "webp"
+	ImageFormatJpg  ImageFormat = "jpg"
+	ImageFormatPng  ImageFormat = "png"
+)
+
+var AllImageFormat = []ImageFormat{
+	ImageFormatWebp,
+	ImageFormatJpg,
+	ImageFormatPng,
+}
+
+func (e ImageFormat) IsValid() bool {
+	switch e {
+	case ImageFormatWebp, ImageFormatJpg, ImageFormatPng:
+		return true
+	}
+	return false
+}
+
+func (e ImageFormat) String() string {
+	return string(e)
+}
+
+func (e *ImageFormat) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = ImageFormat(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid ImageFormat", str)
+	}
+	return nil
+}
+
+func (e ImageFormat) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
 type Language string
 
 const (
@@ -393,6 +442,49 @@ func (e *Language) UnmarshalGQL(v interface{}) error {
 }
 
 func (e Language) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type OriginalThumbnail string
+
+const (
+	OriginalThumbnailJPG512x384 OriginalThumbnail = "JPG512x384"
+	OriginalThumbnailJPG512x512 OriginalThumbnail = "JPG512x512"
+	OriginalThumbnailJPG128x128 OriginalThumbnail = "JPG128x128"
+)
+
+var AllOriginalThumbnail = []OriginalThumbnail{
+	OriginalThumbnailJPG512x384,
+	OriginalThumbnailJPG512x512,
+	OriginalThumbnailJPG128x128,
+}
+
+func (e OriginalThumbnail) IsValid() bool {
+	switch e {
+	case OriginalThumbnailJPG512x384, OriginalThumbnailJPG512x512, OriginalThumbnailJPG128x128:
+		return true
+	}
+	return false
+}
+
+func (e OriginalThumbnail) String() string {
+	return string(e)
+}
+
+func (e *OriginalThumbnail) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = OriginalThumbnail(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid OriginalThumbnail", str)
+	}
+	return nil
+}
+
+func (e OriginalThumbnail) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

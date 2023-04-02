@@ -27,13 +27,13 @@
     "name": "created_at",
     "type": "TIMESTAMP",
     "mode": "REQUIRED",
-    "description": "Client timestamp when the even occurred"
+    "description": "Client timestamp when session was created"
   },
   {
     "name": "inserted_at",
     "type": "TIMESTAMP",
     "mode": "REQUIRED",
-    "description": "Timestamp when the even occurred"
+    "description": "Timestamp when session was inserted"
   },
   {
     "name": "metadata",

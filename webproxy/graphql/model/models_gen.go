@@ -3,6 +3,10 @@
 package model
 
 import (
+	"fmt"
+	"io"
+	"strconv"
+
 	"github.com/vediagames/platform/gateway/graphql/model"
 )
 
@@ -106,4 +110,43 @@ type TagsPageResponse struct {
 type WizardPageRequest struct {
 	Language    model.Language `json:"language"`
 	CategoryIDs []int          `json:"categoryIDs"`
+}
+
+type OriginalVideo string
+
+const (
+	OriginalVideoMP4100x100 OriginalVideo = "MP4100x100"
+)
+
+var AllOriginalVideo = []OriginalVideo{
+	OriginalVideoMP4100x100,
+}
+
+func (e OriginalVideo) IsValid() bool {
+	switch e {
+	case OriginalVideoMP4100x100:
+		return true
+	}
+	return false
+}
+
+func (e OriginalVideo) String() string {
+	return string(e)
+}
+
+func (e *OriginalVideo) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = OriginalVideo(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid OriginalVideo", str)
+	}
+	return nil
+}
+
+func (e OriginalVideo) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
 }

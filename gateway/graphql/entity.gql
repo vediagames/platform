@@ -69,10 +69,10 @@ type Game {
     tags: Tags!
     categories: Categories!
     mobile: Boolean!
-    thumbnail512x384: String!
-    thumbnail512x512: String!
+    thumbnail(request: ThumbnailRequest!): String!
     pageUrl: String!
     fullScreenPageUrl: String!
+    video(original: OriginalVideo): String!
 }
 
 type PlacedSections {
@@ -125,8 +125,7 @@ type Tag {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    thumbnail512x384: String!
-    thumbnail128x128: String!
+    thumbnail(request: ThumbnailRequest!): String!
     pageUrl: String!
 }
 
@@ -172,10 +171,34 @@ type SearchItem {
     slug: String!
     type: SearchItemType!
     pageUrl: String!
-    thumbnail512x384: String!
+    thumbnail(request: ThumbnailRequest!): String!
+    video(original: OriginalVideo): String!
 }
 
 type AvailableLanguage {
     code: Language!
     name: String!
+}
+
+input ThumbnailRequest {
+    original: OriginalThumbnail!
+    width: Int
+    height: Int
+    format: ImageFormat
+}
+
+enum ImageFormat {
+    webp
+    jpg
+    png
+}
+
+enum OriginalThumbnail {
+    JPG512x384
+    JPG512x512
+    JPG128x128
+}
+
+enum OriginalVideo {
+    MP41920x1080
 }

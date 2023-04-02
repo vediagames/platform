@@ -9,6 +9,7 @@ import (
 
 	categorydomain "github.com/vediagames/platform/category/domain"
 	gamedomain "github.com/vediagames/platform/game/domain"
+	imagedomain "github.com/vediagames/platform/image/domain"
 	searchdomain "github.com/vediagames/platform/search/domain"
 	sectiondomain "github.com/vediagames/platform/section/domain"
 	tagdomain "github.com/vediagames/platform/tag/domain"
@@ -22,35 +23,20 @@ func (g Games) IDs() []int {
 	return ids
 }
 
-func (g Games) FromDomain(domain gamedomain.Games) (*Games, error) {
+func (g Games) FromDomain(domain gamedomain.Games) *Games {
 	games := &Games{
 		Data:  make([]*Game, 0, len(domain.Data)),
 		Total: domain.Total,
 	}
 
 	for _, domainGame := range domain.Data {
-		game, err := Game{}.FromDomain(domainGame)
-		if err != nil {
-			return nil, fmt.Errorf("failed to convert game: %w", err)
-		}
-
-		games.Data = append(games.Data, game)
+		games.Data = append(games.Data, Game{}.FromDomain(domainGame))
 	}
 
-	return games, nil
+	return games
 }
 
-func (g Game) FromDomain(domain gamedomain.Game) (*Game, error) {
-	thumb512x384, err := pathGame.Thumbnail(domain.Slug, thumbnail512x384)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get 512x384 thumbnail: %w", err)
-	}
-
-	thumb512x512, err := pathGame.Thumbnail(domain.Slug, thumbnail512x512)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get 512x512 thumbnail: %w", err)
-	}
-
+func (g Game) FromDomain(domain gamedomain.Game) *Game {
 	return &Game{
 		ID:                domain.ID,
 		Language:          Language(domain.Language),
@@ -73,13 +59,11 @@ func (g Game) FromDomain(domain gamedomain.Game) (*Game, error) {
 		Player1Controls:   stringToPointer(domain.Player1Controls),
 		Player2Controls:   stringToPointer(domain.Player2Controls),
 		Mobile:            domain.Mobile,
-		Thumbnail512x384:  thumb512x384,
-		Thumbnail512x512:  thumb512x512,
 		PageURL:           fmt.Sprintf("/game/%s", domain.Slug),
 		FullScreenPageURL: fmt.Sprintf("/game/%s/fullscreen", domain.Slug),
 		TagIDRefs:         domain.TagIDRefs,
 		CategoryIDRefs:    domain.CategoryIDRefs,
-	}, nil
+	}
 }
 
 func (t Tags) IDs() []int {
@@ -90,35 +74,20 @@ func (t Tags) IDs() []int {
 	return ids
 }
 
-func (t Tags) FromDomain(domain tagdomain.Tags) (*Tags, error) {
+func (t Tags) FromDomain(domain tagdomain.Tags) *Tags {
 	tags := &Tags{
 		Data:  make([]*Tag, 0, len(domain.Data)),
 		Total: domain.Total,
 	}
 
 	for _, domainTag := range domain.Data {
-		tag, err := Tag{}.FromDomain(domainTag)
-		if err != nil {
-			return nil, fmt.Errorf("failed to convert tag: %w", err)
-		}
-
-		tags.Data = append(tags.Data, tag)
+		tags.Data = append(tags.Data, Tag{}.FromDomain(domainTag))
 	}
 
-	return tags, nil
+	return tags
 }
 
-func (t Tag) FromDomain(domain tagdomain.Tag) (*Tag, error) {
-	thumb512x384, err := pathTag.Thumbnail(domain.Slug, thumbnail512x384)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get 512x384 thumbnail: %w", err)
-	}
-
-	thumb128x128, err := pathTag.Thumbnail(domain.Slug, thumbnail128x128)
-	if err != nil {
-		return nil, fmt.Errorf("failed to get 128x128 thumbnail: %w", err)
-	}
-
+func (t Tag) FromDomain(domain tagdomain.Tag) *Tag {
 	return &Tag{
 		ID:               domain.ID,
 		Language:         Language(domain.Language),
@@ -132,10 +101,8 @@ func (t Tag) FromDomain(domain tagdomain.Tag) (*Tag, error) {
 		CreatedAt:        domain.CreatedAt.String(),
 		DeletedAt:        stringToPointer(domain.DeletedAt.String()),
 		PublishedAt:      stringToPointer(domain.PublishedAt.String()),
-		Thumbnail512x384: thumb512x384,
-		Thumbnail128x128: thumb128x128,
 		PageURL:          fmt.Sprintf("/tag/%s", domain.Slug),
-	}, nil
+	}
 }
 
 func (c Categories) IDs() []int {
@@ -269,34 +236,22 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItem
 	}
 
 	for _, domainItem := range domain.Games {
-		thumb512x384, err := pathGame.Thumbnail(domainItem.Slug, thumbnail512x384)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get 512x384 thumbnail for %q: %w", domainItem.Slug, err)
-		}
-
 		searchResponse.Data = append(searchResponse.Data, &SearchItem{
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Slug,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeGame,
 			PageURL:          fmt.Sprintf("/game/%s", domainItem.Slug),
-			Thumbnail512x384: thumb512x384,
 		})
 	}
 
 	for _, domainItem := range domain.Tags {
-		thumb512x384, err := pathTag.Thumbnail(domainItem.Slug, thumbnail512x384)
-		if err != nil {
-			return nil, fmt.Errorf("failed to get 512x384 thumbnail for %q: %w", domainItem.Slug, err)
-		}
-
 		searchResponse.Data = append(searchResponse.Data, &SearchItem{
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Slug,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeTag,
 			PageURL:          fmt.Sprintf("/tag/%s", domainItem.Slug),
-			Thumbnail512x384: thumb512x384,
 		})
 	}
 
@@ -331,4 +286,70 @@ func (m *SortingMethod) Domain() string {
 	str := strings.Replace(m.String(), "_", "-", -1)
 
 	return str
+}
+
+func (f *ImageFormat) Domain() imagedomain.Format {
+	if f == nil {
+		return imagedomain.FormatJpg
+	}
+
+	return imagedomain.Format(f.String())
+}
+
+func (f OriginalThumbnail) Domain() imagedomain.OriginalThumbnail {
+	switch f {
+	case OriginalThumbnailJPG512x512:
+		return imagedomain.OriginalThumbnail512x512
+	case OriginalThumbnailJPG128x128:
+		return imagedomain.OriginalThumbnail128x128
+	default:
+		return imagedomain.OriginalThumbnail512x384
+	}
+}
+
+func (r *ThumbnailRequest) Domain(slug string, isTag bool) imagedomain.GetRequest {
+	resource := imagedomain.ResourceGame
+	if isTag {
+		resource = imagedomain.ResourceTag
+	}
+
+	width, height := r.defaultWidthAndHeight()
+
+	return imagedomain.GetRequest{
+		Slug: slug,
+		Image: imagedomain.Image{
+			Format: r.Format.Domain(),
+			Width:  width,
+			Height: height,
+		},
+		Original: r.Original.Domain(),
+		Resource: resource,
+	}
+}
+
+func (r *ThumbnailRequest) defaultWidthAndHeight() (width, height int) {
+	defaultWidth, defaultHeight := r.getDefaultsForOriginal()
+
+	width = defaultWidth
+	if r.Width != nil {
+		width = *r.Width
+	}
+
+	height = defaultHeight
+	if r.Height != nil {
+		height = *r.Height
+	}
+
+	return width, height
+}
+
+func (r *ThumbnailRequest) getDefaultsForOriginal() (width, height int) {
+	switch r.Original {
+	case OriginalThumbnailJPG512x512:
+		return 512, 512
+	case OriginalThumbnailJPG128x128:
+		return 128, 128
+	default:
+		return 512, 384
+	}
 }

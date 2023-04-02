@@ -32,6 +32,8 @@ import (
 	gamepostgresql "github.com/vediagames/platform/game/postgresql"
 	gameservice "github.com/vediagames/platform/game/service"
 	gatewaygraphql "github.com/vediagames/platform/gateway/graphql"
+	"github.com/vediagames/platform/image/imagor"
+	imageservice "github.com/vediagames/platform/image/service"
 	"github.com/vediagames/platform/notification/sendinblue"
 	searchservice "github.com/vediagames/platform/search/service"
 	sectionpostgresql "github.com/vediagames/platform/section/postgresql"
@@ -140,6 +142,23 @@ func startServer(ctx context.Context) error {
 		},
 	})
 
+	imageProcessor := imagor.New(imagor.Config{
+		URL:    cfg.Imagor.URL,
+		Secret: cfg.Imagor.Secret,
+		Client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
+		BucketClient: bucketClient,
+	})
+
+	imageService := imageservice.New(imageservice.Config{
+		URL:       "https://images.vediagames.com/file/vg-images",
+		Processor: imageProcessor,
+		Client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
+	})
+
 	cache := webproxy.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 
 	c := ory.NewConfiguration()
@@ -163,6 +182,7 @@ func startServer(ctx context.Context) error {
 		BucketClient:    bucketClient,
 		FetcherClient:   fetcherClient,
 		AuthService:     authService,
+		ImageService:    imageService,
 	})
 
 	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))

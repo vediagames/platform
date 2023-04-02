@@ -47,12 +47,22 @@ skip_mod_tidy: true
 # modelgen, the others will be allowed when binding to fields. Configure them to
 # your liking
 models:
+  Tag:
+    fields:
+      thumbnail:
+        resolver: true
+  SearchItem:
+    fields:
+      thumbnail:
+        resolver: true
   Game:
     model: github.com/vediagames/platform/gateway/graphql/model.Game
     fields:
       tags:
         resolver: true
       categories:
+        resolver: true
+      thumbnail:
         resolver: true
   Section:
     model: github.com/vediagames/platform/gateway/graphql/model.Section

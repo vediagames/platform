@@ -53,13 +53,8 @@ func (r *queryResolver) MostPlayedGames(ctx context.Context, request model.MostP
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	games, err := model.Games{}.FromDomain(gameRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
 	return &model.MostPlayedGamesResponse{
-		Games: games,
+		Games: model.Games{}.FromDomain(gameRes.Data),
 	}, nil
 }
 
@@ -75,13 +70,8 @@ func (r *queryResolver) FreshGames(ctx context.Context, request model.FreshGames
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	games, err := model.Games{}.FromDomain(gameRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
 	return &model.FreshGamesResponse{
-		Games: games,
+		Games: model.Games{}.FromDomain(gameRes.Data),
 	}, nil
 }
 
@@ -103,13 +93,8 @@ func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	games, err := model.Games{}.FromDomain(gameRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
 	return &model.GamesResponse{
-		Games: games,
+		Games: model.Games{}.FromDomain(gameRes.Data),
 	}, nil
 }
 
@@ -124,13 +109,8 @@ func (r *queryResolver) Game(ctx context.Context, request model.GameRequest) (*m
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	game, err := model.Game{}.FromDomain(gameRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
 	return &model.GameResponse{
-		Game: game,
+		Game: model.Game{}.FromDomain(gameRes.Data),
 	}, nil
 }
 
@@ -182,13 +162,8 @@ func (r *queryResolver) Tags(ctx context.Context, request model.TagsRequest) (*m
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	tags, err := model.Tags{}.FromDomain(tagRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
 	return &model.TagsResponse{
-		Tags: tags,
+		Tags: model.Tags{}.FromDomain(tagRes.Data),
 	}, nil
 }
 
@@ -203,13 +178,8 @@ func (r *queryResolver) Tag(ctx context.Context, request model.TagRequest) (*mod
 		return nil, fmt.Errorf("failed to get: %w", err)
 	}
 
-	tag, err := model.Tag{}.FromDomain(tagRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
 	return &model.TagResponse{
-		Tag: tag,
+		Tag: model.Tag{}.FromDomain(tagRes.Data),
 	}, nil
 }
 

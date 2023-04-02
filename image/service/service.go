@@ -111,8 +111,8 @@ func originalThumbnailImage(o domain.OriginalThumbnail) domain.Image {
 	case domain.OriginalThumbnail128x128:
 		return domain.Image{
 			Format: domain.FormatJpg,
-			Width:  512,
-			Height: 512,
+			Width:  128,
+			Height: 128,
 		}
 	default:
 		return domain.Image{

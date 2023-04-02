@@ -24,8 +24,6 @@ type Game struct {
 	Tags              *Tags       `json:"tags"`
 	Categories        *Categories `json:"categories"`
 	Mobile            bool        `json:"mobile"`
-	Thumbnail512x384  string      `json:"thumbnail512x384"`
-	Thumbnail512x512  string      `json:"thumbnail512x512"`
 	PageURL           string      `json:"pageUrl"`
 	FullScreenPageURL string      `json:"fullScreenPageUrl"`
 	TagIDRefs         []int

@@ -6,9 +6,11 @@ package graphql
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/vediagames/platform/gateway/graphql/model"
 	"github.com/vediagames/platform/webproxy/graphql/generated"
+	model1 "github.com/vediagames/platform/webproxy/graphql/model"
 )
 
 // Tags is the resolver for the tags field.
@@ -19,6 +21,26 @@ func (r *gameResolver) Tags(ctx context.Context, obj *model.Game) (*model.Tags, 
 // Categories is the resolver for the categories field.
 func (r *gameResolver) Categories(ctx context.Context, obj *model.Game) (*model.Categories, error) {
 	return r.gatewayResolver.Game().Categories(ctx, obj)
+}
+
+// Thumbnail is the resolver for the thumbnail field.
+func (r *gameResolver) Thumbnail(ctx context.Context, obj *model.Game, request model.ThumbnailRequest) (string, error) {
+	return r.gatewayResolver.Game().Thumbnail(ctx, obj, request)
+}
+
+// Video is the resolver for the video field.
+func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original *model1.OriginalVideo) (string, error) {
+	panic(fmt.Errorf("not implemented: Video - video"))
+}
+
+// Thumbnail is the resolver for the thumbnail field.
+func (r *searchItemResolver) Thumbnail(ctx context.Context, obj *model.SearchItem, request model.ThumbnailRequest) (string, error) {
+	return r.gatewayResolver.SearchItem().Thumbnail(ctx, obj, request)
+}
+
+// Video is the resolver for the video field.
+func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original *model1.OriginalVideo) (string, error) {
+	panic(fmt.Errorf("not implemented: Video - video"))
 }
 
 // Tags is the resolver for the tags field.
@@ -36,11 +58,24 @@ func (r *sectionResolver) Games(ctx context.Context, obj *model.Section) (*model
 	return r.gatewayResolver.Section().Games(ctx, obj)
 }
 
+// Thumbnail is the resolver for the thumbnail field.
+func (r *tagResolver) Thumbnail(ctx context.Context, obj *model.Tag, request model.ThumbnailRequest) (string, error) {
+	return r.gatewayResolver.Tag().Thumbnail(ctx, obj, request)
+}
+
 // Game returns generated.GameResolver implementation.
 func (r *Resolver) Game() generated.GameResolver { return &gameResolver{r} }
+
+// SearchItem returns generated.SearchItemResolver implementation.
+func (r *Resolver) SearchItem() generated.SearchItemResolver { return &searchItemResolver{r} }
 
 // Section returns generated.SectionResolver implementation.
 func (r *Resolver) Section() generated.SectionResolver { return &sectionResolver{r} }
 
+// Tag returns generated.TagResolver implementation.
+func (r *Resolver) Tag() generated.TagResolver { return &tagResolver{r} }
+
 type gameResolver struct{ *Resolver }
+type searchItemResolver struct{ *Resolver }
 type sectionResolver struct{ *Resolver }
+type tagResolver struct{ *Resolver }

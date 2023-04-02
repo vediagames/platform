@@ -32,12 +32,7 @@ func (r *gameResolver) Tags(ctx context.Context, obj *model.Game) (*model.Tags, 
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	res, err := model.Tags{}.FromDomain(svcRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
-	return res, nil
+	return model.Tags{}.FromDomain(svcRes.Data), nil
 }
 
 // Categories is the resolver for the categories field.
@@ -59,6 +54,26 @@ func (r *gameResolver) Categories(ctx context.Context, obj *model.Game) (*model.
 	return model.Categories{}.FromDomain(svcRes.Data), nil
 }
 
+// Thumbnail is the resolver for the thumbnail field.
+func (r *gameResolver) Thumbnail(ctx context.Context, obj *model.Game, request model.ThumbnailRequest) (string, error) {
+	svcRes, err := r.imageService.Get(ctx, request.Domain(obj.Slug, false))
+	if err != nil {
+		return "", fmt.Errorf("failed to get: %w", err)
+	}
+
+	return svcRes.URL, nil
+}
+
+// Thumbnail is the resolver for the thumbnail field.
+func (r *searchItemResolver) Thumbnail(ctx context.Context, obj *model.SearchItem, request model.ThumbnailRequest) (string, error) {
+	svcRes, err := r.imageService.Get(ctx, request.Domain(obj.Slug, obj.Type == model.SearchItemTypeTag))
+	if err != nil {
+		return "", fmt.Errorf("failed to get: %w", err)
+	}
+
+	return svcRes.URL, nil
+}
+
 // Tags is the resolver for the tags field.
 func (r *sectionResolver) Tags(ctx context.Context, obj *model.Section) (*model.Tags, error) {
 	if len(obj.TagIDRefs) == 0 {
@@ -76,12 +91,7 @@ func (r *sectionResolver) Tags(ctx context.Context, obj *model.Section) (*model.
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	res, err := model.Tags{}.FromDomain(svcRes.Data)
-	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
-	}
-
-	return res, nil
+	return model.Tags{}.FromDomain(svcRes.Data), nil
 }
 
 // Categories is the resolver for the categories field.
@@ -124,19 +134,32 @@ func (r *sectionResolver) Games(ctx context.Context, obj *model.Section) (*model
 		return nil, fmt.Errorf("failed to list: %w", err)
 	}
 
-	res, err := model.Games{}.FromDomain(svcRes.Data)
+	return model.Games{}.FromDomain(svcRes.Data), nil
+}
+
+// Thumbnail is the resolver for the thumbnail field.
+func (r *tagResolver) Thumbnail(ctx context.Context, obj *model.Tag, request model.ThumbnailRequest) (string, error) {
+	svcRes, err := r.imageService.Get(ctx, request.Domain(obj.Slug, true))
 	if err != nil {
-		return nil, fmt.Errorf("failed to convert: %w", err)
+		return "", fmt.Errorf("failed to get: %w", err)
 	}
 
-	return res, nil
+	return svcRes.URL, nil
 }
 
 // Game returns generated.GameResolver implementation.
 func (r *Resolver) Game() generated.GameResolver { return &gameResolver{r} }
 
+// SearchItem returns generated.SearchItemResolver implementation.
+func (r *Resolver) SearchItem() generated.SearchItemResolver { return &searchItemResolver{r} }
+
 // Section returns generated.SectionResolver implementation.
 func (r *Resolver) Section() generated.SectionResolver { return &sectionResolver{r} }
 
+// Tag returns generated.TagResolver implementation.
+func (r *Resolver) Tag() generated.TagResolver { return &tagResolver{r} }
+
 type gameResolver struct{ *Resolver }
+type searchItemResolver struct{ *Resolver }
 type sectionResolver struct{ *Resolver }
+type tagResolver struct{ *Resolver }
