@@ -54,6 +54,8 @@ models:
     fields:
       thumbnail:
         resolver: true
+      video:
+        resolver: true
   Game:
     model: github.com/vediagames/platform/gateway/graphql/model.Game
     fields:
@@ -62,6 +64,8 @@ models:
       categories:
         resolver: true
       thumbnail:
+        resolver: true
+      video:
         resolver: true
   Section:
     model: github.com/vediagames/platform/gateway/graphql/model.Section

@@ -161,6 +161,7 @@ type SearchItem struct {
 	Type             SearchItemType `json:"type"`
 	PageURL          string         `json:"pageUrl"`
 	Thumbnail        string         `json:"thumbnail"`
+	Video            string         `json:"video"`
 }
 
 type SearchItems struct {
@@ -485,6 +486,45 @@ func (e *OriginalThumbnail) UnmarshalGQL(v interface{}) error {
 }
 
 func (e OriginalThumbnail) MarshalGQL(w io.Writer) {
+	fmt.Fprint(w, strconv.Quote(e.String()))
+}
+
+type OriginalVideo string
+
+const (
+	OriginalVideoMP41920x1080 OriginalVideo = "MP41920x1080"
+)
+
+var AllOriginalVideo = []OriginalVideo{
+	OriginalVideoMP41920x1080,
+}
+
+func (e OriginalVideo) IsValid() bool {
+	switch e {
+	case OriginalVideoMP41920x1080:
+		return true
+	}
+	return false
+}
+
+func (e OriginalVideo) String() string {
+	return string(e)
+}
+
+func (e *OriginalVideo) UnmarshalGQL(v interface{}) error {
+	str, ok := v.(string)
+	if !ok {
+		return fmt.Errorf("enums must be strings")
+	}
+
+	*e = OriginalVideo(str)
+	if !e.IsValid() {
+		return fmt.Errorf("%s is not a valid OriginalVideo", str)
+	}
+	return nil
+}
+
+func (e OriginalVideo) MarshalGQL(w io.Writer) {
 	fmt.Fprint(w, strconv.Quote(e.String()))
 }
 

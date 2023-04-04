@@ -116,6 +116,7 @@ type ComplexityRoot struct {
 		Tags              func(childComplexity int) int
 		Thumbnail         func(childComplexity int, request model.ThumbnailRequest) int
 		URL               func(childComplexity int) int
+		Video             func(childComplexity int, original *model.OriginalVideo) int
 		Weight            func(childComplexity int) int
 		Width             func(childComplexity int) int
 	}
@@ -193,6 +194,7 @@ type ComplexityRoot struct {
 		Slug             func(childComplexity int) int
 		Thumbnail        func(childComplexity int, request model.ThumbnailRequest) int
 		Type             func(childComplexity int) int
+		Video            func(childComplexity int, original *model.OriginalVideo) int
 	}
 
 	SearchItems struct {
@@ -285,6 +287,8 @@ type GameResolver interface {
 	Categories(ctx context.Context, obj *model.Game) (*model.Categories, error)
 
 	Thumbnail(ctx context.Context, obj *model.Game, request model.ThumbnailRequest) (string, error)
+
+	Video(ctx context.Context, obj *model.Game, original *model.OriginalVideo) (string, error)
 }
 type MutationResolver interface {
 	SendEmail(ctx context.Context, request model.SendEmailRequest) (*bool, error)
@@ -308,6 +312,7 @@ type QueryResolver interface {
 }
 type SearchItemResolver interface {
 	Thumbnail(ctx context.Context, obj *model.SearchItem, request model.ThumbnailRequest) (string, error)
+	Video(ctx context.Context, obj *model.SearchItem, original *model.OriginalVideo) (string, error)
 }
 type SectionResolver interface {
 	Tags(ctx context.Context, obj *model.Section) (*model.Tags, error)
@@ -652,6 +657,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Game.URL(childComplexity), true
+
+	case "Game.video":
+		if e.complexity.Game.Video == nil {
+			break
+		}
+
+		args, err := ec.field_Game_video_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Game.Video(childComplexity, args["original"].(*model.OriginalVideo)), true
 
 	case "Game.weight":
 		if e.complexity.Game.Weight == nil {
@@ -1035,6 +1052,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SearchItem.Type(childComplexity), true
+
+	case "SearchItem.video":
+		if e.complexity.SearchItem.Video == nil {
+			break
+		}
+
+		args, err := ec.field_SearchItem_video_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.SearchItem.Video(childComplexity, args["original"].(*model.OriginalVideo)), true
 
 	case "SearchItems.data":
 		if e.complexity.SearchItems.Data == nil {
@@ -1513,6 +1542,7 @@ type Game {
     thumbnail(request: ThumbnailRequest!): String!
     pageUrl: String!
     fullScreenPageUrl: String!
+    video(original: OriginalVideo): String!
 }
 
 type PlacedSections {
@@ -1612,6 +1642,7 @@ type SearchItem {
     type: SearchItemType!
     pageUrl: String!
     thumbnail(request: ThumbnailRequest!): String!
+    video(original: OriginalVideo): String!
 }
 
 type AvailableLanguage {
@@ -1636,6 +1667,10 @@ enum OriginalThumbnail {
     JPG512x384
     JPG512x512
     JPG128x128
+}
+
+enum OriginalVideo {
+    MP41920x1080
 }
 `, BuiltIn: false},
 	{Name: "../schema.gql", Input: `type Query {
@@ -1839,13 +1874,12 @@ input SendEmailRequest {
 	{Name: "../../../federation/directives.graphql", Input: `
 	scalar _Any
 	scalar _FieldSet
-
-	directive @external on FIELD_DEFINITION
 	directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 	directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
 	directive @extends on OBJECT | INTERFACE
 
 	directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+	directive @external on FIELD_DEFINITION
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 type _Service {
@@ -1875,6 +1909,21 @@ func (ec *executionContext) field_Game_thumbnail_args(ctx context.Context, rawAr
 		}
 	}
 	args["request"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Game_video_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.OriginalVideo
+	if tmp, ok := rawArgs["original"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("original"))
+		arg0, err = ec.unmarshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["original"] = arg0
 	return args, nil
 }
 
@@ -2115,6 +2164,21 @@ func (ec *executionContext) field_SearchItem_thumbnail_args(ctx context.Context,
 		}
 	}
 	args["request"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_SearchItem_video_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 *model.OriginalVideo
+	if tmp, ok := rawArgs["original"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("original"))
+		arg0, err = ec.unmarshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["original"] = arg0
 	return args, nil
 }
 
@@ -4297,6 +4361,61 @@ func (ec *executionContext) fieldContext_Game_fullScreenPageUrl(ctx context.Cont
 	return fc, nil
 }
 
+func (ec *executionContext) _Game_video(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Game_video(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Game().Video(rctx, obj, fc.Args["original"].(*model.OriginalVideo))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Game_video(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Game",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Game_video_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _GameResponse_game(ctx context.Context, field graphql.CollectedField, obj *model.GameResponse) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_GameResponse_game(ctx, field)
 	if err != nil {
@@ -4388,6 +4507,8 @@ func (ec *executionContext) fieldContext_GameResponse_game(ctx context.Context, 
 				return ec.fieldContext_Game_pageUrl(ctx, field)
 			case "fullScreenPageUrl":
 				return ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
+			case "video":
+				return ec.fieldContext_Game_video(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
 		},
@@ -4486,6 +4607,8 @@ func (ec *executionContext) fieldContext_Games_data(ctx context.Context, field g
 				return ec.fieldContext_Game_pageUrl(ctx, field)
 			case "fullScreenPageUrl":
 				return ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
+			case "video":
+				return ec.fieldContext_Game_video(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
 		},
@@ -6677,6 +6800,61 @@ func (ec *executionContext) fieldContext_SearchItem_thumbnail(ctx context.Contex
 	return fc, nil
 }
 
+func (ec *executionContext) _SearchItem_video(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SearchItem_video(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.SearchItem().Video(rctx, obj, fc.Args["original"].(*model.OriginalVideo))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SearchItem_video(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SearchItem",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_SearchItem_video_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SearchItems_data(ctx context.Context, field graphql.CollectedField, obj *model.SearchItems) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SearchItems_data(ctx, field)
 	if err != nil {
@@ -6728,6 +6906,8 @@ func (ec *executionContext) fieldContext_SearchItems_data(ctx context.Context, f
 				return ec.fieldContext_SearchItem_pageUrl(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_SearchItem_thumbnail(ctx, field)
+			case "video":
+				return ec.fieldContext_SearchItem_video(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type SearchItem", field.Name)
 		},
@@ -11947,6 +12127,26 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
+		case "video":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Game_video(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12757,6 +12957,26 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 					}
 				}()
 				res = ec._SearchItem_thumbnail(ctx, field, obj)
+				if res == graphql.Null {
+					atomic.AddUint32(&invalids, 1)
+				}
+				return res
+			}
+
+			out.Concurrently(i, func() graphql.Marshaler {
+				return innerFunc(ctx)
+
+			})
+		case "video":
+			field := field
+
+			innerFunc := func(ctx context.Context) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._SearchItem_video(ctx, field, obj)
 				if res == graphql.Null {
 					atomic.AddUint32(&invalids, 1)
 				}
@@ -14945,6 +15165,22 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	}
 	res := graphql.MarshalInt(*v)
 	return res
+}
+
+func (ec *executionContext) unmarshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx context.Context, v interface{}) (*model.OriginalVideo, error) {
+	if v == nil {
+		return nil, nil
+	}
+	var res = new(model.OriginalVideo)
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx context.Context, sel ast.SelectionSet, v *model.OriginalVideo) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return v
 }
 
 func (ec *executionContext) marshalORandomProviderGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐRandomProviderGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.RandomProviderGameResponse) graphql.Marshaler {
