@@ -94,7 +94,7 @@ type SiteMapPageResponse struct {
 
 type TagPageRequest struct {
 	Language model.Language `json:"language"`
-	TagID    int            `json:"tagID"`
+	Slug     string         `json:"slug"`
 	Page     int            `json:"page"`
 }
 
@@ -115,16 +115,16 @@ type WizardPageRequest struct {
 type OriginalVideo string
 
 const (
-	OriginalVideoMP4100x100 OriginalVideo = "MP4100x100"
+	OriginalVideoMP41920x1080 OriginalVideo = "MP41920x1080"
 )
 
 var AllOriginalVideo = []OriginalVideo{
-	OriginalVideoMP4100x100,
+	OriginalVideoMP41920x1080,
 }
 
 func (e OriginalVideo) IsValid() bool {
 	switch e {
-	case OriginalVideoMP4100x100:
+	case OriginalVideoMP41920x1080:
 		return true
 	}
 	return false

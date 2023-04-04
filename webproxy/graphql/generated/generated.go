@@ -1470,7 +1470,7 @@ type TagsPageResponse {
 
 input TagPageRequest {
     language: Language!
-    tagID: Int!
+    slug: String!
     page: Int!
 }
 
@@ -1782,19 +1782,18 @@ enum OriginalThumbnail {
 }
 
 enum OriginalVideo {
-    MP4100x100
+    MP41920x1080
 }
 `, BuiltIn: false},
 	{Name: "../../../federation/directives.graphql", Input: `
 	scalar _Any
 	scalar _FieldSet
-
-	directive @external on FIELD_DEFINITION
 	directive @requires(fields: _FieldSet!) on FIELD_DEFINITION
 	directive @provides(fields: _FieldSet!) on FIELD_DEFINITION
 	directive @extends on OBJECT | INTERFACE
 
 	directive @key(fields: _FieldSet!) repeatable on OBJECT | INTERFACE
+	directive @external on FIELD_DEFINITION
 `, BuiltIn: true},
 	{Name: "../../../federation/entity.graphql", Input: `
 type _Service {
@@ -10989,7 +10988,7 @@ func (ec *executionContext) unmarshalInputTagPageRequest(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "tagID", "page"}
+	fieldsInOrder := [...]string{"language", "slug", "page"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -11004,11 +11003,11 @@ func (ec *executionContext) unmarshalInputTagPageRequest(ctx context.Context, ob
 			if err != nil {
 				return it, err
 			}
-		case "tagID":
+		case "slug":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tagID"))
-			it.TagID, err = ec.unmarshalNInt2int(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
