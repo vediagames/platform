@@ -7,7 +7,7 @@ type TagPageResponse struct {
 	Games    *model.Games `json:"games"`
 	Page     int
 	Language model.Language
-	Slug     string
+	ID       int
 }
 
 type HomePageResponse struct {

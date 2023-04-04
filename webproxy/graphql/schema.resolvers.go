@@ -7,6 +7,7 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"strconv"
 
 	"github.com/rs/zerolog"
 
@@ -438,7 +439,7 @@ func (r *queryResolver) TagPage(ctx context.Context, request model.TagPageReques
 	return &model.TagPageResponse{
 		Page:     request.Page,
 		Language: request.Language,
-		Slug:     request.Slug,
+		ID:       request.ID,
 	}, nil
 }
 
@@ -487,8 +488,8 @@ func (r *queryResolver) CategoriesPage(ctx context.Context, request model.Catego
 // Tag is the resolver for the tag field.
 func (r *tagPageResponseResolver) Tag(ctx context.Context, obj *model.TagPageResponse) (*model1.Tag, error) {
 	tagRes, err := r.gatewayResolver.Query().Tag(ctx, model1.TagRequest{
-		Field:    model1.GetByFieldSlug,
-		Value:    obj.Slug,
+		Field:    model1.GetByFieldID,
+		Value:    strconv.Itoa(obj.ID),
 		Language: obj.Language,
 	})
 	if err != nil {
@@ -504,7 +505,7 @@ func (r *tagPageResponseResolver) Games(ctx context.Context, obj *model.TagPageR
 		Language: obj.Language,
 		Page:     obj.Page,
 		Limit:    15,
-		Tags:     []int{obj.TagID},
+		Tags:     []int{obj.ID},
 		Sort:     sortingMethodToPointer(model1.SortingMethodMostPopular),
 	})
 	if err != nil {
@@ -519,7 +520,7 @@ func (r *wizardPageResponseResolver) Categories(ctx context.Context, obj *model.
 	gatewayRes, err := r.gatewayResolver.Query().Categories(ctx, model1.CategoriesRequest{
 		Language: obj.Language,
 		Page:     1,
-		Limit:    1000,
+		Limit:    20,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to query: %w", err)

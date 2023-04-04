@@ -94,7 +94,7 @@ type SiteMapPageResponse struct {
 
 type TagPageRequest struct {
 	Language model.Language `json:"language"`
-	Slug     string         `json:"slug"`
+	ID       int            `json:"id"`
 	Page     int            `json:"page"`
 }
 

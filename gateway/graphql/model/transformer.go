@@ -101,7 +101,7 @@ func (t Tag) FromDomain(domain tagdomain.Tag) *Tag {
 		CreatedAt:        domain.CreatedAt.String(),
 		DeletedAt:        stringToPointer(domain.DeletedAt.String()),
 		PublishedAt:      stringToPointer(domain.PublishedAt.String()),
-		PageURL:          fmt.Sprintf("/tag/%s", domain.Slug),
+		PageURL:          fmt.Sprintf("/tag/%s?id=%d", domain.Slug, domain.ID),
 	}
 }
 
@@ -251,7 +251,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItem
 			Name:             domainItem.Slug,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeTag,
-			PageURL:          fmt.Sprintf("/tag/%s", domainItem.Slug),
+			PageURL:          fmt.Sprintf("/tag/%s?id=%d", domainItem.Slug, domainItem.ID),
 		})
 	}
 

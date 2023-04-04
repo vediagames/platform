@@ -1470,7 +1470,7 @@ type TagsPageResponse {
 
 input TagPageRequest {
     language: Language!
-    slug: String!
+    id: Int!
     page: Int!
 }
 
@@ -10988,7 +10988,7 @@ func (ec *executionContext) unmarshalInputTagPageRequest(ctx context.Context, ob
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "slug", "page"}
+	fieldsInOrder := [...]string{"language", "id", "page"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -11003,11 +11003,11 @@ func (ec *executionContext) unmarshalInputTagPageRequest(ctx context.Context, ob
 			if err != nil {
 				return it, err
 			}
-		case "slug":
+		case "id":
 			var err error
 
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNInt2int(ctx, v)
 			if err != nil {
 				return it, err
 			}

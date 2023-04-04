@@ -31,7 +31,7 @@ type TagsPageResponse {
 
 input TagPageRequest {
     language: Language!
-    slug: String!
+    id: Int!
     page: Int!
 }
 
