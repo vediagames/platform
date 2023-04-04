@@ -6,11 +6,9 @@ package graphql
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/vediagames/platform/gateway/graphql/model"
 	"github.com/vediagames/platform/webproxy/graphql/generated"
-	model1 "github.com/vediagames/platform/webproxy/graphql/model"
 )
 
 // Tags is the resolver for the tags field.
@@ -29,8 +27,8 @@ func (r *gameResolver) Thumbnail(ctx context.Context, obj *model.Game, request m
 }
 
 // Video is the resolver for the video field.
-func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original *model1.OriginalVideo) (string, error) {
-	panic(fmt.Errorf("not implemented: Video - video"))
+func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original *model.OriginalVideo) (string, error) {
+	return r.gatewayResolver.Game().Video(ctx, obj, original)
 }
 
 // Thumbnail is the resolver for the thumbnail field.
@@ -39,8 +37,8 @@ func (r *searchItemResolver) Thumbnail(ctx context.Context, obj *model.SearchIte
 }
 
 // Video is the resolver for the video field.
-func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original *model1.OriginalVideo) (string, error) {
-	panic(fmt.Errorf("not implemented: Video - video"))
+func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original *model.OriginalVideo) (string, error) {
+	return r.gatewayResolver.SearchItem().Video(ctx, obj, original)
 }
 
 // Tags is the resolver for the tags field.
