@@ -307,16 +307,11 @@ func (r *queryResolver) GamePage(ctx context.Context, request model.GamePageRequ
 		return nil, fmt.Errorf("failed to get game: %w", err)
 	}
 
-	tagIDs := make([]int, 0, len(gameRes.Game.Tags.Data))
-	for _, tag := range gameRes.Game.Tags.Data {
-		if _, ok := tagsToIgnore[tag.ID]; !ok {
-			tagIDs = append(tagIDs, tag.ID)
+	tagIDs := make([]int, 0, len(gameRes.Game.TagIDRefs))
+	for _, tag := range gameRes.Game.TagIDRefs {
+		if _, ok := tagsToIgnore[tag]; !ok {
+			tagIDs = append(tagIDs, tag)
 		}
-	}
-
-	categoryIDs := make([]int, 0, len(gameRes.Game.Categories.Data))
-	for _, category := range gameRes.Game.Categories.Data {
-		categoryIDs = append(categoryIDs, category.ID)
 	}
 
 	otherGamesRes, err := r.gatewayResolver.Query().Games(ctx, model1.GamesRequest{
@@ -324,7 +319,7 @@ func (r *queryResolver) GamePage(ctx context.Context, request model.GamePageRequ
 		Page:            1,
 		Limit:           8,
 		Sort:            sortingMethodToPointer(model1.SortingMethodRandom),
-		Categories:      categoryIDs,
+		Categories:      gameRes.Game.CategoryIDRefs,
 		Tags:            tagIDs,
 		ExcludedGameIDs: []int{gameRes.Game.ID},
 	})
