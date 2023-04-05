@@ -222,7 +222,7 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
-	router.Use(authMiddleware(authService))
+	//router.Use(authMiddleware(authService))
 
 	router.Handle("/gateway/graph", gatewayHandler)
 	router.Handle("/vediagames/graph", vediagamesHandler)
