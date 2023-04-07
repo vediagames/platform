@@ -152,7 +152,7 @@ func startServer(ctx context.Context) error {
 	})
 
 	imageService := imageservice.New(imageservice.Config{
-		URL:       "https://images.vediagames.com/file/vg-images",
+		URL:       "https://content.vediagames.com",
 		Processor: imageProcessor,
 		Client: &http.Client{
 			Timeout: 30 * time.Second,
