@@ -10,6 +10,7 @@ import (
 	"strconv"
 
 	"github.com/rs/zerolog"
+
 	gamedomain "github.com/vediagames/platform/game/domain"
 	model1 "github.com/vediagames/platform/gateway/graphql/model"
 	"github.com/vediagames/platform/webproxy/graphql/generated"
@@ -142,7 +143,7 @@ func (r *homePageResponseResolver) MostPlayedGamesInLast7Days(ctx context.Contex
 	gatewayRes, err := r.gatewayResolver.Query().MostPlayedGames(ctx, model1.MostPlayedGamesRequest{
 		Language: obj.Language,
 		Page:     1,
-		Limit:    4,
+		Limit:    5,
 		MaxDays:  7,
 	})
 	if err != nil {

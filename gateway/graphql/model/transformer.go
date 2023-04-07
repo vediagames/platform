@@ -238,7 +238,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItem
 	for _, domainItem := range domain.Games {
 		searchResponse.Data = append(searchResponse.Data, &SearchItem{
 			ShortDescription: domainItem.ShortDescription,
-			Name:             domainItem.Slug,
+			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeGame,
 			PageURL:          fmt.Sprintf("/game/%s", domainItem.Slug),
@@ -248,7 +248,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItem
 	for _, domainItem := range domain.Tags {
 		searchResponse.Data = append(searchResponse.Data, &SearchItem{
 			ShortDescription: domainItem.ShortDescription,
-			Name:             domainItem.Slug,
+			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeTag,
 			PageURL:          fmt.Sprintf("/tag/%s?id=%d", domainItem.Slug, domainItem.ID),
