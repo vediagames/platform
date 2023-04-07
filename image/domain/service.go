@@ -36,10 +36,6 @@ func (r GetRequest) Validate() error {
 	}
 
 	switch r.Resource {
-	case ResourceGame:
-		if r.Original == OriginalThumbnail128x128 {
-			err.Add(fmt.Errorf("thumbnail 128x128 not available for games"))
-		}
 	case ResourceTag:
 		if r.Original == OriginalThumbnail512x512 {
 			err.Add(fmt.Errorf("thumbnail 512x512 not available for tags"))
