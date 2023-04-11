@@ -72,7 +72,7 @@ type Game {
     thumbnail(request: ThumbnailRequest!): String!
     pageUrl: String!
     fullScreenPageUrl: String!
-    video(original: OriginalVideo): String!
+    video(original: OriginalVideo!): String!
 }
 
 type PlacedSections {
@@ -172,7 +172,7 @@ type SearchItem {
     type: SearchItemType!
     pageUrl: String!
     thumbnail(request: ThumbnailRequest!): String!
-    video(original: OriginalVideo): String!
+    video(original: OriginalVideo!): String!
 }
 
 type AvailableLanguage {
@@ -200,5 +200,8 @@ enum OriginalThumbnail {
 }
 
 enum OriginalVideo {
-    MP41920x1080
+    MP4_1920x1080
+    MP4_540x410
+    MP4_240x180
+    MP4_175x130
 }

@@ -183,6 +183,7 @@ func startServer(ctx context.Context) error {
 		FetcherClient:   fetcherClient,
 		AuthService:     authService,
 		ImageService:    imageService,
+		ContentURL:      "https://content.vediagames.com",
 	})
 
 	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))

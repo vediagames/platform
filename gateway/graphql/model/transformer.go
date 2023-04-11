@@ -353,3 +353,18 @@ func (r *ThumbnailRequest) getDefaultsForOriginal() (width, height int) {
 		return 512, 384
 	}
 }
+
+func (v OriginalVideo) FileName() string {
+	switch v {
+	case OriginalVideoMp4_1920x1080:
+		return "gameplay.mp4"
+	case OriginalVideoMp4_540x410:
+		return "gameplay540x410.mp4"
+	case OriginalVideoMp4_240x180:
+		return "gameplay240x180.mp4"
+	case OriginalVideoMp4_175x130:
+		return "gameplay175x130.mp4"
+	default:
+		return ""
+	}
+}

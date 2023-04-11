@@ -65,8 +65,8 @@ func (r *gameResolver) Thumbnail(ctx context.Context, obj *model.Game, request m
 }
 
 // Video is the resolver for the video field.
-func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original *model.OriginalVideo) (string, error) {
-	return fmt.Sprintf("/videos/%s/video.mp4", obj.Slug), nil
+func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original model.OriginalVideo) (string, error) {
+	return fmt.Sprintf("%s/games/%s/%s", r.contentURL, obj.Slug, original.FileName()), nil
 }
 
 // Thumbnail is the resolver for the thumbnail field.
@@ -80,12 +80,12 @@ func (r *searchItemResolver) Thumbnail(ctx context.Context, obj *model.SearchIte
 }
 
 // Video is the resolver for the video field.
-func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original *model.OriginalVideo) (string, error) {
+func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original model.OriginalVideo) (string, error) {
 	if obj.Type != model.SearchItemTypeGame {
 		return "", nil
 	}
 
-	return fmt.Sprintf("/videos/%s/video.mp4", obj.Slug), nil
+	return fmt.Sprintf("%s/games/%s/%s", r.contentURL, obj.Slug, original.FileName()), nil
 }
 
 // Tags is the resolver for the tags field.

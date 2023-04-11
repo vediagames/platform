@@ -492,16 +492,22 @@ func (e OriginalThumbnail) MarshalGQL(w io.Writer) {
 type OriginalVideo string
 
 const (
-	OriginalVideoMP41920x1080 OriginalVideo = "MP41920x1080"
+	OriginalVideoMp4_1920x1080 OriginalVideo = "MP4_1920x1080"
+	OriginalVideoMp4_540x410   OriginalVideo = "MP4_540x410"
+	OriginalVideoMp4_240x180   OriginalVideo = "MP4_240x180"
+	OriginalVideoMp4_175x130   OriginalVideo = "MP4_175x130"
 )
 
 var AllOriginalVideo = []OriginalVideo{
-	OriginalVideoMP41920x1080,
+	OriginalVideoMp4_1920x1080,
+	OriginalVideoMp4_540x410,
+	OriginalVideoMp4_240x180,
+	OriginalVideoMp4_175x130,
 }
 
 func (e OriginalVideo) IsValid() bool {
 	switch e {
-	case OriginalVideoMP41920x1080:
+	case OriginalVideoMp4_1920x1080, OriginalVideoMp4_540x410, OriginalVideoMp4_240x180, OriginalVideoMp4_175x130:
 		return true
 	}
 	return false

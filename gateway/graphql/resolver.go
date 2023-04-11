@@ -34,6 +34,7 @@ type Resolver struct {
 	fetcherClient   fetcherdomain.Client
 	authService     authdomain.Service
 	imageService    imagedomain.Service
+	contentURL      string
 }
 
 type Config struct {
@@ -47,6 +48,7 @@ type Config struct {
 	FetcherClient   fetcherdomain.Client
 	AuthService     authdomain.Service
 	ImageService    imagedomain.Service
+	ContentURL      string
 }
 
 func (c Config) Validate() error {
@@ -62,6 +64,7 @@ func (c Config) Validate() error {
 	err.AddIf(c.FetcherClient == nil, fmt.Errorf("fetcher client is required"))
 	err.AddIf(c.AuthService == nil, fmt.Errorf("auth service is required"))
 	err.AddIf(c.ImageService == nil, fmt.Errorf("image service is required"))
+	err.AddIf(c.ContentURL == "", fmt.Errorf("content URL is required"))
 
 	return err.Err()
 }
@@ -82,6 +85,7 @@ func NewResolver(cfg Config) *Resolver {
 		fetcherClient:   cfg.FetcherClient,
 		authService:     cfg.AuthService,
 		imageService:    cfg.ImageService,
+		contentURL:      cfg.ContentURL,
 	}
 }
 
