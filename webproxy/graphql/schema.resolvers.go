@@ -8,6 +8,7 @@ import (
 	"context"
 	"fmt"
 	"strconv"
+	"time"
 
 	"github.com/rs/zerolog"
 
@@ -201,11 +202,16 @@ func (r *homePageResponseResolver) Sections(ctx context.Context, obj *model.Home
 				continue
 			}
 
+			lastPlayedGameIDInts := make([]int, len(obj.LastPlayedGameIDs))
+			for i, lp := range obj.LastPlayedGameIDs {
+				lastPlayedGameIDInts[i] = lp.ID
+			}
+
 			gamesReq = model1.GamesRequest{
 				Language: obj.Language,
 				Page:     1,
 				Limit:    10,
-				Ids:      obj.LastPlayedGameIDs,
+				Ids:      lastPlayedGameIDInts,
 			}
 		case "newest":
 			gamesReq = model1.GamesRequest{
@@ -235,6 +241,25 @@ func (r *homePageResponseResolver) Sections(ctx context.Context, obj *model.Home
 		gamesRes, err := r.gatewayResolver.Query().Games(ctx, gamesReq)
 		if err != nil {
 			return nil, fmt.Errorf("failed to list games for section %q: %w", websitePlacement.Section.Slug, err)
+		}
+
+		if websitePlacement.Section.Slug == "continue-playing" {
+			gameIDToLastPlayedDate := make(map[int]string)
+			for _, lp := range obj.LastPlayedGameIDs {
+				gameIDToLastPlayedDate[lp.ID] = lp.Date
+			}
+
+			// Sort the games using a simple loop
+			for i := 0; i < len(gamesRes.Games.Data); i++ {
+				for j := i + 1; j < len(gamesRes.Games.Data); j++ {
+					gameIDate, _ := time.Parse(time.RFC3339, gameIDToLastPlayedDate[gamesRes.Games.Data[i].ID])
+					gameJDate, _ := time.Parse(time.RFC3339, gameIDToLastPlayedDate[gamesRes.Games.Data[j].ID])
+
+					if gameJDate.After(gameIDate) {
+						gamesRes.Games.Data[i], gamesRes.Games.Data[j] = gamesRes.Games.Data[j], gamesRes.Games.Data[i]
+					}
+				}
+			}
 		}
 
 		websitePlacement.Section.Games = gamesRes.Games

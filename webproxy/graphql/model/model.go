@@ -17,8 +17,8 @@ type HomePageResponse struct {
 	MostPlayedGames            *model.Games          `json:"mostPlayedGames"`
 	Sections                   *model.PlacedSections `json:"sections"`
 	TagSections                *model.TagSections    `json:"tagSections"`
+	LastPlayedGameIDs          []*LastPlayedGameID
 	Language                   model.Language
-	LastPlayedGameIDs          []int
 }
 
 type WizardPageResponse struct {

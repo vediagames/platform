@@ -64,8 +64,13 @@ type GamePageResponse struct {
 }
 
 type HomePageRequest struct {
-	Language          model.Language `json:"language"`
-	LastPlayedGameIDs []int          `json:"lastPlayedGameIDs,omitempty"`
+	Language          model.Language      `json:"language"`
+	LastPlayedGameIDs []*LastPlayedGameID `json:"lastPlayedGameIDs,omitempty"`
+}
+
+type LastPlayedGameID struct {
+	ID   int    `json:"id"`
+	Date string `json:"date"`
 }
 
 type SearchPageRequest struct {
