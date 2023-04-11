@@ -128,7 +128,7 @@ type ComplexityRoot struct {
 		Tags              func(childComplexity int) int
 		Thumbnail         func(childComplexity int, request model.ThumbnailRequest) int
 		URL               func(childComplexity int) int
-		Video             func(childComplexity int, original *model.OriginalVideo) int
+		Video             func(childComplexity int, original model.OriginalVideo) int
 		Weight            func(childComplexity int) int
 		Width             func(childComplexity int) int
 	}
@@ -185,7 +185,7 @@ type ComplexityRoot struct {
 		Slug             func(childComplexity int) int
 		Thumbnail        func(childComplexity int, request model.ThumbnailRequest) int
 		Type             func(childComplexity int) int
-		Video            func(childComplexity int, original *model.OriginalVideo) int
+		Video            func(childComplexity int, original model.OriginalVideo) int
 	}
 
 	SearchItems struct {
@@ -288,7 +288,7 @@ type GameResolver interface {
 
 	Thumbnail(ctx context.Context, obj *model.Game, request model.ThumbnailRequest) (string, error)
 
-	Video(ctx context.Context, obj *model.Game, original *model.OriginalVideo) (string, error)
+	Video(ctx context.Context, obj *model.Game, original model.OriginalVideo) (string, error)
 }
 type HomePageResponseResolver interface {
 	TotalGames(ctx context.Context, obj *model1.HomePageResponse) (int, error)
@@ -313,7 +313,7 @@ type QueryResolver interface {
 }
 type SearchItemResolver interface {
 	Thumbnail(ctx context.Context, obj *model.SearchItem, request model.ThumbnailRequest) (string, error)
-	Video(ctx context.Context, obj *model.SearchItem, original *model.OriginalVideo) (string, error)
+	Video(ctx context.Context, obj *model.SearchItem, original model.OriginalVideo) (string, error)
 }
 type SectionResolver interface {
 	Tags(ctx context.Context, obj *model.Section) (*model.Tags, error)
@@ -712,7 +712,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Game.Video(childComplexity, args["original"].(*model.OriginalVideo)), true
+		return e.complexity.Game.Video(childComplexity, args["original"].(model.OriginalVideo)), true
 
 	case "Game.weight":
 		if e.complexity.Game.Weight == nil {
@@ -1029,7 +1029,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.SearchItem.Video(childComplexity, args["original"].(*model.OriginalVideo)), true
+		return e.complexity.SearchItem.Video(childComplexity, args["original"].(model.OriginalVideo)), true
 
 	case "SearchItems.data":
 		if e.complexity.SearchItems.Data == nil {
@@ -1659,7 +1659,7 @@ type Game {
     thumbnail(request: ThumbnailRequest!): String!
     pageUrl: String!
     fullScreenPageUrl: String!
-    video(original: OriginalVideo): String!
+    video(original: OriginalVideo!): String!
 }
 
 type PlacedSections {
@@ -1759,7 +1759,7 @@ type SearchItem {
     type: SearchItemType!
     pageUrl: String!
     thumbnail(request: ThumbnailRequest!): String!
-    video(original: OriginalVideo): String!
+    video(original: OriginalVideo!): String!
 }
 
 type AvailableLanguage {
@@ -1787,7 +1787,10 @@ enum OriginalThumbnail {
 }
 
 enum OriginalVideo {
-    MP41920x1080
+    MP4_1920x1080
+    MP4_540x410
+    MP4_240x180
+    MP4_175x130
 }
 `, BuiltIn: false},
 	{Name: "../../../federation/directives.graphql", Input: `
@@ -1834,10 +1837,10 @@ func (ec *executionContext) field_Game_thumbnail_args(ctx context.Context, rawAr
 func (ec *executionContext) field_Game_video_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.OriginalVideo
+	var arg0 model.OriginalVideo
 	if tmp, ok := rawArgs["original"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("original"))
-		arg0, err = ec.unmarshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx, tmp)
+		arg0, err = ec.unmarshalNOriginalVideo2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -2044,10 +2047,10 @@ func (ec *executionContext) field_SearchItem_thumbnail_args(ctx context.Context,
 func (ec *executionContext) field_SearchItem_video_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
-	var arg0 *model.OriginalVideo
+	var arg0 model.OriginalVideo
 	if tmp, ok := rawArgs["original"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("original"))
-		arg0, err = ec.unmarshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx, tmp)
+		arg0, err = ec.unmarshalNOriginalVideo2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -4502,7 +4505,7 @@ func (ec *executionContext) _Game_video(ctx context.Context, field graphql.Colle
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Game().Video(rctx, obj, fc.Args["original"].(*model.OriginalVideo))
+		return ec.resolvers.Game().Video(rctx, obj, fc.Args["original"].(model.OriginalVideo))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -6530,7 +6533,7 @@ func (ec *executionContext) _SearchItem_video(ctx context.Context, field graphql
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.SearchItem().Video(rctx, obj, fc.Args["original"].(*model.OriginalVideo))
+		return ec.resolvers.SearchItem().Video(rctx, obj, fc.Args["original"].(model.OriginalVideo))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -13869,6 +13872,16 @@ func (ec *executionContext) marshalNOriginalThumbnail2githubᚗcomᚋvediagames�
 	return v
 }
 
+func (ec *executionContext) unmarshalNOriginalVideo2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx context.Context, v interface{}) (model.OriginalVideo, error) {
+	var res model.OriginalVideo
+	err := res.UnmarshalGQL(v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNOriginalVideo2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx context.Context, sel ast.SelectionSet, v model.OriginalVideo) graphql.Marshaler {
+	return v
+}
+
 func (ec *executionContext) marshalNPlacedSection2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐPlacedSectionᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.PlacedSection) graphql.Marshaler {
 	ret := make(graphql.Array, len(v))
 	var wg sync.WaitGroup
@@ -14762,22 +14775,6 @@ func (ec *executionContext) unmarshalOLastPlayedGameID2ᚕᚖgithubᚗcomᚋvedi
 		}
 	}
 	return res, nil
-}
-
-func (ec *executionContext) unmarshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx context.Context, v interface{}) (*model.OriginalVideo, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var res = new(model.OriginalVideo)
-	err := res.UnmarshalGQL(v)
-	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalOOriginalVideo2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalVideo(ctx context.Context, sel ast.SelectionSet, v *model.OriginalVideo) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return v
 }
 
 func (ec *executionContext) unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, v interface{}) (*model.SortingMethod, error) {

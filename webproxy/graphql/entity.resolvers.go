@@ -27,7 +27,7 @@ func (r *gameResolver) Thumbnail(ctx context.Context, obj *model.Game, request m
 }
 
 // Video is the resolver for the video field.
-func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original *model.OriginalVideo) (string, error) {
+func (r *gameResolver) Video(ctx context.Context, obj *model.Game, original model.OriginalVideo) (string, error) {
 	return r.gatewayResolver.Game().Video(ctx, obj, original)
 }
 
@@ -37,7 +37,7 @@ func (r *searchItemResolver) Thumbnail(ctx context.Context, obj *model.SearchIte
 }
 
 // Video is the resolver for the video field.
-func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original *model.OriginalVideo) (string, error) {
+func (r *searchItemResolver) Video(ctx context.Context, obj *model.SearchItem, original model.OriginalVideo) (string, error) {
 	return r.gatewayResolver.SearchItem().Video(ctx, obj, original)
 }
 
