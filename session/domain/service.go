@@ -2,8 +2,8 @@ package domain
 
 import (
 	"context"
-	"time"
 	"fmt"
+	"time"
 
 	"github.com/vediagames/zeroerror"
 )
@@ -43,7 +43,7 @@ type CreateResponse struct {
 func (r CreateResponse) Validate() error {
 	var err zeroerror.Error
 
-	err.AddIf(r.Session.ID != "", ErrEmptyID)
+	err.AddIf(r.Session.ID == "", ErrEmptyID)
 	err.AddIf(r.Session.CreatedAt.IsZero(), ErrInvalidCreatedAt)
 	err.AddIf(r.Session.InsertedAt.IsZero(), ErrInvalidInsertedAt)
 

@@ -54,7 +54,7 @@ type processor struct {
 }
 
 func (p processor) Process(ctx context.Context, req domain.ProcessRequest) (domain.ProcessResponse, error) {
-	reqImageURL := fmt.Sprintf("stretch/%dx%d/filters:format(%s)/%s",
+	reqImageURL := fmt.Sprintf("fit-in/%dx%d/filters:format(%s)/%s",
 		req.Image.Width,
 		req.Image.Height,
 		req.Image.Format,

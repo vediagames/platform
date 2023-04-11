@@ -27,4 +27,5 @@ const (
 	ErrNoData                 = Error("no data")
 	ErrInvalidPlacement       = Error("invalid placement")
 	ErrPlacementNotInOrder    = Error("placement not in order")
+	ErrInvalidData            = Error("invalid data")
 )

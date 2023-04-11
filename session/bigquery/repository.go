@@ -46,25 +46,30 @@ func New(cfg Config) domain.Repository {
 	}
 }
 
+type session struct {
+	ID         string    `bigquery:"id"`
+	IP         string    `bigquery:"ip"`
+	PageURL    string    `bigquery:"page_url"`
+	Device     string    `bigquery:"device"`
+	CreatedAt  time.Time `bigquery:"created_at"`
+	InsertedAt time.Time `bigquery:"inserted_at"`
+	Metadata   string    `bigquery:"metadata"`
+}
+
 func (r repository) Insert(ctx context.Context, req domain.InsertQuery) (domain.InsertResult, error) {
 	var (
 		sessionID  = uuid.NewString()
 		insertedAt = time.Now()
-		values     = []bigquery.Value{
-			sessionID,
-			req.IP,
-			req.PageURL,
-			req.Device,
-			req.CreatedAt.Unix(),
-			insertedAt.Unix(),
-		}
 	)
 
-	err := r.client.
-		Dataset(r.datasetID).
-		Table(r.tableID).
-		Inserter().
-		Put(ctx, values)
+	err := r.client.Dataset(r.datasetID).Table(r.tableID).Inserter().Put(ctx, session{
+		ID:         sessionID,
+		IP:         req.IP.String(),
+		PageURL:    req.PageURL,
+		Device:     req.Device.String(),
+		CreatedAt:  req.CreatedAt,
+		InsertedAt: insertedAt,
+	})
 	if err != nil {
 		return domain.InsertResult{}, fmt.Errorf("failed to put: %w", err)
 	}

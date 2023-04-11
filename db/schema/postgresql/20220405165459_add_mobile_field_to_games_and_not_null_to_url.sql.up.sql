@@ -1,10 +1,8 @@
 DROP MATERIALIZED VIEW mat_games_view;
 DROP VIEW games_view;
 
-ALTER TABLE "games"
-    ADD COLUMN mobile BOOLEAN NOT NULL DEFAULT false;
-
-ALTER TABLE "games"
+ALTER TABLE games
+    ADD COLUMN mobile BOOLEAN NOT NULL DEFAULT false,
     ALTER COLUMN url SET NOT NULL;
 
 CREATE MATERIALIZED VIEW mat_games_view AS
@@ -42,7 +40,6 @@ GROUP BY games.id, al.code, games.slug, games.status, games.created_at, games.de
          games.likes, gtxt.player_1_controls, gtxt.player_2_controls, games.dislikes, games.plays, games.weight,
          gtxt.name, gtxt.short_description, gtxt.description, gtxt.content, games.url, games.width, games.height,
          games.mobile;
-
 
 CREATE VIEW games_view AS
 SELECT games.id,

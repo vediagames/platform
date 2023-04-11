@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"context"
 	"database/sql"
-	"encoding/json"
 	"fmt"
 	"strings"
 	"text/template"
@@ -69,54 +68,11 @@ type game struct {
 	Content          sql.NullString `db:"content"`
 	Player1Controls  sql.NullString `db:"player_1_controls"`
 	Player2Controls  sql.NullString `db:"player_2_controls"`
-	Tags             sql.NullString `db:"tags"`
-	Categories       sql.NullString `db:"categories"`
-}
-
-type complimentaryCategory struct {
-	ID          int    `db:"id"`
-	Slug        string `db:"slug"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
-}
-
-type complimentaryTag struct {
-	ID          int    `db:"id"`
-	Slug        string `db:"slug"`
-	Name        string `db:"name"`
-	Description string `db:"description"`
+	TagIDRefs        pq.Int32Array  `db:"tag_id_refs"`
+	CategoryIDRefs   pq.Int32Array  `db:"category_id_refs"`
 }
 
 func (g game) toDomain(ctx context.Context) (domain.Game, error) {
-	var (
-		categories       []complimentaryCategory
-		tags             []complimentaryTag
-		domainCategories []domain.ComplimentaryCategory
-		domainTags       []domain.ComplimentaryTag
-	)
-
-	if g.Categories.Valid {
-		err := json.Unmarshal([]byte(g.Categories.String), &categories)
-		if err != nil {
-			return domain.Game{}, fmt.Errorf("failed to unmarshal categories: %v", err)
-		}
-
-		for _, c := range categories {
-			domainCategories = append(domainCategories, domain.ComplimentaryCategory(c))
-		}
-	}
-
-	if g.Tags.Valid {
-		err := json.Unmarshal([]byte(g.Tags.String), &tags)
-		if err != nil {
-			return domain.Game{}, fmt.Errorf("failed to unmarshal tags: %v", err)
-		}
-
-		for _, c := range tags {
-			domainTags = append(domainTags, domain.ComplimentaryTag(c))
-		}
-	}
-
 	return domain.Game{
 		ID:               g.ID,
 		Language:         domain.Language(g.LanguageCode),
@@ -138,10 +94,18 @@ func (g game) toDomain(ctx context.Context) (domain.Game, error) {
 		Content:          g.Content.String,
 		Player1Controls:  g.Player1Controls.String,
 		Player2Controls:  g.Player2Controls.String,
-		Tags:             domainTags,
-		Categories:       domainCategories,
+		TagIDRefs:        pqInt32ArrayToIntSlice(g.TagIDRefs),
+		CategoryIDRefs:   pqInt32ArrayToIntSlice(g.CategoryIDRefs),
 		Mobile:           g.Mobile,
 	}, nil
+}
+
+func pqInt32ArrayToIntSlice(pqArray pq.Int32Array) []int {
+	intSlice := make([]int, len(pqArray))
+	for i, pqInt := range pqArray {
+		intSlice[i] = int(pqInt)
+	}
+	return intSlice
 }
 
 var orderByOptions = map[domain.SortingMethod]string{
@@ -159,142 +123,91 @@ var orderByOptions = map[domain.SortingMethod]string{
 }
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	var sqlRes []gameWithTotalCount
-
-	val, shouldOrderBy := orderByOptions[q.Sort]
-
-	tq := templateQuery{
-		"ShouldOrderBy":        shouldOrderBy,
-		"OrderBy":              val,
-		"AllowDeleted":         q.AllowDeleted,
-		"AllowInvisible":       q.AllowInvisible,
-		"CreateDateLimit":      q.CreateDateLimit,
-		"ShouldExcludeGameIDs": len(q.ExcludedGameIDs) > 0,
-		"MobileOnly":           q.MobileOnly,
-		"ShouldApplyFilters":   false,
-	}
-
-	var filters []string
-	if len(q.Categories) > 0 {
-		tq["ShouldFilterByCategories"] = true
-		filters = append(filters, "gc.category_id IN (:categories)")
-	}
-	if len(q.Tags) > 0 {
-		tq["ShouldFilterByTags"] = true
-		filters = append(filters, "gt.tag_id IN (:tags)")
-	}
-	if len(q.IDs) > 0 {
-		tq["ShouldFilterByIDs"] = true
-		filters = append(filters, "id IN (:ids)")
-	}
-
-	if len(filters) > 0 {
-		tq["ShouldApplyFilters"] = true
-		tq["SQLFilters"] = fmt.Sprintf("AND (%s)", strings.Join(filters, " OR "))
-	}
+	val := orderByOptions[q.Sort]
 
 	sqlQuery, err := templateToSQL(
 		"find_game",
-		tq,
+		templateQuery{
+			"OrderBy":                val,
+			"FilterByCategoryIDRefs": len(q.CategoryIDRefs) > 0,
+			"FilterByTagIDRefs":      len(q.TagIDRefs) > 0,
+			"FilterByIDRefs":         len(q.IDRefs) > 0,
+			"ExcludeByIDRefs":        len(q.ExcludedIDRefs) > 0,
+			"CreateDateLimit":        !q.CreateDateLimit.IsZero(),
+			"AllowDeleted":           q.AllowDeleted,
+			"AllowInvisible":         q.AllowInvisible,
+			"MobileOnly":             q.MobileOnly,
+		},
 		`
-		SELECT
-		    gv.id,
-		    language_code,
-		    slug,
-		    name,
-		    short_description,
-		    description,
-		    categories,
-		    tags,
-		    plays,
-		    created_at,
-		    mobile,
-		    gv.status,
-		    gv.deleted_at,
-		    gv.published_at,
-		    gv.url,
-		    gv.width,
-		    gv.height,
-		    gv.likes,
-		    gv.dislikes,
-		    gv.weight,
-		    gv.content,
-		    gv.player_1_controls,
-		    gv.player_2_controls,
-			COUNT(*) OVER() AS total_count
-		FROM mat_games_view gv
-			{{ if .ShouldFilterByCategories }}
-			LEFT JOIN game_categories gc on gc.game_id = gv.id
-			{{ end }}
-			{{ if .ShouldFilterByTags }}
-			LEFT JOIN game_tags gt on gt.game_id = gv.id
-			{{ end }}
-		WHERE language_code = :language_code
-		{{ if .ShouldApplyFilters }}
-			{{ .SQLFilters }}
-		{{ end }}
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND status != 'invisible'
-		{{ end }}
-		{{ if not .CreateDateLimit.IsZero }}
-			AND created_at > :create_date_limit
-		{{ end }}
-		{{ if .ShouldExcludeGameIDs }}
-			AND id NOT IN (:excluded_game_ids)
-		{{ end }}
-		{{ if .MobileOnly }}
-			AND mobile = true
-		{{ end }}
-		GROUP BY gv.id,
-		    language_code,
-		    slug,
-		    name,
-		    short_description,
-		    description,
-		    categories,
-		    tags,
-		    plays,
-		    created_at,
-		    mobile,
-		    gv.status,
-		    gv.deleted_at,
-		    gv.published_at,
-		    gv.url,
-		    gv.width,
-		    gv.height,
-		    gv.likes,
-		    gv.dislikes,
-		    gv.weight,
-		    gv.content,
-		    gv.player_1_controls,
-		    gv.player_2_controls
-		{{ if .ShouldOrderBy }}
-		ORDER BY {{ .OrderBy }}
-		{{ end }}
-		LIMIT :limit
-		OFFSET :offset;
+				SELECT
+					id,
+					language_code,
+					slug,
+					name,
+					short_description,
+					description,
+					plays,
+					created_at,
+					mobile,
+					status,
+					deleted_at,
+					published_at,
+					url,
+					width,
+					height,
+					likes,
+					dislikes,
+					weight,
+					content,
+					player_1_controls,
+					player_2_controls,
+					tag_id_refs,
+					category_id_refs,
+					COUNT(*) OVER() AS total_count
+				FROM public.games_view
+				WHERE language_code = :language_code
+				{{ if .FilterByCategoryIDRefs }}
+					AND category_id_refs && CAST(:category_id_refs AS INTEGER[])
+				{{ end }}
+				{{ if .FilterByTagIDRefs }}
+    				AND tag_id_refs && CAST(:tag_id_refs AS INTEGER[])
+				{{ end }}
+				{{ if .FilterByIDRefs }}
+					AND id IN (:id_refs)
+				{{ end }}
+				{{ if .ExcludeByIDRefs }}
+					AND id NOT IN (:excluded_id_refs)
+				{{ end }}
+				{{ if .CreateDateLimit }}
+					AND created_at > :create_date_limit
+				{{ end }}
+				{{ if not .AllowDeleted }}
+					AND status != 'deleted'
+				{{ end }}
+				{{ if not .AllowInvisible }}
+					AND status != 'invisible'
+				{{ end }}
+				{{ if .MobileOnly }}
+					AND mobile = true
+				{{ end }}
+				ORDER BY {{ .OrderBy }}
+				LIMIT :limit
+				OFFSET :offset;
 	`)
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to template sql: %v", err)
 	}
 
-	offset := (q.Page - 1) * q.Limit
-
-	params := map[string]interface{}{
+	query, args, err := sqlx.Named(sqlQuery, map[string]interface{}{
 		"language_code":     q.Language.String(),
 		"limit":             q.Limit,
-		"offset":            offset,
-		"categories":        q.Categories,
+		"offset":            (q.Page - 1) * q.Limit,
+		"category_id_refs":  pq.Array(q.CategoryIDRefs),
+		"tag_id_refs":       pq.Array(q.TagIDRefs),
+		"id_refs":           q.IDRefs,
+		"excluded_id_refs":  q.ExcludedIDRefs,
 		"create_date_limit": q.CreateDateLimit,
-		"ids":               q.IDs,
-		"tags":              q.Tags,
-		"excluded_game_ids": q.ExcludedGameIDs,
-	}
-
-	query, args, err := sqlx.Named(sqlQuery, params)
+	})
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
 	}
@@ -306,17 +219,21 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 
 	query = r.db.Rebind(query)
 
+	var sqlRes []gameWithTotalCount
+
 	if err := r.db.Select(&sqlRes, query, args...); err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to select %w", err)
 	}
 
 	res := domain.FindResult{
-		Data:  make([]domain.Game, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Games{
+			Data:  make([]domain.Game, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 	}
 
 	for i, g := range sqlRes {
@@ -325,7 +242,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 			return domain.FindResult{}, fmt.Errorf("failed to convert to domain: %w at index %d", err, i)
 		}
 
-		res.Data = append(res.Data, gg)
+		res.Data.Data = append(res.Data.Data, gg)
 	}
 
 	return res, nil
@@ -345,7 +262,31 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		SELECT * FROM mat_games_view
+		SELECT
+		    id,
+		    language_code,
+		    slug,
+		    name,
+		    status,
+		    created_at,
+		    deleted_at,
+		    published_at,
+		    url,
+		    width,
+		    height,
+		    likes,
+		    dislikes,
+		    plays,
+		    weight,
+		    mobile,
+		    short_description,
+		    description,
+		    content,
+		    player_1_controls,
+		    player_2_controls,
+		    tag_id_refs,
+		    category_id_refs
+		FROM public.games_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 
@@ -380,7 +321,7 @@ func (r repository) IncreaseField(ctx context.Context, q domain.IncreaseFieldQue
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		UPDATE games
+		UPDATE public.games
 		SET %s = %s + $1
 		WHERE id = $2;
 	`, val, val)
@@ -429,7 +370,7 @@ type templateQuery map[string]any
 
 type searchResult []gameWithTotalCount
 
-func (r *searchResult) RemoveDuplicates(ctx context.Context) {
+func (r *searchResult) removeDuplicates(ctx context.Context) {
 	gameMap := make(map[int]gameWithTotalCount)
 
 	for _, g := range *r {
@@ -444,8 +385,10 @@ func (r *searchResult) RemoveDuplicates(ctx context.Context) {
 }
 
 type searchQuery struct {
-	query    string
-	language string
+	query          string
+	language       string
+	allowDeleted   bool
+	allowInvisible bool
 }
 
 func (r repository) search(ctx context.Context, q searchQuery) (searchResult, error) {
@@ -453,19 +396,46 @@ func (r repository) search(ctx context.Context, q searchQuery) (searchResult, er
 
 	sqlQuery, err := templateToSQL(
 		"search_game",
-		templateQuery{},
+		templateQuery{
+			"AllowDeleted":   q.allowDeleted,
+			"AllowInvisible": q.allowInvisible,
+		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_games_view
-		WHERE LOWER(name) LIKE $1
-			AND language_code = $2
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND status != 'invisible'
-		{{ end }}
-		ORDER BY (length(name) - levenshtein($1,name)) DESC;
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				status,
+				created_at,
+				deleted_at,
+				published_at,
+				url,
+				width,
+				height,
+				likes,
+				dislikes,
+				plays,
+				weight,
+				mobile,
+				short_description,
+				description,
+				content,
+				player_1_controls,
+				player_2_controls,
+				tag_id_refs,
+				category_id_refs,
+				COUNT(*) OVER() AS total_count
+			FROM public.games_view
+			WHERE LOWER(name) LIKE $1
+				AND language_code = $2
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND status != 'invisible'
+			{{ end }}
+			ORDER BY (length(name) - levenshtein($1,name)) DESC;
 	`)
 	if err != nil {
 		return searchResult{}, fmt.Errorf("failed to template sql: %v", err)
@@ -500,15 +470,17 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 		sqlRes = append(sqlRes, sqlResSecond...)
 	}
 
-	sqlRes.RemoveDuplicates(ctx)
+	sqlRes.removeDuplicates(ctx)
 
 	res := domain.SearchResult{
-		Data:  make([]domain.Game, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Games{
+			Data:  make([]domain.Game, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[len(sqlRes)-1].TotalCount
+		res.Data.Total = sqlRes[len(sqlRes)-1].TotalCount
 	}
 
 	if len(sqlRes) > q.Max {
@@ -521,7 +493,7 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 			return domain.SearchResult{}, fmt.Errorf("failed to convert to domain: %w at index %d", err, i)
 		}
 
-		res.Data = append(res.Data, gg)
+		res.Data.Data = append(res.Data.Data, gg)
 	}
 
 	return res, nil
@@ -546,20 +518,44 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 			"AllowInvisible": q.AllowInvisible,
 		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_games_view
-		WHERE (to_tsvector(name || ' ' || short_description || ' ' || description || '' || content) @@ plainto_tsquery($1) OR LOWER(name) LIKE $2)
-			AND language_code = $3
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND status != 'invisible'
-		{{ end }}
-		{{- if .ShouldOrderBy }}
-		ORDER BY {{ .OrderBy }}
-		{{ end -}}
-		LIMIT $4 OFFSET $5
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				status,
+				created_at,
+				deleted_at,
+				published_at,
+				url,
+				width,
+				height,
+				likes,
+				dislikes,
+				plays,
+				weight,
+				mobile,
+				short_description,
+				description,
+				content,
+				player_1_controls,
+				player_2_controls,
+				tag_id_refs,
+				category_id_refs,
+				COUNT(*) OVER() AS total_count
+			FROM public.games_view
+			WHERE (to_tsvector(name || ' ' || short_description || ' ' || description || '' || content) @@ plainto_tsquery($1) OR LOWER(name) LIKE $2)
+				AND language_code = $3
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND status != 'invisible'
+			{{ end }}
+			{{- if .ShouldOrderBy }}
+			ORDER BY {{ .OrderBy }}
+			{{ end -}}
+			LIMIT $4 OFFSET $5
 	`)
 	if err != nil {
 		return domain.FullSearchResult{}, fmt.Errorf("failed to template sql: %v", err)
@@ -581,12 +577,14 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 	}
 
 	res := domain.FullSearchResult{
-		Data:  make([]domain.Game, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Games{
+			Data:  make([]domain.Game, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 	}
 
 	for i, g := range sqlRes {
@@ -595,8 +593,58 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 			return domain.FullSearchResult{}, fmt.Errorf("failed to convert to domain: %w at index %d", err, i)
 		}
 
-		res.Data = append(res.Data, gg)
+		res.Data.Data = append(res.Data.Data, gg)
 	}
 
 	return res, nil
+}
+
+func (r repository) FindMostPlayedIDsByDate(ctx context.Context, q domain.FindMostPlayedIDsByDateQuery) (domain.FindMostPlayedIDsByDateResult, error) {
+	var sqlRes []struct {
+		ID    int `db:"game_id"`
+		Plays int `db:"plays"`
+	}
+
+	sqlQuery, err := templateToSQL(
+		"find_most_played_ids_by_date",
+		templateQuery{
+			"AllowDeleted":   q.AllowDeleted,
+			"AllowInvisible": q.AllowInvisible,
+		},
+		`
+			SELECT
+				game_id,
+				count(*) as plays
+			FROM public.game_play_events
+				LEFT JOIN games g on g.id = game_id
+			WHERE date > $1
+			{{ if not .AllowDeleted }}
+				AND g.status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND g.status != 'invisible'
+			{{ end }}
+			GROUP BY game_id
+			ORDER BY plays DESC
+			LIMIT $2 OFFSET $3;
+	`)
+	if err != nil {
+		return domain.FindMostPlayedIDsByDateResult{}, fmt.Errorf("failed to build sql query: %w", err)
+	}
+
+	offset := (q.Page - 1) * q.Limit
+
+	if err := r.db.Select(&sqlRes, sqlQuery, q.DateLimit.UTC(), q.Limit, offset); err != nil {
+		return domain.FindMostPlayedIDsByDateResult{}, fmt.Errorf("failed to select: %w", err)
+	}
+
+	ids := make([]int, 0, len(sqlRes))
+
+	for _, g := range sqlRes {
+		ids = append(ids, g.ID)
+	}
+
+	return domain.FindMostPlayedIDsByDateResult{
+		Data: ids,
+	}, nil
 }

@@ -1,4 +1,4 @@
-package domain
+package graphql
 
 var CategoryPageLayouts = map[string][]string{
 	"shooting": {

@@ -1,0 +1,44 @@
+[
+  {
+    "name": "id",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Session ID"
+  },
+  {
+    "name": "ip",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "IP of the client"
+  },
+  {
+    "name": "page_url",
+    "type": "STRING",
+    "mode": "required",
+    "description": "Page on which session was created"
+  },
+  {
+    "name": "device",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Device on which session was created"
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Client timestamp when session was created"
+  },
+  {
+    "name": "inserted_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Timestamp when session was inserted"
+  },
+  {
+    "name": "metadata",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "Payload metadata"
+  }
+]

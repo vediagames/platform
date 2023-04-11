@@ -9,7 +9,7 @@ import (
 
 	"github.com/vediagames/platform/bucket/bunny"
 	"github.com/vediagames/platform/image/domain"
-	"github.com/vediagames/platform/image/processor/imagor"
+	"github.com/vediagames/platform/image/imagor"
 )
 
 func TestService_Get(t *testing.T) {
@@ -51,8 +51,7 @@ func TestService_Get(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	fmt.Println(get.URL)
-
+	fmt.Println(get)
 }
 
 func Test_imagePath(t *testing.T) {

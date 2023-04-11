@@ -21,7 +21,6 @@ import (
 
 	authdomain "github.com/vediagames/platform/auth/domain"
 	authservice "github.com/vediagames/platform/auth/service"
-	"github.com/vediagames/platform/bff/graphql"
 	"github.com/vediagames/platform/bucket/bunny"
 	categorypostgresql "github.com/vediagames/platform/category/postgresql"
 	categoryservice "github.com/vediagames/platform/category/service"
@@ -32,6 +31,9 @@ import (
 	"github.com/vediagames/platform/fetcher/gamemonetize"
 	gamepostgresql "github.com/vediagames/platform/game/postgresql"
 	gameservice "github.com/vediagames/platform/game/service"
+	gatewaygraphql "github.com/vediagames/platform/gateway/graphql"
+	"github.com/vediagames/platform/image/imagor"
+	imageservice "github.com/vediagames/platform/image/service"
 	"github.com/vediagames/platform/notification/sendinblue"
 	searchservice "github.com/vediagames/platform/search/service"
 	sectionpostgresql "github.com/vediagames/platform/section/postgresql"
@@ -43,11 +45,8 @@ import (
 	sessionservice "github.com/vediagames/platform/session/service"
 	tagpostgresql "github.com/vediagames/platform/tag/postgresql"
 	tagservice "github.com/vediagames/platform/tag/service"
-)
-
-const (
-	tableID   = "tableID"
-	datasetID = "datasetID"
+	"github.com/vediagames/platform/webproxy"
+	vediagamesgraphql "github.com/vediagames/platform/webproxy/graphql"
 )
 
 func ServerCmd() *cobra.Command {
@@ -72,10 +71,7 @@ func startServer(ctx context.Context) error {
 		Repository: gamepostgresql.New(gamepostgresql.Config{
 			DB: db,
 		}),
-		StatsRepository: gamepostgresql.NewStatsRepository(gamepostgresql.Config{
-			DB: db,
-		}),
-		EventRepository: gamepostgresql.NewEventRepository(gamepostgresql.Config{
+		EventRepository: gamepostgresql.NewEvent(gamepostgresql.Config{
 			DB: db,
 		}),
 	})
@@ -90,7 +86,7 @@ func startServer(ctx context.Context) error {
 		Repository: sectionpostgresql.New(sectionpostgresql.Config{
 			DB: db,
 		}),
-		WebsitePlacementRepository: sectionpostgresql.NewWebsitePlacementRepository(sectionpostgresql.Config{
+		PlacedRepository: sectionpostgresql.NewPlaced(sectionpostgresql.Config{
 			DB: db,
 		}),
 	})
@@ -118,8 +114,8 @@ func startServer(ctx context.Context) error {
 	sessionService := sessionservice.New(sessionservice.Config{
 		Repository: sessionbigquery.New(sessionbigquery.Config{
 			Client:    client,
-			TableID:   tableID,
-			DatasetID: datasetID,
+			TableID:   "sessions",
+			DatasetID: "vediagames",
 		}),
 	})
 
@@ -146,7 +142,24 @@ func startServer(ctx context.Context) error {
 		},
 	})
 
-	cache := graphql.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
+	imageProcessor := imagor.New(imagor.Config{
+		URL:    cfg.Imagor.URL,
+		Secret: cfg.Imagor.Secret,
+		Client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
+		BucketClient: bucketClient,
+	})
+
+	imageService := imageservice.New(imageservice.Config{
+		URL:       "https://content.vediagames.com",
+		Processor: imageProcessor,
+		Client: &http.Client{
+			Timeout: 30 * time.Second,
+		},
+	})
+
+	cache := webproxy.NewCache(ctx, cfg.RedisAddress, 24*time.Hour)
 
 	c := ory.NewConfiguration()
 	c.Servers = ory.ServerConfigurations{
@@ -159,7 +172,7 @@ func startServer(ctx context.Context) error {
 		Client: ory.NewAPIClient(c),
 	})
 
-	resolver := graphql.NewResolver(graphql.Config{
+	gatewayResolver := gatewaygraphql.NewResolver(gatewaygraphql.Config{
 		GameService:     gameService,
 		CategoryService: categoryService,
 		SectionService:  sectionService,
@@ -169,20 +182,33 @@ func startServer(ctx context.Context) error {
 		BucketClient:    bucketClient,
 		FetcherClient:   fetcherClient,
 		AuthService:     authService,
+		ImageService:    imageService,
 	})
 
-	gqlHandler := handler.New(graphql.NewSchema(&resolver))
-	gqlHandler.AddTransport(transport.Websocket{
+	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))
+	gatewayHandler.AddTransport(transport.Websocket{
 		KeepAlivePingInterval: 10 * time.Second,
 	})
-	gqlHandler.AddTransport(transport.Options{})
-	gqlHandler.AddTransport(transport.GET{})
-	gqlHandler.AddTransport(transport.POST{})
-	gqlHandler.AddTransport(transport.MultipartForm{})
-	gqlHandler.Use(extension.Introspection{})
-	gqlHandler.Use(extension.AutomaticPersistedQuery{
+	gatewayHandler.AddTransport(transport.Options{})
+	gatewayHandler.AddTransport(transport.GET{})
+	gatewayHandler.AddTransport(transport.POST{})
+	gatewayHandler.AddTransport(transport.MultipartForm{})
+	gatewayHandler.Use(extension.Introspection{})
+
+	vediagamesResolver := vediagamesgraphql.NewResolver(vediagamesgraphql.Config{
+		GatewayResolver: gatewayResolver,
+	})
+
+	vediagamesHandler := handler.New(vediagamesgraphql.NewSchema(&vediagamesResolver))
+	vediagamesHandler.AddTransport(transport.Options{})
+	vediagamesHandler.AddTransport(transport.GET{})
+	vediagamesHandler.AddTransport(transport.POST{})
+	vediagamesHandler.AddTransport(transport.MultipartForm{})
+	vediagamesHandler.Use(extension.Introspection{})
+	vediagamesHandler.Use(extension.AutomaticPersistedQuery{
 		Cache: cache,
 	})
+	vediagamesHandler.Use(extension.FixedComplexityLimit(290))
 
 	httpCors := cors.New(cors.Options{
 		AllowedOrigins:   cfg.CORS.AllowedOrigins,
@@ -196,9 +222,10 @@ func startServer(ctx context.Context) error {
 
 	router.Use(httpCors.Handler)
 	router.Use(loggerMiddleware(&logger))
-	router.Use(authMiddleware(authService))
+	//router.Use(authMiddleware(authService))
 
-	router.Handle("/graph", gqlHandler)
+	router.Handle("/gateway/graph", gatewayHandler)
+	router.Handle("/vediagames/graph", vediagamesHandler)
 	router.Handle("/session/new", createSessionHandler(sessionService))
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
@@ -266,6 +293,7 @@ func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
 				next.ServeHTTP(w, r)
 				return
 			}
+
 			next.ServeHTTP(w, r.WithContext(
 				s.ToContext(r.Context(), res.User),
 			))
@@ -298,6 +326,7 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
 		}
+
 		createdAt, err := time.Parse(time.RFC3339, req.CreatedAt)
 		if err != nil {
 			zerolog.Ctx(r.Context()).Error().Msgf("failed to parse: %s", err)

@@ -7,6 +7,27 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
+type Tags struct {
+	Data  []Tag
+	Total int
+}
+
+func (t Tags) Validate() error {
+	var err zeroerror.Error
+
+	for _, tag := range t.Data {
+		if ve := tag.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%s: %w", ErrInvalidTag, ve))
+		}
+	}
+
+	if t.Total < 0 {
+		err.Add(ErrInvalidTotal)
+	}
+
+	return err.Err()
+}
+
 type Tag struct {
 	ID               int
 	Language         Language
@@ -155,3 +176,17 @@ func (f IncreasableField) Validate() error {
 const (
 	IncreasableFieldClicks IncreasableField = "clicks"
 )
+
+type IDs []int
+
+func (ids IDs) Validate() error {
+	var err zeroerror.Error
+
+	for i, id := range ids {
+		if id < 0 {
+			err.Add(fmt.Errorf("%w at index: %d", ErrInvalidID, i))
+		}
+	}
+
+	return err.Err()
+}

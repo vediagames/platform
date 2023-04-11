@@ -90,8 +90,6 @@ var orderByOptions = map[domain.SortingMethod]string{
 }
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	var sqlRes []tagWithTotalCount
-
 	val, shouldOrderBy := orderByOptions[q.Sort]
 	if !shouldOrderBy {
 		zerolog.Ctx(ctx).Warn().Str("sort", q.Sort.String()).Msg("unsupported sorting method")
@@ -102,44 +100,81 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		templateQuery{
 			"AllowDeleted":   q.AllowDeleted,
 			"AllowInvisible": q.AllowInvisible,
+			"FilterByIDRefs": len(q.IDRefs) > 0,
 			"ShouldOrderBy":  shouldOrderBy,
 			"OrderBy":        val,
 		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_tags_view
-		WHERE language_code = $1
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND  status != 'invisible'
-		{{ end }}
-		{{ if .ShouldOrderBy }}
-		ORDER BY {{ .OrderBy }}
-		{{ end }}
-		LIMIT $2 OFFSET $3
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				short_description,
+				description,
+				content,
+				status,
+				clicks,
+				created_at,
+				deleted_at,
+				published_at,
+				COUNT(*) OVER() AS total_count
+			FROM public.tags_view
+			WHERE language_code = :language_code
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND  status != 'invisible'
+			{{ end }}
+			{{ if .FilterByIDRefs }}
+				AND id IN (:id_refs)
+			{{ end }}
+			{{ if .ShouldOrderBy }}
+			ORDER BY {{ .OrderBy }}
+			{{ end }}
+			LIMIT :limit
+			OFFSET :offset;
 	`)
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to create SQL from template: %w", err)
 	}
 
-	offset := (q.Page - 1) * q.Limit
+	query, args, err := sqlx.Named(sqlQuery, map[string]interface{}{
+		"language_code": q.Language.String(),
+		"limit":         q.Limit,
+		"offset":        (q.Page - 1) * q.Limit,
+		"id_refs":       q.IDRefs,
+	})
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
+	}
 
-	if err := r.db.Select(&sqlRes, sqlQuery, q.Language.String(), q.Limit, offset); err != nil {
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to expand %w", err)
+	}
+
+	query = r.db.Rebind(query)
+
+	var sqlRes []tagWithTotalCount
+
+	if err := r.db.Select(&sqlRes, query, args...); err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to select: %w", err)
 	}
 
 	res := domain.FindResult{
-		Data:  make([]domain.Tag, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Tags{
+			Data:  make([]domain.Tag, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 
 		for _, tag := range sqlRes {
-			res.Data = append(res.Data, tag.toDomain())
+			res.Data.Data = append(res.Data.Data, tag.toDomain())
 		}
 	}
 
@@ -160,7 +195,20 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		SELECT * FROM mat_tags_view
+		SELECT
+		    id,
+			language_code,
+			slug,
+			name,
+			short_description,
+			description,
+			content,
+			status,
+			clicks,
+			created_at,
+			deleted_at,
+			published_at
+		FROM public.tags_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 
@@ -188,7 +236,7 @@ func (r repository) IncreaseField(ctx context.Context, q domain.IncreaseFieldQue
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		UPDATE tags
+		UPDATE public.tags
 		SET %s = %s + $1
 		WHERE id = $2;
 	`, val, val)
@@ -252,8 +300,10 @@ func (r *searchResult) RemoveDuplicates(ctx context.Context) {
 }
 
 type searchQuery struct {
-	query    string
-	language string
+	query          string
+	language       string
+	allowDeleted   bool
+	allowInvisible bool
 }
 
 func (r repository) search(ctx context.Context, q searchQuery) (searchResult, error) {
@@ -261,19 +311,35 @@ func (r repository) search(ctx context.Context, q searchQuery) (searchResult, er
 
 	sqlQuery, err := templateToSQL(
 		"search_tag",
-		templateQuery{},
+		templateQuery{
+			"AllowDeleted":   q.allowDeleted,
+			"AllowInvisible": q.allowInvisible,
+		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_tags_view
-		WHERE LOWER(name) LIKE $1
-			AND language_code = $2
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND status != 'invisible'
-		{{ end }}
-		ORDER BY (length(name) - levenshtein($1,name)) DESC;
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				short_description,
+				description,
+				content,
+				status,
+				clicks,
+				created_at,
+				deleted_at,
+				published_at,
+				COUNT(*) OVER() AS total_count
+			FROM public.tags_view
+			WHERE LOWER(name) LIKE $1
+				AND language_code = $2
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND status != 'invisible'
+			{{ end }}
+			ORDER BY (length(name) - levenshtein($1,name)) DESC;
 	`)
 	if err != nil {
 		return searchResult{}, fmt.Errorf("failed to template sql: %v", err)
@@ -288,8 +354,10 @@ func (r repository) search(ctx context.Context, q searchQuery) (searchResult, er
 }
 func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.SearchResult, error) {
 	sqlRes, err := r.search(ctx, searchQuery{
-		query:    q.Query + "%",
-		language: q.Language.String(),
+		query:          q.Query + "%",
+		language:       q.Language.String(),
+		allowDeleted:   q.AllowDeleted,
+		allowInvisible: q.AllowInvisible,
 	})
 	if err != nil {
 		return domain.SearchResult{}, fmt.Errorf("failed to perform first search: %w", err)
@@ -310,12 +378,14 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 	sqlRes.RemoveDuplicates(ctx)
 
 	res := domain.SearchResult{
-		Data:  make([]domain.Tag, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Tags{
+			Data:  make([]domain.Tag, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[len(sqlRes)-1].TotalCount
+		res.Data.Total = sqlRes[len(sqlRes)-1].TotalCount
 	}
 
 	if len(sqlRes) > q.Max {
@@ -323,7 +393,7 @@ func (r repository) Search(ctx context.Context, q domain.SearchQuery) (domain.Se
 	}
 
 	for _, t := range sqlRes {
-		res.Data = append(res.Data, t.toDomain())
+		res.Data.Data = append(res.Data.Data, t.toDomain())
 	}
 
 	return res, nil
@@ -348,20 +418,33 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 			"AllowInvisible": q.AllowInvisible,
 		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_tags_view
-		WHERE (to_tsvector(name || ' ' || short_description || ' ' || description || '' || content) @@ plainto_tsquery($1) OR LOWER(name) LIKE $2)
-			AND language_code = $3
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND status != 'invisible'
-		{{ end }}
-		{{- if .ShouldOrderBy }}
-		ORDER BY {{ .OrderBy }}
-		{{ end -}}
-		LIMIT $4 OFFSET $5
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				short_description,
+				description,
+				content,
+				status,
+				clicks,
+				created_at,
+				deleted_at,
+				published_at,
+				COUNT(*) OVER() AS total_count
+			FROM public.tags_view
+			WHERE (to_tsvector(name || ' ' || short_description || ' ' || description || '' || content) @@ plainto_tsquery($1) OR LOWER(name) LIKE $2)
+				AND language_code = $3
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND status != 'invisible'
+			{{ end }}
+			{{- if .ShouldOrderBy }}
+			ORDER BY {{ .OrderBy }}
+			{{ end -}}
+			LIMIT $4 OFFSET $5
 	`)
 	if err != nil {
 		return domain.FullSearchResult{}, fmt.Errorf("failed to template sql: %v", err)
@@ -383,16 +466,18 @@ func (r repository) FullSearch(ctx context.Context, q domain.FullSearchQuery) (d
 	}
 
 	res := domain.FullSearchResult{
-		Data:  make([]domain.Tag, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Tags{
+			Data:  make([]domain.Tag, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 	}
 
 	for _, tag := range sqlRes {
-		res.Data = append(res.Data, tag.toDomain())
+		res.Data.Data = append(res.Data.Data, tag.toDomain())
 	}
 
 	return res, nil

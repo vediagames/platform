@@ -1,10 +1,9 @@
 DROP MATERIALIZED VIEW mat_games_view;
 DROP VIEW games_view;
 
-ALTER TABLE "game_texts"
+ALTER TABLE game_texts
     ADD COLUMN player_1_controls varchar,
     ADD COLUMN player_2_controls varchar;
-
 
 CREATE MATERIALIZED VIEW mat_games_view AS
 SELECT games.id,

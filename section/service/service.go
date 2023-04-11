@@ -10,22 +10,22 @@ import (
 )
 
 type Config struct {
-	Repository                 domain.Repository
-	WebsitePlacementRepository domain.WebsitePlacementRepository
+	Repository       domain.Repository
+	PlacedRepository domain.PlacedRepository
 }
 
 func (c Config) Validate() error {
 	var err zeroerror.Error
 
 	err.AddIf(c.Repository == nil, fmt.Errorf("empty repository"))
-	err.AddIf(c.WebsitePlacementRepository == nil, fmt.Errorf("empty web placement repository"))
+	err.AddIf(c.PlacedRepository == nil, fmt.Errorf("empty placed repository"))
 
 	return err.Err()
 }
 
 type service struct {
 	repository             domain.Repository
-	webPlacementRepository domain.WebsitePlacementRepository
+	placedRepository domain.PlacedRepository
 }
 
 func New(cfg Config) domain.Service {
@@ -35,7 +35,7 @@ func New(cfg Config) domain.Service {
 
 	return &service{
 		repository:             cfg.Repository,
-		webPlacementRepository: cfg.WebsitePlacementRepository,
+		placedRepository: cfg.PlacedRepository,
 	}
 }
 
@@ -57,17 +57,17 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 	return domain.GetResponse(repoRes), nil
 }
 
-func (s service) GetWebsitePlacements(ctx context.Context, req domain.GetWebsitePlacementsRequest) (domain.GetWebsitePlacementsResponse, error) {
-	repoRes, err := s.webPlacementRepository.Find(ctx, domain.WebsitePlacementFindQuery(req))
+func (s service) GetPlaced(ctx context.Context, req domain.GetPlacedRequest) (domain.GetPlacedResponse, error) {
+	repoRes, err := s.placedRepository.Find(ctx, domain.PlacedFindQuery(req))
 	if err != nil {
-		return domain.GetWebsitePlacementsResponse{}, fmt.Errorf("failed to find website placements: %w", err)
+		return domain.GetPlacedResponse{}, fmt.Errorf("failed to find website placements: %w", err)
 	}
 
-	return domain.GetWebsitePlacementsResponse(repoRes), nil
+	return domain.GetPlacedResponse(repoRes), nil
 }
 
-func (s service) EditWebsitePlacements(ctx context.Context, req domain.EditWebsitePlacementsRequest) error {
-	if err := s.webPlacementRepository.Update(ctx, domain.WebsitePlacementUpdateQuery(req)); err != nil {
+func (s service) EditPlaced(ctx context.Context, req domain.EditPlacedRequest) error {
+	if err := s.placedRepository.Update(ctx, domain.PlacedUpdateQuery(req)); err != nil {
 		return fmt.Errorf("failed to edit website placements: %w", err)
 	}
 

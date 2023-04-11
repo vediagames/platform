@@ -10,7 +10,6 @@ DROP VIEW json_tags_view;
 DROP MATERIALIZED VIEW mat_json_categories_view;
 DROP VIEW json_categories_view;
 
-
 CREATE MATERIALIZED VIEW mat_json_tags_view AS
 SELECT tags.id,
        al.code as language_code,
@@ -23,7 +22,6 @@ SELECT tags.id,
 FROM tags
          LEFT JOIN tag_texts tt on tags.id = tt.tag_id
          LEFT JOIN available_languages al on tt.language_id = al.id;
-
 
 CREATE VIEW json_tags_view AS
 SELECT tags.id,
@@ -38,7 +36,6 @@ FROM tags
          LEFT JOIN tag_texts tt on tags.id = tt.tag_id
          LEFT JOIN available_languages al on tt.language_id = al.id;
 
-
 CREATE MATERIALIZED VIEW mat_json_categories_view AS
 SELECT categories.id,
        al.code as language_code,
@@ -52,7 +49,6 @@ FROM categories
          LEFT JOIN category_texts ct on categories.id = ct.category_id
          LEFT JOIN available_languages al on ct.language_id = al.id;
 
-
 CREATE MATERIALIZED VIEW json_categories_view AS
 SELECT categories.id,
        al.code as language_code,
@@ -65,11 +61,6 @@ SELECT categories.id,
 FROM categories
          LEFT JOIN category_texts ct on categories.id = ct.category_id
          LEFT JOIN available_languages al on ct.language_id = al.id;
-
-
-
-
-
 
 CREATE MATERIALIZED VIEW mat_games_view AS
 SELECT games.id,
@@ -107,10 +98,6 @@ GROUP BY games.id, al.code, games.slug, games.status, games.created_at, games.de
          gtxt.name, gtxt.short_description, gtxt.description, gtxt.content, games.url, games.width, games.height,
          games.mobile;
 
-
-
-
-
 CREATE VIEW games_view AS
 SELECT games.id,
        al.code                                                                  as language_code,
@@ -147,17 +134,6 @@ GROUP BY games.id, al.code, games.slug, games.status, games.created_at, games.de
          gtxt.name, gtxt.short_description, gtxt.description, gtxt.content, games.url, games.width, games.height,
          games.mobile;
 
-
-
-
-
-
-
-
-
-
-
-
 CREATE MATERIALIZED VIEW mat_sections_view AS
 SELECT sections.id,
        al.code                                                                as language_code,
@@ -182,12 +158,6 @@ FROM sections
 GROUP BY sections.id, al.code, sections.slug, sections.status, sections.created_at, sections.deleted_at,
          sections.published_at,
          txt.name, txt.short_description, txt.description, txt.content;
-
-
-
-
-
-
 
 CREATE VIEW sections_view AS
 SELECT sections.id,

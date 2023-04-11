@@ -13,7 +13,7 @@ type eventRepository struct {
 	db *sqlx.DB
 }
 
-func NewEventRepository(cfg Config) domain.EventRepository {
+func NewEvent(cfg Config) domain.EventRepository {
 	if err := cfg.Validate(); err != nil {
 		panic(fmt.Errorf("invalid config: %w", err))
 	}
@@ -22,9 +22,9 @@ func NewEventRepository(cfg Config) domain.EventRepository {
 }
 
 var logEventTables = map[domain.Event]string{
-	domain.EventPlay:    "game_play_events",
-	domain.EventLike:    "game_like_events",
-	domain.EventDislike: "game_dislike_events",
+	domain.EventPlay:    "public.game_play_events",
+	domain.EventLike:    "public.game_like_events",
+	domain.EventDislike: "public.game_dislike_events",
 }
 
 func (r eventRepository) Log(ctx context.Context, q domain.LogQuery) error {
@@ -38,7 +38,7 @@ func (r eventRepository) Log(ctx context.Context, q domain.LogQuery) error {
 		VALUES ($1);
 	`, table)
 
-	res, err := r.db.Exec(sqlQuery, q.GameID)
+	res, err := r.db.Exec(sqlQuery, q.ID)
 	if err != nil {
 		return fmt.Errorf("failed to execute: %w", err)
 	}

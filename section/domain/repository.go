@@ -9,13 +9,13 @@ type Repository interface {
 	FindOne(context.Context, FindOneQuery) (FindOneResult, error)
 }
 
-type WebsitePlacementRepository interface {
-	Find(context.Context, WebsitePlacementFindQuery) (WebsitePlacementFindResult, error)
-	Update(context.Context, WebsitePlacementUpdateQuery) error
+type PlacedRepository interface {
+	Find(context.Context, PlacedFindQuery) (PlacedFindResult, error)
+	Update(context.Context, PlacedUpdateQuery) error
 }
 
-type WebsitePlacementUpdateQuery struct {
-	WebsitePlacements map[Placement]int
+type PlacedUpdateQuery struct {
+	Placements map[Placement]int
 }
 
 type FindQuery struct {
@@ -27,8 +27,7 @@ type FindQuery struct {
 }
 
 type FindResult struct {
-	Data  []Section
-	Total int
+	Data Sections
 }
 
 type FindOneQuery struct {
@@ -41,12 +40,12 @@ type FindOneResult struct {
 	Data Section
 }
 
-type WebsitePlacementFindQuery struct {
+type PlacedFindQuery struct {
 	Language       Language
 	AllowDeleted   bool
 	AllowInvisible bool
 }
 
-type WebsitePlacementFindResult struct {
-	Data []WebsitePlacement
+type PlacedFindResult struct {
+	Data []Placed
 }

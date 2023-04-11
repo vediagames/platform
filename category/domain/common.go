@@ -7,22 +7,22 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
-type Text struct {
-	Name             string
-	Description      string
-	ShortDescription string
-	Content          string
+type Categories struct {
+	Data  []Category
+	Total int
 }
 
-func (t Text) Validate() error {
+func (c Categories) Validate() error {
 	var err zeroerror.Error
 
-	if t.Name == "" {
-		err.Add(ErrEmptyName)
+	for _, category := range c.Data {
+		if ve := category.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidCategory, ve))
+		}
 	}
 
-	if t.Description == "" {
-		err.Add(ErrEmptyDescription)
+	if c.Total < 0 {
+		err.Add(ErrInvalidTotal)
 	}
 
 	return err.Err()
@@ -51,7 +51,7 @@ func (c Category) Validate() error {
 	}
 
 	if ve := c.Language.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
 	}
 
 	if c.Slug == "" {
@@ -67,7 +67,7 @@ func (c Category) Validate() error {
 	}
 
 	if ve := c.Status.Validate(); ve != nil {
-		err.Add(fmt.Errorf("%s: %w", ErrInvalidStatus, ve))
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidStatus, ve))
 	}
 
 	if c.Clicks < 0 {
@@ -152,3 +152,17 @@ func (f IncreasableField) Validate() error {
 const (
 	IncreasableFieldClicks IncreasableField = "clicks"
 )
+
+type IDs []int
+
+func (ids IDs) Validate() error {
+	var err zeroerror.Error
+
+	for i, id := range ids {
+		if id < 0 {
+			err.Add(fmt.Errorf("%w at index: %d", ErrInvalidID, i))
+		}
+	}
+
+	return err.Err()
+}

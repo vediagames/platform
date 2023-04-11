@@ -76,52 +76,85 @@ func (c category) toDomain() domain.Category {
 		PublishedAt:      c.PublishedAt.Time,
 	}
 }
-
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
-	var sqlRes []struct {
-		category
-		TotalCount int `db:"total_count"`
-	}
-
 	sqlQuery, err := templateToSQL(
 		"find_categories",
 		templateQuery{
 			"AllowDeleted":   q.AllowDeleted,
 			"AllowInvisible": q.AllowInvisible,
+			"FilterByIDRefs": len(q.IDRefs) > 0,
 		},
 		`
-		SELECT *, COUNT(*) OVER() AS total_count
-		FROM mat_categories_view
-		WHERE language_code = $1
-		{{ if not .AllowDeleted }}
-			AND status != 'deleted'
-		{{ end }}
-		{{ if not .AllowInvisible }}
-			AND  status != 'invisible'
-		{{ end }}
-		ORDER BY id ASC
-		LIMIT $2 OFFSET $3
+			SELECT
+				id,
+				language_code,
+				slug,
+				name,
+				short_description,
+				description,
+				content,
+				status,
+				clicks,
+				created_at,
+				deleted_at,
+				published_at,
+				COUNT(*) OVER() AS total_count
+			FROM public.categories_view
+			WHERE language_code = :language_code
+			{{ if not .AllowDeleted }}
+				AND status != 'deleted'
+			{{ end }}
+			{{ if not .AllowInvisible }}
+				AND  status != 'invisible'
+			{{ end }}
+			{{ if .FilterByIDRefs }}
+				AND id IN (:id_refs)
+			{{ end }}
+			LIMIT :limit
+			OFFSET :offset;
 	`)
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to create SQL from template: %w", err)
 	}
 
-	offset := (q.Page - 1) * q.Limit
+	query, args, err := sqlx.Named(sqlQuery, map[string]interface{}{
+		"language_code": q.Language.String(),
+		"limit":         q.Limit,
+		"offset":        (q.Page - 1) * q.Limit,
+		"id_refs":       q.IDRefs,
+	})
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)
+	}
 
-	if err := r.db.Select(&sqlRes, sqlQuery, q.Language.String(), q.Limit, offset); err != nil {
-		return domain.FindResult{}, fmt.Errorf("failed to select: %w", err)
+	query, args, err = sqlx.In(query, args...)
+	if err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to expand %w", err)
+	}
+
+	query = r.db.Rebind(query)
+
+	var sqlRes []struct {
+		category
+		TotalCount int `db:"total_count"`
+	}
+
+	if err := r.db.Select(&sqlRes, query, args...); err != nil {
+		return domain.FindResult{}, fmt.Errorf("failed to select %w", err)
 	}
 
 	res := domain.FindResult{
-		Data:  make([]domain.Category, 0, len(sqlRes)),
-		Total: 0,
+		Data: domain.Categories{
+			Data:  make([]domain.Category, 0, len(sqlRes)),
+			Total: 0,
+		},
 	}
 
 	if len(sqlRes) > 0 {
-		res.Total = sqlRes[0].TotalCount
+		res.Data.Total = sqlRes[0].TotalCount
 
 		for _, category := range sqlRes {
-			res.Data = append(res.Data, category.toDomain())
+			res.Data.Data = append(res.Data.Data, category.toDomain())
 		}
 	}
 
@@ -142,7 +175,21 @@ func (r repository) FindOne(ctx context.Context, q domain.FindOneQuery) (domain.
 	}
 
 	sqlQuery := fmt.Sprintf(`
-		SELECT * FROM mat_categories_view
+		SELECT
+			id,
+			language_code,
+			slug,
+			name,
+			short_description,
+			description,
+			content,
+			status,
+			clicks,
+			created_at,
+			deleted_at,
+			deleted_at,
+			published_at
+		FROM public.categories_view
 		WHERE %s = $1 AND language_code = $2
 	`, val)
 

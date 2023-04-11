@@ -43,21 +43,14 @@ func (r SearchRequest) Validate() error {
 }
 
 type SearchResponse struct {
-	Data  []Tag
-	Total int
+	Data Tags
 }
 
 func (r SearchResponse) Validate() error {
 	var err zeroerror.Error
 
-	for _, tag := range r.Data {
-		if ve := tag.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidTag, ve))
-		}
-	}
-
-	if r.Total < 0 {
-		err.Add(ErrInvalidTotal)
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
 	}
 
 	return err.Err()
@@ -96,21 +89,14 @@ func (r FullSearchRequest) Validate() error {
 }
 
 type FullSearchResponse struct {
-	Data  []Tag
-	Total int
+	Data Tags
 }
 
 func (r FullSearchResponse) Validate() error {
 	var err zeroerror.Error
 
-	for _, tag := range r.Data {
-		if ve := tag.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidTag, ve))
-		}
-	}
-
-	if r.Total < 0 {
-		err.Add(ErrInvalidTotal)
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
 	}
 
 	return err.Err()
@@ -123,6 +109,7 @@ type ListRequest struct {
 	AllowDeleted   bool
 	AllowInvisible bool
 	Sort           SortingMethod
+	IDRefs         IDs
 }
 
 func (r ListRequest) Validate() error {
@@ -140,25 +127,22 @@ func (r ListRequest) Validate() error {
 		err.Add(fmt.Errorf("%s: %w", ErrInvalidLanguage, ve))
 	}
 
+	if ve := r.IDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%s: %w", ErrInvalidIDRefs, ve))
+	}
+
 	return err.Err()
 }
 
 type ListResponse struct {
-	Data  []Tag
-	Total int
+	Data Tags
 }
 
 func (r ListResponse) Validate() error {
 	var err zeroerror.Error
 
-	for _, tag := range r.Data {
-		if ve := tag.Validate(); ve != nil {
-			err.Add(fmt.Errorf("%s: %w", ErrInvalidTag, ve))
-		}
-	}
-
-	if r.Total < 0 {
-		err.Add(ErrInvalidTotal)
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
 	}
 
 	return err.Err()
