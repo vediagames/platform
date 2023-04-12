@@ -359,11 +359,11 @@ func (v OriginalVideo) FileName() string {
 	case OriginalVideoMp4_1920x1080:
 		return "gameplay.mp4"
 	case OriginalVideoMp4_540x410:
-		return "gameplay540x410.mp4"
+		return "gameplay_540_410_0.50.mp4"
 	case OriginalVideoMp4_240x180:
-		return "gameplay240x180.mp4"
-	case OriginalVideoMp4_175x130:
-		return "gameplay175x130.mp4"
+		return "gameplay_240_180_0.50.mp4"
+	case OriginalVideoMp4_176x130:
+		return "gameplay_176_130_0.50.mp4"
 	default:
 		return ""
 	}

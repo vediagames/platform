@@ -4,7 +4,7 @@ go 1.20
 
 require (
 	cloud.google.com/go/bigquery v1.48.0
-	github.com/99designs/gqlgen v0.17.28
+	github.com/99designs/gqlgen v0.17.29
 	github.com/go-chi/chi/v5 v5.0.8
 	github.com/go-redis/redis/v8 v8.11.5
 	github.com/golang-migrate/migrate/v4 v4.15.2

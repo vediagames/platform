@@ -1673,7 +1673,7 @@ enum OriginalVideo {
     MP4_1920x1080
     MP4_540x410
     MP4_240x180
-    MP4_175x130
+    MP4_176x130
 }
 `, BuiltIn: false},
 	{Name: "../schema.gql", Input: `type Query {
