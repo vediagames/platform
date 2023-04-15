@@ -14,7 +14,7 @@
   {
     "name": "page_url",
     "type": "STRING",
-    "mode": "required",
+    "mode": "REQUIRED",
     "description": "Page on which session was created"
   },
   {
