@@ -1,0 +1,44 @@
+[
+  {
+    "name": "id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "The ID of the tag."
+  },
+  {
+    "name": "slug",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "The slug of the tag."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Date and time the tag was created."
+  },
+  {
+    "name": "deleted_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Date and time the tag was deleted."
+  },
+  {
+    "name": "published_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Date and time the tag was published."
+  },
+  {
+    "name": "status",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Status of the tag (e.g. invisible, visible, deleted)"
+  },
+  {
+    "name": "clicks",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Number of clicks on the tag."
+  }
+]

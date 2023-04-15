@@ -1,0 +1,44 @@
+[
+  {
+    "name": "id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "The ID of the language."
+  },
+  {
+    "name": "created_at",
+    "type": "TIMESTAMP",
+    "mode": "REQUIRED",
+    "description": "Date and time the language was created."
+  },
+  {
+    "name": "deleted_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Date and time the language was deleted."
+  },
+  {
+    "name": "published_at",
+    "type": "TIMESTAMP",
+    "mode": "NULLABLE",
+    "description": "Date and time the language was published."
+  },
+  {
+    "name": "status",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "Status of the language (e.g. invisible, visible, deleted)"
+  },
+  {
+    "name": "name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "The name of the language (e.g. English, Spanish)"
+  },
+  {
+    "name": "code",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "The ISO 639-1 code of the language (e.g. en, es)"
+  }
+]

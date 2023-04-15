@@ -1,0 +1,38 @@
+[
+  {
+    "name": "tag_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key to tags table."
+  },
+  {
+    "name": "language_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key to available_languages table."
+  },
+  {
+    "name": "name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "The name of the tag."
+  },
+  {
+    "name": "description",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "The description of the tag."
+  },
+  {
+    "name": "content",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "The content of the tag."
+  },
+  {
+    "name": "short_description",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "The short description of the tag."
+  }
+]

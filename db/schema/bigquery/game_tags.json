@@ -1,0 +1,14 @@
+[
+  {
+    "name": "game_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key to games table."
+  },
+  {
+    "name": "tag_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key to tags table."
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "name": "category_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key to categories table."
+  },
+  {
+    "name": "language_id",
+    "type": "INTEGER",
+    "mode": "REQUIRED",
+    "description": "Foreign key to available_languages table."
+  },
+  {
+    "name": "name",
+    "type": "STRING",
+    "mode": "REQUIRED",
+    "description": "The name of the category."
+  },
+  {
+    "name": "description",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "The description of the category."
+  },
+  {
+    "name": "content",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "The content of the category."
+  },
+  {
+    "name": "short_description",
+    "type": "STRING",
+    "mode": "NULLABLE",
+    "description": "The short description of the category."
+  }
+]
