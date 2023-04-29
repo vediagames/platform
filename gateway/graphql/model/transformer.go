@@ -1,9 +1,6 @@
 package model
 
 import (
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
 	"strings"
 
 	categorydomain "github.com/vediagames/platform/category/domain"
@@ -37,29 +34,29 @@ func (g Games) FromDomain(domain gamedomain.Games) *Games {
 
 func (g Game) FromDomain(domain gamedomain.Game) *Game {
 	return &Game{
-		ID:                domain.ID,
-		Language:          Language(domain.Language),
-		Slug:              domain.Slug,
-		Name:              domain.Name,
-		Status:            Status(domain.Status),
-		CreatedAt:         domain.CreatedAt.String(),
-		DeletedAt:         stringToPointer(domain.DeletedAt.String()),
-		PublishedAt:       stringToPointer(domain.PublishedAt.String()),
-		URL:               domain.URL,
-		Width:             domain.Width,
-		Height:            domain.Height,
-		ShortDescription:  stringToPointer(domain.ShortDescription),
-		Description:       stringToPointer(domain.Description),
-		Content:           stringToPointer(domain.Content),
-		Likes:             domain.Likes,
-		Dislikes:          domain.Dislikes,
-		Plays:             domain.Plays,
-		Weight:            domain.Weight,
-		Player1Controls:   stringToPointer(domain.Player1Controls),
-		Player2Controls:   stringToPointer(domain.Player2Controls),
-		Mobile:            domain.Mobile,
-		TagIDRefs:         domain.TagIDRefs,
-		CategoryIDRefs:    domain.CategoryIDRefs,
+		ID:               domain.ID,
+		Language:         Language(domain.Language),
+		Slug:             domain.Slug,
+		Name:             domain.Name,
+		Status:           Status(domain.Status),
+		CreatedAt:        domain.CreatedAt.String(),
+		DeletedAt:        stringToPointer(domain.DeletedAt.String()),
+		PublishedAt:      stringToPointer(domain.PublishedAt.String()),
+		URL:              domain.URL,
+		Width:            domain.Width,
+		Height:           domain.Height,
+		ShortDescription: stringToPointer(domain.ShortDescription),
+		Description:      stringToPointer(domain.Description),
+		Content:          stringToPointer(domain.Content),
+		Likes:            domain.Likes,
+		Dislikes:         domain.Dislikes,
+		Plays:            domain.Plays,
+		Weight:           domain.Weight,
+		Player1Controls:  stringToPointer(domain.Player1Controls),
+		Player2Controls:  stringToPointer(domain.Player2Controls),
+		Mobile:           domain.Mobile,
+		TagIDRefs:        domain.TagIDRefs,
+		CategoryIDRefs:   domain.CategoryIDRefs,
 	}
 }
 
@@ -216,22 +213,6 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) *SearchItems
 
 func stringToPointer(s string) *string {
 	return &s
-}
-
-type filterParams struct {
-	Sort       SortingMethod `json:"sort,omitempty"`
-	Tags       []int         `json:"tags,omitempty"`
-	Categories []int         `json:"categories,omitempty"`
-	Games      []int         `json:"games,omitempty"`
-}
-
-func filterParamsInBase64(p filterParams) (string, error) {
-	body, err := json.Marshal(p)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal filter params: %w", err)
-	}
-
-	return base64.StdEncoding.EncodeToString(body), nil
 }
 
 func (m *SortingMethod) Domain() string {
