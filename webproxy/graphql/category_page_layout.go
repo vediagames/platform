@@ -1,14 +1,14 @@
 package graphql
 
-var CategoryPageLayouts = map[string][]string{
-	"shooting": {
+var CategoryPageLayouts = map[int][]string{
+	1: { // "shooting"
 		"first-person-shooter",
 		"third-person-shooter",
 	},
-	"io": {
+	2: { // "io"
 		"hypercasual",
 	},
-	"board-and-puzzle": {
+	4: { // "board-and-puzzle"
 		"card",
 		"jigsaw",
 		"mahjong",
@@ -16,11 +16,11 @@ var CategoryPageLayouts = map[string][]string{
 		"match-3",
 		"math",
 	},
-	"multiplayer": {
+	5: { // "multiplayer"
 		"play-with-friends",
 		"online",
 	},
-	"sports": {
+	6: { // "sports"
 		"soccer",
 		"basketball",
 		"boxing",
@@ -28,21 +28,21 @@ var CategoryPageLayouts = map[string][]string{
 		"pool",
 		"ball",
 	},
-	"driving": {
+	10: { // "driving"
 		"bike",
 		"motor-racing",
 		"car",
 		"truck",
 		"parking",
 	},
-	"adventure": {
+	11: { // "adventure"
 		"build",
 	},
-	"beauty": {
+	12: { // "beauty"
 		"dress-up",
 		"makeup",
 	},
-	"arcade": {
+	13: { // "arcade"
 		"match-3",
 		"pool",
 		"runner",

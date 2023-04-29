@@ -47,7 +47,6 @@ type Category struct {
 	CreatedAt        string   `json:"createdAt"`
 	DeletedAt        *string  `json:"deletedAt,omitempty"`
 	PublishedAt      *string  `json:"publishedAt,omitempty"`
-	PageURL          string   `json:"pageUrl"`
 }
 
 type CategoryRequest struct {
@@ -159,7 +158,6 @@ type SearchItem struct {
 	Name             string         `json:"name"`
 	Slug             string         `json:"slug"`
 	Type             SearchItemType `json:"type"`
-	PageURL          string         `json:"pageUrl"`
 	Thumbnail        string         `json:"thumbnail"`
 	Video            string         `json:"video"`
 }
@@ -230,7 +228,6 @@ type Tag struct {
 	DeletedAt        *string  `json:"deletedAt,omitempty"`
 	PublishedAt      *string  `json:"publishedAt,omitempty"`
 	Thumbnail        string   `json:"thumbnail"`
-	PageURL          string   `json:"pageUrl"`
 }
 
 type TagRequest struct {

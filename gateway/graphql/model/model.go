@@ -24,8 +24,6 @@ type Game struct {
 	Tags              *Tags       `json:"tags"`
 	Categories        *Categories `json:"categories"`
 	Mobile            bool        `json:"mobile"`
-	PageURL           string      `json:"pageUrl"`
-	FullScreenPageURL string      `json:"fullScreenPageUrl"`
 	TagIDRefs         []int
 	CategoryIDRefs    []int
 }
@@ -45,7 +43,6 @@ type Section struct {
 	Tags             *Tags       `json:"tags,omitempty"`
 	Categories       *Categories `json:"categories,omitempty"`
 	Games            *Games      `json:"games,omitempty"`
-	PageURL          string      `json:"pageUrl"`
 	TagIDRefs        []int
 	CategoryIDRefs   []int
 	GameIDRefs       []int

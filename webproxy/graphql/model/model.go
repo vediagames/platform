@@ -35,6 +35,5 @@ type CategoryPageResponse struct {
 	Tags              *model.Tags        `json:"tags"`
 	OtherGames        *model.Games       `json:"otherGames"`
 	Language          model.Language
-	Slug              string
 	ID                int
 }

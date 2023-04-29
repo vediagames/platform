@@ -70,8 +70,6 @@ type Game {
     categories: Categories!
     mobile: Boolean!
     thumbnail(request: ThumbnailRequest!): String!
-    pageUrl: String!
-    fullScreenPageUrl: String!
     video(original: OriginalVideo!): String!
 }
 
@@ -104,7 +102,6 @@ type Section {
     tags: Tags
     categories: Categories
     games: Games
-    pageUrl: String!
 }
 
 type Tags {
@@ -126,7 +123,6 @@ type Tag {
     deletedAt: String
     publishedAt: String
     thumbnail(request: ThumbnailRequest!): String!
-    pageUrl: String!
 }
 
 type Categories {
@@ -147,7 +143,6 @@ type Category {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    pageUrl: String!
 }
 
 type TagSections {
@@ -170,7 +165,6 @@ type SearchItem {
     name: String!
     slug: String!
     type: SearchItemType!
-    pageUrl: String!
     thumbnail(request: ThumbnailRequest!): String!
     video(original: OriginalVideo!): String!
 }
