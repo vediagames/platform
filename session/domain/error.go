@@ -11,4 +11,5 @@ const (
 	ErrEmptyID           = Error("empty ID")
 	ErrInvalidCreatedAt  = Error("invalid created at")
 	ErrInvalidInsertedAt = Error("invalid inserted at")
+	ErrEmptyPageURL      = Error("empty page URL")
 )
