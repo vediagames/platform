@@ -1514,7 +1514,6 @@ type GamePageResponse {
 
 input HomePageRequest {
     language: Language!
-    lastPlayedGameIDs: [LastPlayedGameID!]
 }
 
 input CategoryPageRequest {
@@ -10528,7 +10527,7 @@ func (ec *executionContext) unmarshalInputHomePageRequest(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "lastPlayedGameIDs"}
+	fieldsInOrder := [...]string{"language"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -10540,14 +10539,6 @@ func (ec *executionContext) unmarshalInputHomePageRequest(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
 			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "lastPlayedGameIDs":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastPlayedGameIDs"))
-			it.LastPlayedGameIDs, err = ec.unmarshalOLastPlayedGameID2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -13463,11 +13454,6 @@ func (ec *executionContext) marshalNLanguage2githubᚗcomᚋvediagamesᚋplatfor
 	return v
 }
 
-func (ec *executionContext) unmarshalNLastPlayedGameID2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameID(ctx context.Context, v interface{}) (*model1.LastPlayedGameID, error) {
-	res, err := ec.unmarshalInputLastPlayedGameID(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNOriginalThumbnail2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalThumbnail(ctx context.Context, v interface{}) (model.OriginalThumbnail, error) {
 	var res model.OriginalThumbnail
 	err := res.UnmarshalGQL(v)
@@ -14361,26 +14347,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	}
 	res := graphql.MarshalInt(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOLastPlayedGameID2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameIDᚄ(ctx context.Context, v interface{}) ([]*model1.LastPlayedGameID, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*model1.LastPlayedGameID, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNLastPlayedGameID2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameID(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
 }
 
 func (ec *executionContext) unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, v interface{}) (*model.SortingMethod, error) {
