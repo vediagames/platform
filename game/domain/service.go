@@ -12,11 +12,165 @@ type Service interface {
 	Get(context.Context, GetRequest) (GetResponse, error)
 	GetMostPlayedByDays(context.Context, GetMostPlayedByDaysRequest) (GetMostPlayedByDaysResponse, error)
 	GetFresh(context.Context, GetFreshRequest) (GetFreshResponse, error)
+	Create(context.Context, CreateRequest) (CreateResponse, error)
+	Edit(context.Context, EditRequest) (EditResponse, error)
+	Remove(context.Context, RemoveRequest) (RemoveResponse, error)
 
 	LogEvent(context.Context, LogEventRequest) error
 
 	Search(context.Context, SearchRequest) (SearchResponse, error)
 	FullSearch(context.Context, FullSearchRequest) (FullSearchResponse, error)
+}
+
+type EditRequest struct {
+	ID             int
+	Slug           string
+	Mobile         bool
+	TagIDRefs      IDs
+	CategoryIDRefs IDs
+	Status         Status
+	URL            string
+	Width          int
+	Height         int
+	Likes          int
+	Dislikes       int
+	Plays          int
+	Weight         int
+	Texts          map[Language]Texts
+}
+
+func (r EditRequest) Validate() error {
+	var err zeroerror.Error
+
+	err.AddIf(r.ID < 0, ErrInvalidID)
+	err.AddIf(r.Slug == "", ErrEmptySlug)
+	err.AddIf(r.URL == "", ErrInvalidURL)
+	err.AddIf(r.Width < 0, ErrInvalidWidth)
+	err.AddIf(r.Height < 0, ErrInvalidHeight)
+	err.AddIf(r.Weight < 0, ErrInvalidWeight)
+
+	if ve := r.TagIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidTagIDRefs, ve))
+	}
+
+	if ve := r.CategoryIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidCategoryIDRefs, ve))
+	}
+
+	if ve := r.Status.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidStatus, ve))
+	}
+
+	for l, t := range r.Texts {
+		if ve := l.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
+		}
+
+		if ve := t.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w at language %q: %w", ErrInvalidText, l, ve))
+		}
+	}
+
+	return err.Err()
+}
+
+type EditResponse struct {
+	Data Game
+}
+
+func (r EditResponse) Validate() error {
+	var err zeroerror.Error
+
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
+	}
+
+	return err.Err()
+}
+
+type RemoveRequest struct {
+	ID   int
+	Slug string
+}
+
+func (r RemoveRequest) Validate() error {
+	var err zeroerror.Error
+
+	if r.ID <= 0 && r.Slug == "" {
+		err.Add(fmt.Errorf("id and slug are both empty"))
+	}
+
+	return err.Err()
+}
+
+type RemoveResponse struct {
+}
+
+func (r RemoveResponse) Validate() error {
+	var err zeroerror.Error
+
+	return err.Err()
+}
+
+type CreateRequest struct {
+	Slug           string
+	Mobile         bool
+	TagIDRefs      IDs
+	CategoryIDRefs IDs
+	Status         Status
+	URL            string
+	Width          int
+	Height         int
+	Weight         int
+	Texts          map[Language]Texts
+}
+
+func (r CreateRequest) Validate() error {
+	var err zeroerror.Error
+
+	err.AddIf(r.Slug == "", ErrEmptySlug)
+	err.AddIf(r.URL == "", ErrInvalidURL)
+	err.AddIf(r.Width < 0, ErrInvalidWidth)
+	err.AddIf(r.Height < 0, ErrInvalidHeight)
+	err.AddIf(r.Weight < 0, ErrInvalidWeight)
+
+	if ve := r.TagIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidTagIDRefs, ve))
+	}
+
+	if ve := r.CategoryIDRefs.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidCategoryIDRefs, ve))
+	}
+
+	if ve := r.Status.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidStatus, ve))
+	}
+
+	for l, t := range r.Texts {
+		if ve := l.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w: %w", ErrInvalidLanguage, ve))
+		}
+
+		if ve := t.Validate(); ve != nil {
+			err.Add(fmt.Errorf("%w at language %q: %w", ErrInvalidText, l, ve))
+		}
+	}
+
+	return err.Err()
+}
+
+type CreateResponse struct {
+	Data Game
+}
+
+func (r CreateResponse) Validate() error {
+	var err zeroerror.Error
+
+	if ve := r.Data.Validate(); ve != nil {
+		err.Add(fmt.Errorf("%w: %w", ErrInvalidData, ve))
+	}
+
+	return err.Err()
 }
 
 type SearchRequest struct {

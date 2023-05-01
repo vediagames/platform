@@ -7,6 +7,26 @@ import (
 	"github.com/vediagames/zeroerror"
 )
 
+type Texts struct {
+	Name             string
+	ShortDescription string
+	Description      string
+	Content          string
+	Player1Controls  string
+	Player2Controls  string
+}
+
+func (t Texts) Validate() error {
+	var err zeroerror.Error
+
+	err.AddIf(t.Name == "", ErrEmptyName)
+	err.AddIf(t.ShortDescription == "", ErrEmptyShortDescription)
+	err.AddIf(t.Description == "", ErrEmptyDescription)
+	err.AddIf(t.Player1Controls == "", ErrEmptyPlayer1Controls)
+
+	return err.Err()
+}
+
 type Games struct {
 	Data  []Game
 	Total int

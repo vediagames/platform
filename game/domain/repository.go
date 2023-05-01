@@ -12,10 +12,59 @@ type Repository interface {
 	Search(context.Context, SearchQuery) (SearchResult, error)
 	FullSearch(context.Context, FullSearchQuery) (FullSearchResult, error)
 	FindMostPlayedIDsByDate(context.Context, FindMostPlayedIDsByDateQuery) (FindMostPlayedIDsByDateResult, error)
+	Insert(context.Context, InsertQuery) (InsertResult, error)
+	Update(context.Context, UpdateQuery) (UpdateResult, error)
+	Delete(context.Context, DeleteQuery) (DeleteResult, error)
 }
 
 type EventRepository interface {
 	Log(context.Context, LogQuery) error
+}
+
+type UpdateQuery struct {
+	ID             int
+	Slug           string
+	Mobile         bool
+	TagIDRefs      IDs
+	CategoryIDRefs IDs
+	Status         Status
+	URL            string
+	Width          int
+	Height         int
+	Likes          int
+	Dislikes       int
+	Plays          int
+	Weight         int
+	Texts          map[Language]Texts
+}
+
+type UpdateResult struct {
+	Data Game
+}
+
+type DeleteQuery struct {
+	ID   int
+	Slug string
+}
+
+type DeleteResult struct {
+}
+
+type InsertQuery struct {
+	Slug           string
+	Mobile         bool
+	TagIDRefs      IDs
+	CategoryIDRefs IDs
+	Status         Status
+	URL            string
+	Width          int
+	Height         int
+	Weight         int
+	Texts          map[Language]Texts
+}
+
+type InsertResult struct {
+	Data Game
 }
 
 type SearchQuery struct {

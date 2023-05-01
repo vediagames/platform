@@ -16,10 +16,6 @@ import (
 	"github.com/vediagames/platform/game/domain"
 )
 
-type repository struct {
-	db *sqlx.DB
-}
-
 type Config struct {
 	DB *sqlx.DB
 }
@@ -46,80 +42,216 @@ func New(cfg Config) domain.Repository {
 	}
 }
 
-type game struct {
-	ID               int            `db:"id"`
-	LanguageCode     string         `db:"language_code"`
-	Slug             string         `db:"slug"`
-	Name             string         `db:"name"`
-	Status           string         `db:"status"`
-	CreatedAt        time.Time      `db:"created_at"`
-	DeletedAt        pq.NullTime    `db:"deleted_at"`
-	PublishedAt      pq.NullTime    `db:"published_at"`
-	Url              string         `db:"url"`
-	Width            int            `db:"width"`
-	Height           int            `db:"height"`
-	Likes            int            `db:"likes"`
-	Dislikes         int            `db:"dislikes"`
-	Plays            int            `db:"plays"`
-	Weight           int            `db:"weight"`
-	Mobile           bool           `db:"mobile"`
-	ShortDescription sql.NullString `db:"short_description"`
-	Description      sql.NullString `db:"description"`
-	Content          sql.NullString `db:"content"`
-	Player1Controls  sql.NullString `db:"player_1_controls"`
-	Player2Controls  sql.NullString `db:"player_2_controls"`
-	TagIDRefs        pq.Int32Array  `db:"tag_id_refs"`
-	CategoryIDRefs   pq.Int32Array  `db:"category_id_refs"`
+type repository struct {
+	db *sqlx.DB
 }
 
-func (g game) toDomain(ctx context.Context) (domain.Game, error) {
-	return domain.Game{
-		ID:               g.ID,
-		Language:         domain.Language(g.LanguageCode),
-		Slug:             g.Slug,
-		Name:             g.Name,
-		Status:           domain.Status(g.Status),
-		CreatedAt:        g.CreatedAt,
-		DeletedAt:        g.DeletedAt.Time,
-		PublishedAt:      g.PublishedAt.Time,
-		URL:              g.Url,
-		Width:            g.Width,
-		Height:           g.Height,
-		Likes:            g.Likes,
-		Dislikes:         g.Dislikes,
-		Plays:            g.Plays,
-		Weight:           g.Weight,
-		ShortDescription: g.ShortDescription.String,
-		Description:      g.Description.String,
-		Content:          g.Content.String,
-		Player1Controls:  g.Player1Controls.String,
-		Player2Controls:  g.Player2Controls.String,
-		TagIDRefs:        pqInt32ArrayToIntSlice(g.TagIDRefs),
-		CategoryIDRefs:   pqInt32ArrayToIntSlice(g.CategoryIDRefs),
-		Mobile:           g.Mobile,
+func (r repository) Insert(ctx context.Context, q domain.InsertQuery) (domain.InsertResult, error) {
+	tx, err := r.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return domain.InsertResult{}, fmt.Errorf("failed to begin tx: %w", err)
+	}
+
+	var gameID int
+
+	err = tx.GetContext(ctx, &gameID, `
+		INSERT INTO games (
+			slug,
+			mobile,
+			status,
+			url,
+			weight,
+			height
+		)
+		VALUES (
+			$1,
+			$2,
+			$3,
+			$4,
+			$5,
+			$6
+		)
+		RETURNING id;
+	`, q.Slug, q.Mobile, q.Status, q.URL, q.Weight, q.Height)
+	if err != nil {
+		return domain.InsertResult{}, fmt.Errorf("failed to get: %w", err)
+	}
+
+	for i, tagID := range q.TagIDRefs {
+		_, err = tx.ExecContext(ctx, "INSERT INTO game_tags (game_id, tag_id) VALUES ($1, $2)", gameID, tagID)
+		if err != nil {
+			return domain.InsertResult{}, fmt.Errorf("failed to insert tag with ID %d at index %d: %w", tagID, i, err)
+		}
+	}
+
+	for i, categoryID := range q.CategoryIDRefs {
+		_, err = tx.ExecContext(ctx, "INSERT INTO game_categories (game_id, category_id) VALUES ($1, $2)", gameID, categoryID)
+		if err != nil {
+			return domain.InsertResult{}, fmt.Errorf("failed to insert category with ID %d at index %d: %w", categoryID, i, err)
+		}
+	}
+
+	for lang, texts := range q.Texts {
+		_, err = tx.ExecContext(ctx, `
+			INSERT INTO game_texts (
+				game_id,
+				language_id,
+				name,
+				short_description,
+				description,
+				content,
+				player_1_controls,
+				player_2_controls
+			)
+			VALUES (
+				$1,
+				$2,
+				$3,
+				$4,
+				$5,
+				$6,
+				$7,
+				$8
+			)`, gameID, langIDMap[lang], texts.Name, texts.ShortDescription, texts.Description, texts.Content, texts.Player1Controls, texts.Player2Controls)
+		if err != nil {
+			return domain.InsertResult{}, fmt.Errorf("failed to insert text for language %q: %w", lang, err)
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return domain.InsertResult{}, fmt.Errorf("failed to commit: %w", err)
+	}
+
+	repoRes, err := r.FindOne(ctx, domain.FindOneQuery{
+		Field:    domain.GetByFieldID,
+		Value:    gameID,
+		Language: domain.LanguageEnglish,
+	})
+	if err != nil {
+		return domain.InsertResult{}, fmt.Errorf("failed to find one: %w", err)
+	}
+
+	return domain.InsertResult{
+		Data: repoRes.Data,
 	}, nil
 }
 
-func pqInt32ArrayToIntSlice(pqArray pq.Int32Array) []int {
-	intSlice := make([]int, len(pqArray))
-	for i, pqInt := range pqArray {
-		intSlice[i] = int(pqInt)
+func (r repository) Update(ctx context.Context, q domain.UpdateQuery) (domain.UpdateResult, error) {
+	tx, err := r.db.BeginTxx(ctx, nil)
+	if err != nil {
+		return domain.UpdateResult{}, fmt.Errorf("failed to begin tx: %w", err)
 	}
-	return intSlice
+	defer tx.Rollback()
+
+	_, err = tx.ExecContext(ctx, `
+		UPDATE games
+		SET
+			slug = $1,
+			mobile = $2,
+			status = $3,
+			url = $4,
+			width = $5,
+			height= $6,
+			likes = $7,
+			dislikes = $8,
+			plays = $9,
+			weight = $10
+		WHERE id = $11
+	`, q.Slug, q.Mobile, q.Status.String(), q.URL, q.Width, q.Height, q.Likes, q.Dislikes, q.Plays, q.Weight, q.ID)
+	if err != nil {
+		return domain.UpdateResult{}, fmt.Errorf("failed to update: %w", err)
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM game_tags WHERE game_id = $1", q.ID)
+	if err != nil {
+		return domain.UpdateResult{}, fmt.Errorf("failed to delete tags: %w", err)
+	}
+
+	for i, tagID := range q.TagIDRefs {
+		_, err = tx.ExecContext(ctx, "INSERT INTO game_tags (game_id, tag_id) VALUES ($1, $2)", q.ID, tagID)
+		if err != nil {
+			return domain.UpdateResult{}, fmt.Errorf("failed to insert tag with ID %d at index %d: %w", tagID, i, err)
+		}
+	}
+
+	_, err = tx.ExecContext(ctx, "DELETE FROM game_categories WHERE game_id = $1", q.ID)
+	if err != nil {
+		return domain.UpdateResult{}, fmt.Errorf("failed to delete categories: %w", err)
+	}
+
+	for i, categoryID := range q.CategoryIDRefs {
+		_, err = tx.ExecContext(ctx, "INSERT INTO game_categories (game_id, category_id) VALUES ($1, $2)", q.ID, categoryID)
+		if err != nil {
+			return domain.UpdateResult{}, fmt.Errorf("failed to insert category with ID %d at index %d: %w", categoryID, i, err)
+		}
+	}
+
+	for lang, texts := range q.Texts {
+		_, err = tx.ExecContext(ctx, `
+			UPDATE game_texts
+			SET
+				name = $1,
+				short_description = $2,
+				description = $3,
+				content = $4,
+				player_1_controls = $5,
+				player_2_controls = $6
+			WHERE game_id = $7 AND language_id = $8
+		`, texts.Name, texts.ShortDescription, texts.Description, texts.Content, texts.Player1Controls, texts.Player2Controls, q.ID, langIDMap[lang])
+		if err != nil {
+			return domain.UpdateResult{}, fmt.Errorf("failed to update text for language %q: %w", lang, err)
+		}
+	}
+
+	if err = tx.Commit(); err != nil {
+		return domain.UpdateResult{}, fmt.Errorf("failed to commit: %w", err)
+	}
+
+	repoRes, err := r.FindOne(ctx, domain.FindOneQuery{
+		Field:    domain.GetByFieldID,
+		Value:    q.ID,
+		Language: domain.LanguageEnglish,
+	})
+	if err != nil {
+		return domain.UpdateResult{}, fmt.Errorf("failed to find one: %w", err)
+	}
+
+	return domain.UpdateResult{
+		Data: repoRes.Data,
+	}, nil
+
 }
 
-var orderByOptions = map[domain.SortingMethod]string{
-	domain.SortingMethodRandom:        "RANDOM()",
-	domain.SortingMethodID:            "id ASC",
-	domain.SortingMethodName:          "name ASC",
-	domain.SortingMethodNewest:        "created_at DESC",
-	domain.SortingMethodOldest:        "created_at ASC",
-	domain.SortingMethodMostPopular:   "plays DESC",
-	domain.SortingMethodLeastPopular:  "plays ASC",
-	domain.SortingMethodMostLiked:     "likes DESC",
-	domain.SortingMethodLeastLiked:    "likes ASC",
-	domain.SortingMethodMostDisliked:  "dislikes DESC",
-	domain.SortingMethodLeastDisliked: "dislikes ASC",
+func (r repository) Delete(ctx context.Context, q domain.DeleteQuery) (domain.DeleteResult, error) {
+	var (
+		query string
+		arg   any
+	)
+
+	switch {
+	case q.ID != 0:
+		query = "UPDATE games SET status = 'deleted', deleted_at = NOW() WHERE id = $1"
+		arg = q.ID
+	case q.Slug != "":
+		query = "UPDATE games SET status = 'deleted', deleted_at = NOW() WHERE slug = $1"
+		arg = q.Slug
+	}
+
+	res, err := r.db.ExecContext(ctx, query, arg)
+	if err != nil {
+		return domain.DeleteResult{}, fmt.Errorf("failed to exec: %w", err)
+	}
+
+	rowsAffected, err := res.RowsAffected()
+	if err != nil {
+		return domain.DeleteResult{}, fmt.Errorf("failed to get rows affected: %w", err)
+	}
+
+	if rowsAffected == 0 {
+		return domain.DeleteResult{}, fmt.Errorf("no rows found matching the provided ID or Slug")
+	}
+
+	return domain.DeleteResult{}, nil
 }
 
 func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindResult, error) {
@@ -647,4 +779,85 @@ func (r repository) FindMostPlayedIDsByDate(ctx context.Context, q domain.FindMo
 	return domain.FindMostPlayedIDsByDateResult{
 		Data: ids,
 	}, nil
+}
+
+type game struct {
+	ID               int            `db:"id"`
+	LanguageCode     string         `db:"language_code"`
+	Slug             string         `db:"slug"`
+	Name             string         `db:"name"`
+	Status           string         `db:"status"`
+	CreatedAt        time.Time      `db:"created_at"`
+	DeletedAt        pq.NullTime    `db:"deleted_at"`
+	PublishedAt      pq.NullTime    `db:"published_at"`
+	Url              string         `db:"url"`
+	Width            int            `db:"width"`
+	Height           int            `db:"height"`
+	Likes            int            `db:"likes"`
+	Dislikes         int            `db:"dislikes"`
+	Plays            int            `db:"plays"`
+	Weight           int            `db:"weight"`
+	Mobile           bool           `db:"mobile"`
+	ShortDescription sql.NullString `db:"short_description"`
+	Description      sql.NullString `db:"description"`
+	Content          sql.NullString `db:"content"`
+	Player1Controls  sql.NullString `db:"player_1_controls"`
+	Player2Controls  sql.NullString `db:"player_2_controls"`
+	TagIDRefs        pq.Int32Array  `db:"tag_id_refs"`
+	CategoryIDRefs   pq.Int32Array  `db:"category_id_refs"`
+}
+
+func (g game) toDomain(ctx context.Context) (domain.Game, error) {
+	return domain.Game{
+		ID:               g.ID,
+		Language:         domain.Language(g.LanguageCode),
+		Slug:             g.Slug,
+		Name:             g.Name,
+		Status:           domain.Status(g.Status),
+		CreatedAt:        g.CreatedAt,
+		DeletedAt:        g.DeletedAt.Time,
+		PublishedAt:      g.PublishedAt.Time,
+		URL:              g.Url,
+		Width:            g.Width,
+		Height:           g.Height,
+		Likes:            g.Likes,
+		Dislikes:         g.Dislikes,
+		Plays:            g.Plays,
+		Weight:           g.Weight,
+		ShortDescription: g.ShortDescription.String,
+		Description:      g.Description.String,
+		Content:          g.Content.String,
+		Player1Controls:  g.Player1Controls.String,
+		Player2Controls:  g.Player2Controls.String,
+		TagIDRefs:        pqInt32ArrayToIntSlice(g.TagIDRefs),
+		CategoryIDRefs:   pqInt32ArrayToIntSlice(g.CategoryIDRefs),
+		Mobile:           g.Mobile,
+	}, nil
+}
+
+func pqInt32ArrayToIntSlice(pqArray pq.Int32Array) []int {
+	intSlice := make([]int, len(pqArray))
+	for i, pqInt := range pqArray {
+		intSlice[i] = int(pqInt)
+	}
+	return intSlice
+}
+
+var orderByOptions = map[domain.SortingMethod]string{
+	domain.SortingMethodRandom:        "RANDOM()",
+	domain.SortingMethodID:            "id ASC",
+	domain.SortingMethodName:          "name ASC",
+	domain.SortingMethodNewest:        "created_at DESC",
+	domain.SortingMethodOldest:        "created_at ASC",
+	domain.SortingMethodMostPopular:   "plays DESC",
+	domain.SortingMethodLeastPopular:  "plays ASC",
+	domain.SortingMethodMostLiked:     "likes DESC",
+	domain.SortingMethodLeastLiked:    "likes ASC",
+	domain.SortingMethodMostDisliked:  "dislikes DESC",
+	domain.SortingMethodLeastDisliked: "dislikes ASC",
+}
+
+var langIDMap = map[domain.Language]int{
+	domain.LanguageEnglish: 1,
+	domain.LanguageEspanol: 2,
 }

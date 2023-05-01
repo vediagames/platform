@@ -22,7 +22,63 @@ type Query {
 }
 
 type Mutation {
-    sendEmail(request: SendEmailRequest!): Boolean
+    sendEmail(request: SendEmailRequest!): Boolean!
+    createGame(request: CreateGameRequest!): CreateGameResponse!
+    updateGame(request: UpdateGameRequest!): UpdateGameResponse!
+    deleteGame(request: DeleteGameRequest!): Boolean!
+}
+
+input UpdateGameRequest {
+    id: Int!
+    slug: String!
+    mobile: Boolean!
+    tags: [Int!]!
+    categories: [Int!]!
+    status: Status!
+    url: String!
+    width: Int!
+    height: Int!
+    likes: Int!
+    dislikes: Int!
+    plays: Int!
+    weight: Int!
+    name: String!
+    shortDescription: String!
+    description: String!
+    player1Controls: String!
+    content: String
+    player2Controls: String
+}
+
+type UpdateGameResponse {
+    game: Game!
+}
+
+input DeleteGameRequest {
+    slug: String
+    id: Int
+}
+
+input CreateGameRequest {
+    slug: String!
+    mobile: Boolean!
+    tags: [Int!]!
+    categories: [Int!]!
+    status: Status!
+    url: String!
+    width: Int!
+    height: Int!
+    weight: Int!
+    name: String!
+    shortDescription: String!
+    description: String!
+    player1Controls: String!
+    content: String
+    player2Controls: String
+}
+
+type CreateGameResponse {
+    game: Game!
 }
 
 input MostPlayedGamesRequest {

@@ -11,7 +11,7 @@ services:
       - POSTGRES_PASSWORD=123
       - POSTGRES_DB=vediagames
     volumes:
-      - ./tmp/database-data:/var/lib/postgresql/data/
+      - $PG_MOUNT:/var/lib/postgresql/data/
 
   redis:
     image: redis:latest
@@ -20,7 +20,7 @@ services:
     ports:
       - "6379:6379"
     volumes:
-      - ./tmp/redis-data:/var/lib/redis/data
+      - $REDIS_MOUNT:/var/lib/redis/data
 
   imagor:
     image: shumc/imagor:1.4.2

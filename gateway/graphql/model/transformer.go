@@ -11,6 +11,58 @@ import (
 	tagdomain "github.com/vediagames/platform/tag/domain"
 )
 
+func (r UpdateGameRequest) Domain() gamedomain.EditRequest {
+	return gamedomain.EditRequest{
+		ID:             r.ID,
+		Slug:           r.Slug,
+		Mobile:         r.Mobile,
+		TagIDRefs:      gamedomain.IDs(r.Tags),
+		CategoryIDRefs: gamedomain.IDs(r.Categories),
+		Status:         gamedomain.Status(r.Status),
+		URL:            r.URL,
+		Likes:          r.Likes,
+		Dislikes:       r.Dislikes,
+		Plays:          r.Plays,
+		Width:          r.Width,
+		Height:         r.Height,
+		Weight:         r.Weight,
+		Texts: map[gamedomain.Language]gamedomain.Texts{
+			gamedomain.LanguageEnglish: {
+				Name:             r.Name,
+				ShortDescription: r.ShortDescription,
+				Description:      r.Description,
+				Content:          pointerToString(r.Content),
+				Player1Controls:  r.Player1Controls,
+				Player2Controls:  pointerToString(r.Player2Controls),
+			},
+		},
+	}
+}
+
+func (r CreateGameRequest) Domain() gamedomain.CreateRequest {
+	return gamedomain.CreateRequest{
+		Slug:           r.Slug,
+		Mobile:         r.Mobile,
+		TagIDRefs:      gamedomain.IDs(r.Tags),
+		CategoryIDRefs: gamedomain.IDs(r.Categories),
+		Status:         gamedomain.Status(r.Status),
+		URL:            r.URL,
+		Width:          r.Width,
+		Height:         r.Height,
+		Weight:         r.Weight,
+		Texts: map[gamedomain.Language]gamedomain.Texts{
+			gamedomain.LanguageEnglish: {
+				Name:             r.Name,
+				ShortDescription: r.ShortDescription,
+				Description:      r.Description,
+				Content:          pointerToString(r.Content),
+				Player1Controls:  r.Player1Controls,
+				Player2Controls:  pointerToString(r.Player2Controls),
+			},
+		},
+	}
+}
+
 func (g Games) IDs() []int {
 	ids := make([]int, 0, len(g.Data))
 	for _, e := range g.Data {
@@ -304,4 +356,12 @@ func (v OriginalVideo) FileName() string {
 	default:
 		return ""
 	}
+}
+
+func pointerToString(p *string) string {
+	if p != nil {
+		return *p
+	}
+
+	return ""
 }
