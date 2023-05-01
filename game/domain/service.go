@@ -42,11 +42,11 @@ type EditRequest struct {
 func (r EditRequest) Validate() error {
 	var err zeroerror.Error
 
-	err.AddIf(r.ID < 0, ErrInvalidID)
+	err.AddIf(r.ID <= 0, ErrInvalidID)
 	err.AddIf(r.Slug == "", ErrEmptySlug)
 	err.AddIf(r.URL == "", ErrInvalidURL)
-	err.AddIf(r.Width < 0, ErrInvalidWidth)
-	err.AddIf(r.Height < 0, ErrInvalidHeight)
+	err.AddIf(r.Width <= 0, ErrInvalidWidth)
+	err.AddIf(r.Height <= 0, ErrInvalidHeight)
 	err.AddIf(r.Weight < 0, ErrInvalidWeight)
 
 	if ve := r.TagIDRefs.Validate(); ve != nil {
@@ -130,8 +130,8 @@ func (r CreateRequest) Validate() error {
 
 	err.AddIf(r.Slug == "", ErrEmptySlug)
 	err.AddIf(r.URL == "", ErrInvalidURL)
-	err.AddIf(r.Width < 0, ErrInvalidWidth)
-	err.AddIf(r.Height < 0, ErrInvalidHeight)
+	err.AddIf(r.Width <= 0, ErrInvalidWidth)
+	err.AddIf(r.Height <= 0, ErrInvalidHeight)
 	err.AddIf(r.Weight < 0, ErrInvalidWeight)
 
 	if ve := r.TagIDRefs.Validate(); ve != nil {
