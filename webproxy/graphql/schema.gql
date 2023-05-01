@@ -1,144 +1,197 @@
 type Query {
-    homePage(request: HomePageRequest!): HomePageResponse!
-    gamePage(request: GamePageRequest!): GamePageResponse!
-    continuePlayingPage(request: ContinuePlayingPageRequest!): ContinuePlayingPageResponse!
-    filterPage(request: FilterPageRequest!): FilterPageResponse!
-    searchPage(request: SearchPageRequest!): SearchPageResponse!
-    siteMapPage(request: SiteMapPageRequest!): SiteMapPageResponse!
-    wizardPage(request: WizardPageRequest!): WizardPageResponse!
-    tagPage(request: TagPageRequest!): TagPageResponse!
-    tagsPage(request: TagsPageRequest!): TagsPageResponse!
-    categoryPage(request: CategoryPageRequest!): CategoryPageResponse!
-    categoriesPage(request: CategoriesPageRequest!): CategoriesPageResponse!
+    mostPlayedGames(request: MostPlayedGamesRequest!): MostPlayedGamesResponse!
+    freshGames(request: FreshGamesRequest!): FreshGamesResponse!
+    games(request: GamesRequest!): GamesResponse!
+    game(request: GameRequest!): GameResponse!
+
+    categories(request: CategoriesRequest!): CategoriesResponse!
+    category(request: CategoryRequest!): CategoryResponse!
+
+    tags(request: TagsRequest!): TagsResponse!
+    tag(request: TagRequest!): TagResponse!
+
+    sections(request: SectionsRequest!): SectionsResponse!
+    section(request: SectionRequest!): SectionResponse!
+    placedSections(request: PlacedSectionsRequest!): PlacedSectionsResponse!
+
+    search(request: SearchRequest!): SearchResponse!
+    fullSearch(request: FullSearchRequest!): SearchResponse!
+
+    randomProviderGame: RandomProviderGameResponse
+    availableLanguages: AvailableLanguagesResponse!
 }
 
-input CategoriesPageRequest {
+type Mutation {
+    sendEmail(request: SendEmailRequest!): Boolean
+}
+
+input MostPlayedGamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    maxDays: Int!
+}
+
+type MostPlayedGamesResponse {
+    games: Games!
+}
+
+input FreshGamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    maxDays: Int!
+}
+
+type FreshGamesResponse {
+    games: Games!
+}
+
+input GamesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+    sort: SortingMethod
+    categories: [Int!]
+    tags: [Int!]
+    ids: [Int!]
+    excludedGameIDs: [Int!]
+}
+
+type GamesResponse {
+    games: Games!
+}
+
+input GameRequest {
+    field: GetByField!
+    value: String!
     language: Language!
 }
 
-type CategoriesPageResponse {
+type GameResponse {
+    game: Game!
+}
+
+input CategoriesRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type CategoriesResponse {
     categories: Categories!
 }
 
-input TagsPageRequest {
+input CategoryRequest {
+    field: GetByField!
+    value: String!
     language: Language!
-    page: Int!
 }
 
-type TagsPageResponse {
+type CategoryResponse {
+    category: Category!
+}
+
+input TagsRequest {
+    language: Language!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+    sort: SortingMethod
+}
+
+type TagsResponse {
     tags: Tags!
 }
 
-input TagPageRequest {
+input TagRequest {
+    field: GetByField!
+    value: String!
     language: Language!
-    id: Int!
-    page: Int!
 }
 
-type TagPageResponse {
+type TagResponse {
     tag: Tag!
-    games: Games!
 }
 
-input WizardPageRequest {
+input SectionsRequest {
     language: Language!
-    categoryIDs: [Int!]!
+    page: Int!
+    limit: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
 }
 
-type WizardPageResponse {
-    categories: Categories!
-    games: Games!
+type SectionsResponse {
+    sections: Sections!
 }
 
-input SiteMapPageRequest {
+input SectionRequest {
+    field: GetByField!
+    value: String!
     language: Language!
 }
 
-type SiteMapPageResponse {
-    categories: Categories!
+type SectionResponse {
+    section: Section!
 }
 
-input SearchPageRequest {
+input PlacedSectionsRequest {
+    language: Language!
+}
+
+type PlacedSectionsResponse {
+    placedSections: PlacedSections!
+}
+
+input SearchRequest {
+    language: Language!
+    query: String!
+    maxGames: Int!
+    maxTags: Int!
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
+}
+
+type SearchResponse {
+    searchItems: SearchItems
+}
+
+input FullSearchRequest {
     language: Language!
     query: String!
     page: Int!
+    limit: Int!
     sort: SortingMethod
+    allowDeleted: Boolean!
+    allowInvisible: Boolean!
 }
 
-type SearchPageResponse {
-    items: SearchItems!
-    showingRange: String!
+type RandomProviderGameResponse {
+    name: String!
+    url: String!
+    description: String!
+    controls: String!
+    mobile: Boolean!
+    height: Int!
+    width: Int!
+    categories: [String!]!
+    tags: [String!]!
+    images: [String!]!
 }
 
-input ContinuePlayingPageRequest{
-    lastPlayedGameIDs: [Int!]!
-    page: Int!
-    language: Language!
+type AvailableLanguagesResponse {
+    Languages: [AvailableLanguage!]
 }
 
-type ContinuePlayingPageResponse {
-    games: Games!
-}
-
-input FilterPageRequest {
-    categoryIDs: [Int!]
-    sort: SortingMethod
-    tagIDs: [Int!]
-    gameIDs: [Int!]
-    page: Int!
-    language: Language!
-}
-
-type FilterPageResponse {
-    games: Games!
-}
-
-type CategoryPageResponse {
-    category: Category!
-    tagSections: TagSections!
-    tags: Tags!
-    games: CategoryPageGames!
-}
-
-type CategoryPageGames {
-    firstSectionGames: Games!
-    otherGames: Games!
-}
-
-type HomePageResponse {
-    totalGames: Int!
-    mostPlayedGamesInLast7Days: Games!
-    gamesAddedInLast7Days: Games!
-    mostPlayedGames: Games!
-    sections: PlacedSections!
-    tagSections: TagSections!
-}
-
-type GamePageResponse {
-    game: Game!
-    otherGames: Games!
-    isLiked: Boolean!
-    isDisliked: Boolean!
-}
-
-input HomePageRequest {
-    language: Language!
-}
-
-input CategoryPageRequest {
-    language: Language!
-    id: Int!
-}
-
-input GamePageRequest {
-    language: Language!
-    slug: String!
-    lastPlayedGameIDs: [Int]
-    likedGameIDs: [Int]
-    dislikedGameIDs: [Int]
-}
-
-input LastPlayedGameID {
-    id: Int!
-    date: String!
+input SendEmailRequest {
+    from: String!
+    name: String!
+    subject: String!
+    body: String!
 }
