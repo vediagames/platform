@@ -21,7 +21,6 @@ type CategoryPageGames struct {
 
 type CategoryPageRequest struct {
 	Language model.Language `json:"language"`
-	Slug     string         `json:"slug"`
 	ID       int            `json:"id"`
 }
 
@@ -64,8 +63,7 @@ type GamePageResponse struct {
 }
 
 type HomePageRequest struct {
-	Language          model.Language      `json:"language"`
-	LastPlayedGameIDs []*LastPlayedGameID `json:"lastPlayedGameIDs,omitempty"`
+	Language model.Language `json:"language"`
 }
 
 type LastPlayedGameID struct {

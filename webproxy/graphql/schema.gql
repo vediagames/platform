@@ -123,12 +123,10 @@ type GamePageResponse {
 
 input HomePageRequest {
     language: Language!
-    lastPlayedGameIDs: [LastPlayedGameID!]
 }
 
 input CategoryPageRequest {
     language: Language!
-    slug: String!
     id: Int!
 }
 

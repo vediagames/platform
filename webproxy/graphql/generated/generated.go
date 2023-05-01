@@ -76,7 +76,6 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Language         func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
 		PublishedAt      func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -104,33 +103,31 @@ type ComplexityRoot struct {
 	}
 
 	Game struct {
-		Categories        func(childComplexity int) int
-		Content           func(childComplexity int) int
-		CreatedAt         func(childComplexity int) int
-		DeletedAt         func(childComplexity int) int
-		Description       func(childComplexity int) int
-		Dislikes          func(childComplexity int) int
-		FullScreenPageURL func(childComplexity int) int
-		Height            func(childComplexity int) int
-		ID                func(childComplexity int) int
-		Language          func(childComplexity int) int
-		Likes             func(childComplexity int) int
-		Mobile            func(childComplexity int) int
-		Name              func(childComplexity int) int
-		PageURL           func(childComplexity int) int
-		Player1Controls   func(childComplexity int) int
-		Player2Controls   func(childComplexity int) int
-		Plays             func(childComplexity int) int
-		PublishedAt       func(childComplexity int) int
-		ShortDescription  func(childComplexity int) int
-		Slug              func(childComplexity int) int
-		Status            func(childComplexity int) int
-		Tags              func(childComplexity int) int
-		Thumbnail         func(childComplexity int, request model.ThumbnailRequest) int
-		URL               func(childComplexity int) int
-		Video             func(childComplexity int, original model.OriginalVideo) int
-		Weight            func(childComplexity int) int
-		Width             func(childComplexity int) int
+		Categories       func(childComplexity int) int
+		Content          func(childComplexity int) int
+		CreatedAt        func(childComplexity int) int
+		DeletedAt        func(childComplexity int) int
+		Description      func(childComplexity int) int
+		Dislikes         func(childComplexity int) int
+		Height           func(childComplexity int) int
+		ID               func(childComplexity int) int
+		Language         func(childComplexity int) int
+		Likes            func(childComplexity int) int
+		Mobile           func(childComplexity int) int
+		Name             func(childComplexity int) int
+		Player1Controls  func(childComplexity int) int
+		Player2Controls  func(childComplexity int) int
+		Plays            func(childComplexity int) int
+		PublishedAt      func(childComplexity int) int
+		ShortDescription func(childComplexity int) int
+		Slug             func(childComplexity int) int
+		Status           func(childComplexity int) int
+		Tags             func(childComplexity int) int
+		Thumbnail        func(childComplexity int, request model.ThumbnailRequest) int
+		URL              func(childComplexity int) int
+		Video            func(childComplexity int, original model.OriginalVideo) int
+		Weight           func(childComplexity int) int
+		Width            func(childComplexity int) int
 	}
 
 	GamePageResponse struct {
@@ -180,7 +177,6 @@ type ComplexityRoot struct {
 
 	SearchItem struct {
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
 		Thumbnail        func(childComplexity int, request model.ThumbnailRequest) int
@@ -208,7 +204,6 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Language         func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
 		PublishedAt      func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -234,7 +229,6 @@ type ComplexityRoot struct {
 		ID               func(childComplexity int) int
 		Language         func(childComplexity int) int
 		Name             func(childComplexity int) int
-		PageURL          func(childComplexity int) int
 		PublishedAt      func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -287,7 +281,6 @@ type GameResolver interface {
 	Categories(ctx context.Context, obj *model.Game) (*model.Categories, error)
 
 	Thumbnail(ctx context.Context, obj *model.Game, request model.ThumbnailRequest) (string, error)
-
 	Video(ctx context.Context, obj *model.Game, original model.OriginalVideo) (string, error)
 }
 type HomePageResponseResolver interface {
@@ -438,13 +431,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Category.Name(childComplexity), true
 
-	case "Category.pageUrl":
-		if e.complexity.Category.PageURL == nil {
-			break
-		}
-
-		return e.complexity.Category.PageURL(childComplexity), true
-
 	case "Category.publishedAt":
 		if e.complexity.Category.PublishedAt == nil {
 			break
@@ -571,13 +557,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Game.Dislikes(childComplexity), true
 
-	case "Game.fullScreenPageUrl":
-		if e.complexity.Game.FullScreenPageURL == nil {
-			break
-		}
-
-		return e.complexity.Game.FullScreenPageURL(childComplexity), true
-
 	case "Game.height":
 		if e.complexity.Game.Height == nil {
 			break
@@ -619,13 +598,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Game.Name(childComplexity), true
-
-	case "Game.pageUrl":
-		if e.complexity.Game.PageURL == nil {
-			break
-		}
-
-		return e.complexity.Game.PageURL(childComplexity), true
 
 	case "Game.player1Controls":
 		if e.complexity.Game.Player1Controls == nil {
@@ -979,13 +951,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SearchItem.Name(childComplexity), true
 
-	case "SearchItem.pageUrl":
-		if e.complexity.SearchItem.PageURL == nil {
-			break
-		}
-
-		return e.complexity.SearchItem.PageURL(childComplexity), true
-
 	case "SearchItem.shortDescription":
 		if e.complexity.SearchItem.ShortDescription == nil {
 			break
@@ -1122,13 +1087,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Section.Name(childComplexity), true
 
-	case "Section.pageUrl":
-		if e.complexity.Section.PageURL == nil {
-			break
-		}
-
-		return e.complexity.Section.PageURL(childComplexity), true
-
 	case "Section.publishedAt":
 		if e.complexity.Section.PublishedAt == nil {
 			break
@@ -1240,13 +1198,6 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Tag.Name(childComplexity), true
-
-	case "Tag.pageUrl":
-		if e.complexity.Tag.PageURL == nil {
-			break
-		}
-
-		return e.complexity.Tag.PageURL(childComplexity), true
 
 	case "Tag.publishedAt":
 		if e.complexity.Tag.PublishedAt == nil {
@@ -1563,12 +1514,10 @@ type GamePageResponse {
 
 input HomePageRequest {
     language: Language!
-    lastPlayedGameIDs: [LastPlayedGameID!]
 }
 
 input CategoryPageRequest {
     language: Language!
-    slug: String!
     id: Int!
 }
 
@@ -1657,8 +1606,6 @@ type Game {
     categories: Categories!
     mobile: Boolean!
     thumbnail(request: ThumbnailRequest!): String!
-    pageUrl: String!
-    fullScreenPageUrl: String!
     video(original: OriginalVideo!): String!
 }
 
@@ -1691,7 +1638,6 @@ type Section {
     tags: Tags
     categories: Categories
     games: Games
-    pageUrl: String!
 }
 
 type Tags {
@@ -1713,7 +1659,6 @@ type Tag {
     deletedAt: String
     publishedAt: String
     thumbnail(request: ThumbnailRequest!): String!
-    pageUrl: String!
 }
 
 type Categories {
@@ -1734,7 +1679,6 @@ type Category {
     createdAt: String!
     deletedAt: String
     publishedAt: String
-    pageUrl: String!
 }
 
 type TagSections {
@@ -1757,7 +1701,6 @@ type SearchItem {
     name: String!
     slug: String!
     type: SearchItemType!
-    pageUrl: String!
     thumbnail(request: ThumbnailRequest!): String!
     video(original: OriginalVideo!): String!
 }
@@ -2263,8 +2206,6 @@ func (ec *executionContext) fieldContext_Categories_data(ctx context.Context, fi
 				return ec.fieldContext_Category_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Category_publishedAt(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Category_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
@@ -2879,50 +2820,6 @@ func (ec *executionContext) fieldContext_Category_publishedAt(ctx context.Contex
 	return fc, nil
 }
 
-func (ec *executionContext) _Category_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Category) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Category_pageUrl(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Category_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Category",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _CategoryPageGames_firstSectionGames(ctx context.Context, field graphql.CollectedField, obj *model1.CategoryPageGames) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_CategoryPageGames_firstSectionGames(ctx, field)
 	if err != nil {
@@ -3086,8 +2983,6 @@ func (ec *executionContext) fieldContext_CategoryPageResponse_category(ctx conte
 				return ec.fieldContext_Category_deletedAt(ctx, field)
 			case "publishedAt":
 				return ec.fieldContext_Category_publishedAt(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Category_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
 		},
@@ -4403,94 +4298,6 @@ func (ec *executionContext) fieldContext_Game_thumbnail(ctx context.Context, fie
 	return fc, nil
 }
 
-func (ec *executionContext) _Game_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Game_pageUrl(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Game_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Game",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
-func (ec *executionContext) _Game_fullScreenPageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.FullScreenPageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Game_fullScreenPageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Game",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Game_video(ctx context.Context, field graphql.CollectedField, obj *model.Game) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Game_video(ctx, field)
 	if err != nil {
@@ -4633,10 +4440,6 @@ func (ec *executionContext) fieldContext_GamePageResponse_game(ctx context.Conte
 				return ec.fieldContext_Game_mobile(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Game_thumbnail(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Game_pageUrl(ctx, field)
-			case "fullScreenPageUrl":
-				return ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
 			case "video":
 				return ec.fieldContext_Game_video(ctx, field)
 			}
@@ -4871,10 +4674,6 @@ func (ec *executionContext) fieldContext_Games_data(ctx context.Context, field g
 				return ec.fieldContext_Game_mobile(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Game_thumbnail(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Game_pageUrl(ctx, field)
-			case "fullScreenPageUrl":
-				return ec.fieldContext_Game_fullScreenPageUrl(ctx, field)
 			case "video":
 				return ec.fieldContext_Game_video(ctx, field)
 			}
@@ -5287,8 +5086,6 @@ func (ec *executionContext) fieldContext_PlacedSection_section(ctx context.Conte
 				return ec.fieldContext_Section_categories(ctx, field)
 			case "games":
 				return ec.fieldContext_Section_games(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Section_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Section", field.Name)
 		},
@@ -6420,50 +6217,6 @@ func (ec *executionContext) fieldContext_SearchItem_type(ctx context.Context, fi
 	return fc, nil
 }
 
-func (ec *executionContext) _SearchItem_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_SearchItem_pageUrl(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_SearchItem_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "SearchItem",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _SearchItem_thumbnail(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SearchItem_thumbnail(ctx, field)
 	if err != nil {
@@ -6621,8 +6374,6 @@ func (ec *executionContext) fieldContext_SearchItems_data(ctx context.Context, f
 				return ec.fieldContext_SearchItem_slug(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_SearchItem_pageUrl(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_SearchItem_thumbnail(ctx, field)
 			case "video":
@@ -7382,50 +7133,6 @@ func (ec *executionContext) fieldContext_Section_games(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Section_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Section) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Section_pageUrl(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Section_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Section",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _Sections_data(ctx context.Context, field graphql.CollectedField, obj *model.Sections) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_Sections_data(ctx, field)
 	if err != nil {
@@ -7493,8 +7200,6 @@ func (ec *executionContext) fieldContext_Sections_data(ctx context.Context, fiel
 				return ec.fieldContext_Section_categories(ctx, field)
 			case "games":
 				return ec.fieldContext_Section_games(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Section_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Section", field.Name)
 		},
@@ -8164,50 +7869,6 @@ func (ec *executionContext) fieldContext_Tag_thumbnail(ctx context.Context, fiel
 	return fc, nil
 }
 
-func (ec *executionContext) _Tag_pageUrl(ctx context.Context, field graphql.CollectedField, obj *model.Tag) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Tag_pageUrl(ctx, field)
-	if err != nil {
-		return graphql.Null
-	}
-	ctx = graphql.WithFieldContext(ctx, fc)
-	defer func() {
-		if r := recover(); r != nil {
-			ec.Error(ctx, ec.Recover(ctx, r))
-			ret = graphql.Null
-		}
-	}()
-	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
-		ctx = rctx // use context from middleware stack in children
-		return obj.PageURL, nil
-	})
-	if err != nil {
-		ec.Error(ctx, err)
-		return graphql.Null
-	}
-	if resTmp == nil {
-		if !graphql.HasFieldError(ctx, fc) {
-			ec.Errorf(ctx, "must not be null")
-		}
-		return graphql.Null
-	}
-	res := resTmp.(string)
-	fc.Result = res
-	return ec.marshalNString2string(ctx, field.Selections, res)
-}
-
-func (ec *executionContext) fieldContext_Tag_pageUrl(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
-	fc = &graphql.FieldContext{
-		Object:     "Tag",
-		Field:      field,
-		IsMethod:   false,
-		IsResolver: false,
-		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
-			return nil, errors.New("field of type String does not have child fields")
-		},
-	}
-	return fc, nil
-}
-
 func (ec *executionContext) _TagPageResponse_tag(ctx context.Context, field graphql.CollectedField, obj *model1.TagPageResponse) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_TagPageResponse_tag(ctx, field)
 	if err != nil {
@@ -8273,8 +7934,6 @@ func (ec *executionContext) fieldContext_TagPageResponse_tag(ctx context.Context
 				return ec.fieldContext_Tag_publishedAt(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Tag_thumbnail(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
 		},
@@ -8444,8 +8103,6 @@ func (ec *executionContext) fieldContext_TagSection_tag(ctx context.Context, fie
 				return ec.fieldContext_Tag_publishedAt(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Tag_thumbnail(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
 		},
@@ -8612,8 +8269,6 @@ func (ec *executionContext) fieldContext_Tags_data(ctx context.Context, field gr
 				return ec.fieldContext_Tag_publishedAt(ctx, field)
 			case "thumbnail":
 				return ec.fieldContext_Tag_thumbnail(ctx, field)
-			case "pageUrl":
-				return ec.fieldContext_Tag_pageUrl(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Tag", field.Name)
 		},
@@ -10664,7 +10319,7 @@ func (ec *executionContext) unmarshalInputCategoryPageRequest(ctx context.Contex
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "slug", "id"}
+	fieldsInOrder := [...]string{"language", "id"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -10676,14 +10331,6 @@ func (ec *executionContext) unmarshalInputCategoryPageRequest(ctx context.Contex
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
 			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "slug":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
-			it.Slug, err = ec.unmarshalNString2string(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -10880,7 +10527,7 @@ func (ec *executionContext) unmarshalInputHomePageRequest(ctx context.Context, o
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "lastPlayedGameIDs"}
+	fieldsInOrder := [...]string{"language"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -10892,14 +10539,6 @@ func (ec *executionContext) unmarshalInputHomePageRequest(ctx context.Context, o
 
 			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
 			it.Language, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, v)
-			if err != nil {
-				return it, err
-			}
-		case "lastPlayedGameIDs":
-			var err error
-
-			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("lastPlayedGameIDs"))
-			it.LastPlayedGameIDs, err = ec.unmarshalOLastPlayedGameID2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameIDᚄ(ctx, v)
 			if err != nil {
 				return it, err
 			}
@@ -11378,13 +11017,6 @@ func (ec *executionContext) _Category(ctx context.Context, sel ast.SelectionSet,
 
 			out.Values[i] = ec._Category_publishedAt(ctx, field, obj)
 
-		case "pageUrl":
-
-			out.Values[i] = ec._Category_pageUrl(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				invalids++
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -11784,20 +11416,6 @@ func (ec *executionContext) _Game(ctx context.Context, sel ast.SelectionSet, obj
 				return innerFunc(ctx)
 
 			})
-		case "pageUrl":
-
-			out.Values[i] = ec._Game_pageUrl(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
-		case "fullScreenPageUrl":
-
-			out.Values[i] = ec._Game_fullScreenPageUrl(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "video":
 			field := field
 
@@ -12473,13 +12091,6 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&invalids, 1)
 			}
-		case "pageUrl":
-
-			out.Values[i] = ec._SearchItem_pageUrl(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		case "thumbnail":
 			field := field
 
@@ -12724,13 +12335,6 @@ func (ec *executionContext) _Section(ctx context.Context, sel ast.SelectionSet, 
 				return innerFunc(ctx)
 
 			})
-		case "pageUrl":
-
-			out.Values[i] = ec._Section_pageUrl(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -12904,13 +12508,6 @@ func (ec *executionContext) _Tag(ctx context.Context, sel ast.SelectionSet, obj 
 				return innerFunc(ctx)
 
 			})
-		case "pageUrl":
-
-			out.Values[i] = ec._Tag_pageUrl(ctx, field, obj)
-
-			if out.Values[i] == graphql.Null {
-				atomic.AddUint32(&invalids, 1)
-			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13857,11 +13454,6 @@ func (ec *executionContext) marshalNLanguage2githubᚗcomᚋvediagamesᚋplatfor
 	return v
 }
 
-func (ec *executionContext) unmarshalNLastPlayedGameID2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameID(ctx context.Context, v interface{}) (*model1.LastPlayedGameID, error) {
-	res, err := ec.unmarshalInputLastPlayedGameID(ctx, v)
-	return &res, graphql.ErrorOnPath(ctx, err)
-}
-
 func (ec *executionContext) unmarshalNOriginalThumbnail2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐOriginalThumbnail(ctx context.Context, v interface{}) (model.OriginalThumbnail, error) {
 	var res model.OriginalThumbnail
 	err := res.UnmarshalGQL(v)
@@ -14755,26 +14347,6 @@ func (ec *executionContext) marshalOInt2ᚖint(ctx context.Context, sel ast.Sele
 	}
 	res := graphql.MarshalInt(*v)
 	return res
-}
-
-func (ec *executionContext) unmarshalOLastPlayedGameID2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameIDᚄ(ctx context.Context, v interface{}) ([]*model1.LastPlayedGameID, error) {
-	if v == nil {
-		return nil, nil
-	}
-	var vSlice []interface{}
-	if v != nil {
-		vSlice = graphql.CoerceList(v)
-	}
-	var err error
-	res := make([]*model1.LastPlayedGameID, len(vSlice))
-	for i := range vSlice {
-		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
-		res[i], err = ec.unmarshalNLastPlayedGameID2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋwebproxyᚋgraphqlᚋmodelᚐLastPlayedGameID(ctx, vSlice[i])
-		if err != nil {
-			return nil, err
-		}
-	}
-	return res, nil
 }
 
 func (ec *executionContext) unmarshalOSortingMethod2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐSortingMethod(ctx context.Context, v interface{}) (*model.SortingMethod, error) {

@@ -1,6 +1,6 @@
 .PHONY: gqlgen up build
 
-dc = docker-compose -f docker-compose.yaml
+dc = docker-compose -f docker-compose.yml
 env_file = ./.env
 
 include $(env_file)
@@ -12,7 +12,7 @@ gqlgen/%:
 
 dev:
 	echo "Starting dev environment in docker"
-	docker-compose up -d
+	$(dc) up -d
 
 down:
 	echo "Shutting down the dev environment"

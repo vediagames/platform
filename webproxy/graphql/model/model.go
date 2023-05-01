@@ -17,7 +17,6 @@ type HomePageResponse struct {
 	MostPlayedGames            *model.Games          `json:"mostPlayedGames"`
 	Sections                   *model.PlacedSections `json:"sections"`
 	TagSections                *model.TagSections    `json:"tagSections"`
-	LastPlayedGameIDs          []*LastPlayedGameID
 	Language                   model.Language
 }
 
@@ -35,6 +34,5 @@ type CategoryPageResponse struct {
 	Tags              *model.Tags        `json:"tags"`
 	OtherGames        *model.Games       `json:"otherGames"`
 	Language          model.Language
-	Slug              string
 	ID                int
 }

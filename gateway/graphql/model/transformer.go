@@ -1,10 +1,6 @@
 package model
 
 import (
-	"encoding/base64"
-	"encoding/json"
-	"fmt"
-	"net/url"
 	"strings"
 
 	categorydomain "github.com/vediagames/platform/category/domain"
@@ -38,31 +34,29 @@ func (g Games) FromDomain(domain gamedomain.Games) *Games {
 
 func (g Game) FromDomain(domain gamedomain.Game) *Game {
 	return &Game{
-		ID:                domain.ID,
-		Language:          Language(domain.Language),
-		Slug:              domain.Slug,
-		Name:              domain.Name,
-		Status:            Status(domain.Status),
-		CreatedAt:         domain.CreatedAt.String(),
-		DeletedAt:         stringToPointer(domain.DeletedAt.String()),
-		PublishedAt:       stringToPointer(domain.PublishedAt.String()),
-		URL:               domain.URL,
-		Width:             domain.Width,
-		Height:            domain.Height,
-		ShortDescription:  stringToPointer(domain.ShortDescription),
-		Description:       stringToPointer(domain.Description),
-		Content:           stringToPointer(domain.Content),
-		Likes:             domain.Likes,
-		Dislikes:          domain.Dislikes,
-		Plays:             domain.Plays,
-		Weight:            domain.Weight,
-		Player1Controls:   stringToPointer(domain.Player1Controls),
-		Player2Controls:   stringToPointer(domain.Player2Controls),
-		Mobile:            domain.Mobile,
-		PageURL:           fmt.Sprintf("/game/%s", domain.Slug),
-		FullScreenPageURL: fmt.Sprintf("/game/%s/fullscreen", domain.Slug),
-		TagIDRefs:         domain.TagIDRefs,
-		CategoryIDRefs:    domain.CategoryIDRefs,
+		ID:               domain.ID,
+		Language:         Language(domain.Language),
+		Slug:             domain.Slug,
+		Name:             domain.Name,
+		Status:           Status(domain.Status),
+		CreatedAt:        domain.CreatedAt.String(),
+		DeletedAt:        stringToPointer(domain.DeletedAt.String()),
+		PublishedAt:      stringToPointer(domain.PublishedAt.String()),
+		URL:              domain.URL,
+		Width:            domain.Width,
+		Height:           domain.Height,
+		ShortDescription: stringToPointer(domain.ShortDescription),
+		Description:      stringToPointer(domain.Description),
+		Content:          stringToPointer(domain.Content),
+		Likes:            domain.Likes,
+		Dislikes:         domain.Dislikes,
+		Plays:            domain.Plays,
+		Weight:           domain.Weight,
+		Player1Controls:  stringToPointer(domain.Player1Controls),
+		Player2Controls:  stringToPointer(domain.Player2Controls),
+		Mobile:           domain.Mobile,
+		TagIDRefs:        domain.TagIDRefs,
+		CategoryIDRefs:   domain.CategoryIDRefs,
 	}
 }
 
@@ -101,7 +95,6 @@ func (t Tag) FromDomain(domain tagdomain.Tag) *Tag {
 		CreatedAt:        domain.CreatedAt.String(),
 		DeletedAt:        stringToPointer(domain.DeletedAt.String()),
 		PublishedAt:      stringToPointer(domain.PublishedAt.String()),
-		PageURL:          fmt.Sprintf("/tag/%s?id=%d", domain.Slug, domain.ID),
 	}
 }
 
@@ -141,55 +134,23 @@ func (c Category) FromDomain(domain categorydomain.Category) *Category {
 		CreatedAt:        domain.CreatedAt.String(),
 		DeletedAt:        stringToPointer(domain.DeletedAt.String()),
 		PublishedAt:      stringToPointer(domain.PublishedAt.String()),
-		PageURL:          fmt.Sprintf("/category/%s", domain.Slug),
 	}
 }
 
-func (s Sections) FromDomain(domain sectiondomain.Sections) (*Sections, error) {
+func (s Sections) FromDomain(domain sectiondomain.Sections) *Sections {
 	sections := &Sections{
 		Data:  make([]*Section, 0, len(domain.Data)),
 		Total: domain.Total,
 	}
 
 	for _, domainSection := range domain.Data {
-		section, err := Section{}.FromDomain(domainSection)
-		if err != nil {
-			return nil, fmt.Errorf("failed to convert section: %w", err)
-		}
-
-		sections.Data = append(sections.Data, section)
+		sections.Data = append(sections.Data, Section{}.FromDomain(domainSection))
 	}
 
-	return sections, nil
+	return sections
 }
 
-func (S Section) FromDomain(domain sectiondomain.Section) (*Section, error) {
-	pageURL := "/continue-playing"
-
-	if domain.Slug != "continue-playing" {
-		var paramsFilter filterParams
-
-		switch domain.Slug {
-		case "newest":
-			paramsFilter = filterParams{
-				Sort: SortingMethodNewest,
-			}
-		default:
-			paramsFilter = filterParams{
-				Tags:       domain.TagIDRefs,
-				Categories: domain.CategoryIDRefs,
-				Games:      domain.GameIDRefs,
-			}
-		}
-
-		params, err := filterParamsInBase64(paramsFilter)
-		if err != nil {
-			return &Section{}, fmt.Errorf("failed to encode filter params: %w", err)
-		}
-
-		pageURL = fmt.Sprintf("/filter?title=%s&params=%s", url.QueryEscape(domain.Name), params)
-	}
-
+func (S Section) FromDomain(domain sectiondomain.Section) *Section {
 	return &Section{
 		ID:               domain.ID,
 		Language:         Language(domain.Language),
@@ -202,34 +163,28 @@ func (S Section) FromDomain(domain sectiondomain.Section) (*Section, error) {
 		ShortDescription: stringToPointer(domain.ShortDescription),
 		Description:      stringToPointer(domain.Description),
 		Content:          stringToPointer(domain.Content),
-		PageURL:          pageURL,
 		TagIDRefs:        domain.TagIDRefs,
 		CategoryIDRefs:   domain.CategoryIDRefs,
 		GameIDRefs:       domain.GameIDRefs,
-	}, nil
+	}
 }
 
-func (s PlacedSections) FromDomain(domain sectiondomain.GetPlacedResponse) (*PlacedSections, error) {
+func (s PlacedSections) FromDomain(domain sectiondomain.GetPlacedResponse) *PlacedSections {
 	placedSections := &PlacedSections{
 		Data: make([]*PlacedSection, 0, len(domain.Data)),
 	}
 
 	for _, domainSection := range domain.Data {
-		section, err := Section{}.FromDomain(domainSection.Section)
-		if err != nil {
-			return nil, fmt.Errorf("failed to convert section: %w", err)
-		}
-
 		placedSections.Data = append(placedSections.Data, &PlacedSection{
-			Section:   section,
+			Section:   Section{}.FromDomain(domainSection.Section),
 			Placement: domainSection.PlacementNumber,
 		})
 	}
 
-	return placedSections, nil
+	return placedSections
 }
 
-func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItems, error) {
+func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) *SearchItems {
 	searchResponse := &SearchItems{
 		Data:  make([]*SearchItem, 0, len(domain.Games)+len(domain.Tags)),
 		Total: domain.Total,
@@ -241,7 +196,6 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItem
 			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeGame,
-			PageURL:          fmt.Sprintf("/game/%s", domainItem.Slug),
 		})
 	}
 
@@ -251,31 +205,14 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) (*SearchItem
 			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
 			Type:             SearchItemTypeTag,
-			PageURL:          fmt.Sprintf("/tag/%s?id=%d", domainItem.Slug, domainItem.ID),
 		})
 	}
 
-	return searchResponse, nil
+	return searchResponse
 }
 
 func stringToPointer(s string) *string {
 	return &s
-}
-
-type filterParams struct {
-	Sort       SortingMethod `json:"sort,omitempty"`
-	Tags       []int         `json:"tags,omitempty"`
-	Categories []int         `json:"categories,omitempty"`
-	Games      []int         `json:"games,omitempty"`
-}
-
-func filterParamsInBase64(p filterParams) (string, error) {
-	body, err := json.Marshal(p)
-	if err != nil {
-		return "", fmt.Errorf("failed to marshal filter params: %w", err)
-	}
-
-	return base64.StdEncoding.EncodeToString(body), nil
 }
 
 func (m *SortingMethod) Domain() string {
