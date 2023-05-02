@@ -59,6 +59,33 @@ type CategoryResponse struct {
 	Category *Category `json:"category"`
 }
 
+type CreateGameRequest struct {
+	Slug             string  `json:"slug"`
+	Mobile           bool    `json:"mobile"`
+	Tags             []int   `json:"tags"`
+	Categories       []int   `json:"categories"`
+	Status           Status  `json:"status"`
+	URL              string  `json:"url"`
+	Width            int     `json:"width"`
+	Height           int     `json:"height"`
+	Weight           int     `json:"weight"`
+	Name             string  `json:"name"`
+	ShortDescription string  `json:"shortDescription"`
+	Description      string  `json:"description"`
+	Player1Controls  string  `json:"player1Controls"`
+	Content          *string `json:"content,omitempty"`
+	Player2Controls  *string `json:"player2Controls,omitempty"`
+}
+
+type CreateGameResponse struct {
+	Game *Game `json:"game"`
+}
+
+type DeleteGameRequest struct {
+	Slug *string `json:"slug,omitempty"`
+	ID   *int    `json:"id,omitempty"`
+}
+
 type FreshGamesRequest struct {
 	Language Language `json:"language"`
 	Page     int      `json:"page"`
@@ -273,6 +300,32 @@ type ThumbnailRequest struct {
 	Width    *int              `json:"width,omitempty"`
 	Height   *int              `json:"height,omitempty"`
 	Format   *ImageFormat      `json:"format,omitempty"`
+}
+
+type UpdateGameRequest struct {
+	ID               int     `json:"id"`
+	Slug             string  `json:"slug"`
+	Mobile           bool    `json:"mobile"`
+	Tags             []int   `json:"tags"`
+	Categories       []int   `json:"categories"`
+	Status           Status  `json:"status"`
+	URL              string  `json:"url"`
+	Width            int     `json:"width"`
+	Height           int     `json:"height"`
+	Likes            int     `json:"likes"`
+	Dislikes         int     `json:"dislikes"`
+	Plays            int     `json:"plays"`
+	Weight           int     `json:"weight"`
+	Name             string  `json:"name"`
+	ShortDescription string  `json:"shortDescription"`
+	Description      string  `json:"description"`
+	Player1Controls  string  `json:"player1Controls"`
+	Content          *string `json:"content,omitempty"`
+	Player2Controls  *string `json:"player2Controls,omitempty"`
+}
+
+type UpdateGameResponse struct {
+	Game *Game `json:"game"`
 }
 
 type GameReaction string

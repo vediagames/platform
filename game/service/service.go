@@ -10,11 +10,6 @@ import (
 	"github.com/vediagames/platform/game/domain"
 )
 
-type service struct {
-	repository      domain.Repository
-	eventRepository domain.EventRepository
-}
-
 type Config struct {
 	Repository      domain.Repository
 	EventRepository domain.EventRepository
@@ -38,6 +33,65 @@ func New(config Config) domain.Service {
 		repository:      config.Repository,
 		eventRepository: config.EventRepository,
 	}
+}
+
+type service struct {
+	repository      domain.Repository
+	eventRepository domain.EventRepository
+}
+
+func (s service) Create(ctx context.Context, req domain.CreateRequest) (domain.CreateResponse, error) {
+	if ve := req.Validate(); ve != nil {
+		return domain.CreateResponse{}, fmt.Errorf("invalid request: %w", ve)
+	}
+
+	repoRes, err := s.repository.Insert(ctx, domain.InsertQuery(req))
+	if err != nil {
+		return domain.CreateResponse{}, fmt.Errorf("failed to insert: %w", err)
+	}
+
+	res := domain.CreateResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.CreateResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
+
+	return res, nil
+}
+
+func (s service) Edit(ctx context.Context, req domain.EditRequest) (domain.EditResponse, error) {
+	if ve := req.Validate(); ve != nil {
+		return domain.EditResponse{}, fmt.Errorf("invalid request: %w", ve)
+	}
+
+	repoRes, err := s.repository.Update(ctx, domain.UpdateQuery(req))
+	if err != nil {
+		return domain.EditResponse{}, fmt.Errorf("failed to update: %w", err)
+	}
+
+	res := domain.EditResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.EditResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
+
+	return res, nil
+}
+
+func (s service) Remove(ctx context.Context, req domain.RemoveRequest) (domain.RemoveResponse, error) {
+	if ve := req.Validate(); ve != nil {
+		return domain.RemoveResponse{}, fmt.Errorf("invalid request: %w", ve)
+	}
+
+	repoRes, err := s.repository.Delete(ctx, domain.DeleteQuery(req))
+	if err != nil {
+		return domain.RemoveResponse{}, fmt.Errorf("failed to delete: %w", err)
+	}
+
+	res := domain.RemoveResponse(repoRes)
+	if err := res.Validate(); err != nil {
+		return domain.RemoveResponse{}, fmt.Errorf("invalid response: %w", err)
+	}
+
+	return res, nil
 }
 
 func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListResponse, error) {

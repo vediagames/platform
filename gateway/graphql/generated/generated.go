@@ -86,6 +86,10 @@ type ComplexityRoot struct {
 		Category func(childComplexity int) int
 	}
 
+	CreateGameResponse struct {
+		Game func(childComplexity int) int
+	}
+
 	FreshGamesResponse struct {
 		Games func(childComplexity int) int
 	}
@@ -136,7 +140,10 @@ type ComplexityRoot struct {
 	}
 
 	Mutation struct {
-		SendEmail func(childComplexity int, request model.SendEmailRequest) int
+		CreateGame func(childComplexity int, request model.CreateGameRequest) int
+		DeleteGame func(childComplexity int, request model.DeleteGameRequest) int
+		SendEmail  func(childComplexity int, request model.SendEmailRequest) int
+		UpdateGame func(childComplexity int, request model.UpdateGameRequest) int
 	}
 
 	PlacedSection struct {
@@ -271,6 +278,10 @@ type ComplexityRoot struct {
 		Tags func(childComplexity int) int
 	}
 
+	UpdateGameResponse struct {
+		Game func(childComplexity int) int
+	}
+
 	_Service struct {
 		SDL func(childComplexity int) int
 	}
@@ -284,7 +295,10 @@ type GameResolver interface {
 	Video(ctx context.Context, obj *model.Game, original model.OriginalVideo) (string, error)
 }
 type MutationResolver interface {
-	SendEmail(ctx context.Context, request model.SendEmailRequest) (*bool, error)
+	SendEmail(ctx context.Context, request model.SendEmailRequest) (bool, error)
+	CreateGame(ctx context.Context, request model.CreateGameRequest) (*model.CreateGameResponse, error)
+	UpdateGame(ctx context.Context, request model.UpdateGameRequest) (*model.UpdateGameResponse, error)
+	DeleteGame(ctx context.Context, request model.DeleteGameRequest) (bool, error)
 }
 type QueryResolver interface {
 	MostPlayedGames(ctx context.Context, request model.MostPlayedGamesRequest) (*model.MostPlayedGamesResponse, error)
@@ -463,6 +477,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.CategoryResponse.Category(childComplexity), true
+
+	case "CreateGameResponse.game":
+		if e.complexity.CreateGameResponse.Game == nil {
+			break
+		}
+
+		return e.complexity.CreateGameResponse.Game(childComplexity), true
 
 	case "FreshGamesResponse.games":
 		if e.complexity.FreshGamesResponse.Games == nil {
@@ -691,6 +712,30 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.MostPlayedGamesResponse.Games(childComplexity), true
 
+	case "Mutation.createGame":
+		if e.complexity.Mutation.CreateGame == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_createGame_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.CreateGame(childComplexity, args["request"].(model.CreateGameRequest)), true
+
+	case "Mutation.deleteGame":
+		if e.complexity.Mutation.DeleteGame == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_deleteGame_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.DeleteGame(childComplexity, args["request"].(model.DeleteGameRequest)), true
+
 	case "Mutation.sendEmail":
 		if e.complexity.Mutation.SendEmail == nil {
 			break
@@ -702,6 +747,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Mutation.SendEmail(childComplexity, args["request"].(model.SendEmailRequest)), true
+
+	case "Mutation.updateGame":
+		if e.complexity.Mutation.UpdateGame == nil {
+			break
+		}
+
+		args, err := ec.field_Mutation_updateGame_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Mutation.UpdateGame(childComplexity, args["request"].(model.UpdateGameRequest)), true
 
 	case "PlacedSection.placement":
 		if e.complexity.PlacedSection.Placement == nil {
@@ -1329,6 +1386,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.TagsResponse.Tags(childComplexity), true
 
+	case "UpdateGameResponse.game":
+		if e.complexity.UpdateGameResponse.Game == nil {
+			break
+		}
+
+		return e.complexity.UpdateGameResponse.Game(childComplexity), true
+
 	case "_Service.sdl":
 		if e.complexity._Service.SDL == nil {
 			break
@@ -1346,6 +1410,8 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 	inputUnmarshalMap := graphql.BuildUnmarshalerMap(
 		ec.unmarshalInputCategoriesRequest,
 		ec.unmarshalInputCategoryRequest,
+		ec.unmarshalInputCreateGameRequest,
+		ec.unmarshalInputDeleteGameRequest,
 		ec.unmarshalInputFreshGamesRequest,
 		ec.unmarshalInputFullSearchRequest,
 		ec.unmarshalInputGameRequest,
@@ -1359,6 +1425,7 @@ func (e *executableSchema) Exec(ctx context.Context) graphql.ResponseHandler {
 		ec.unmarshalInputTagRequest,
 		ec.unmarshalInputTagsRequest,
 		ec.unmarshalInputThumbnailRequest,
+		ec.unmarshalInputUpdateGameRequest,
 	)
 	first := true
 
@@ -1645,7 +1712,63 @@ enum OriginalVideo {
 }
 
 type Mutation {
-    sendEmail(request: SendEmailRequest!): Boolean
+    sendEmail(request: SendEmailRequest!): Boolean!
+    createGame(request: CreateGameRequest!): CreateGameResponse!
+    updateGame(request: UpdateGameRequest!): UpdateGameResponse!
+    deleteGame(request: DeleteGameRequest!): Boolean!
+}
+
+input UpdateGameRequest {
+    id: Int!
+    slug: String!
+    mobile: Boolean!
+    tags: [Int!]!
+    categories: [Int!]!
+    status: Status!
+    url: String!
+    width: Int!
+    height: Int!
+    likes: Int!
+    dislikes: Int!
+    plays: Int!
+    weight: Int!
+    name: String!
+    shortDescription: String!
+    description: String!
+    player1Controls: String!
+    content: String
+    player2Controls: String
+}
+
+type UpdateGameResponse {
+    game: Game!
+}
+
+input DeleteGameRequest {
+    slug: String
+    id: Int
+}
+
+input CreateGameRequest {
+    slug: String!
+    mobile: Boolean!
+    tags: [Int!]!
+    categories: [Int!]!
+    status: Status!
+    url: String!
+    width: Int!
+    height: Int!
+    weight: Int!
+    name: String!
+    shortDescription: String!
+    description: String!
+    player1Controls: String!
+    content: String
+    player2Controls: String
+}
+
+type CreateGameResponse {
+    game: Game!
 }
 
 input MostPlayedGamesRequest {
@@ -1875,6 +1998,36 @@ func (ec *executionContext) field_Game_video_args(ctx context.Context, rawArgs m
 	return args, nil
 }
 
+func (ec *executionContext) field_Mutation_createGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.CreateGameRequest
+	if tmp, ok := rawArgs["request"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
+		arg0, err = ec.unmarshalNCreateGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCreateGameRequest(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["request"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_deleteGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.DeleteGameRequest
+	if tmp, ok := rawArgs["request"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
+		arg0, err = ec.unmarshalNDeleteGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐDeleteGameRequest(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["request"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Mutation_sendEmail_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -1882,6 +2035,21 @@ func (ec *executionContext) field_Mutation_sendEmail_args(ctx context.Context, r
 	if tmp, ok := rawArgs["request"]; ok {
 		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
 		arg0, err = ec.unmarshalNSendEmailRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐSendEmailRequest(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["request"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Mutation_updateGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.UpdateGameRequest
+	if tmp, ok := rawArgs["request"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("request"))
+		arg0, err = ec.unmarshalNUpdateGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐUpdateGameRequest(ctx, tmp)
 		if err != nil {
 			return nil, err
 		}
@@ -3060,6 +3228,102 @@ func (ec *executionContext) fieldContext_CategoryResponse_category(ctx context.C
 				return ec.fieldContext_Category_publishedAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Category", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _CreateGameResponse_game(ctx context.Context, field graphql.CollectedField, obj *model.CreateGameResponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_CreateGameResponse_game(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Game, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Game)
+	fc.Result = res
+	return ec.marshalNGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGame(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_CreateGameResponse_game(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "CreateGameResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Game_id(ctx, field)
+			case "language":
+				return ec.fieldContext_Game_language(ctx, field)
+			case "slug":
+				return ec.fieldContext_Game_slug(ctx, field)
+			case "name":
+				return ec.fieldContext_Game_name(ctx, field)
+			case "status":
+				return ec.fieldContext_Game_status(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Game_createdAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_Game_deletedAt(ctx, field)
+			case "publishedAt":
+				return ec.fieldContext_Game_publishedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_Game_url(ctx, field)
+			case "width":
+				return ec.fieldContext_Game_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Game_height(ctx, field)
+			case "shortDescription":
+				return ec.fieldContext_Game_shortDescription(ctx, field)
+			case "description":
+				return ec.fieldContext_Game_description(ctx, field)
+			case "content":
+				return ec.fieldContext_Game_content(ctx, field)
+			case "likes":
+				return ec.fieldContext_Game_likes(ctx, field)
+			case "dislikes":
+				return ec.fieldContext_Game_dislikes(ctx, field)
+			case "plays":
+				return ec.fieldContext_Game_plays(ctx, field)
+			case "weight":
+				return ec.fieldContext_Game_weight(ctx, field)
+			case "player1Controls":
+				return ec.fieldContext_Game_player1Controls(ctx, field)
+			case "player2Controls":
+				return ec.fieldContext_Game_player2Controls(ctx, field)
+			case "tags":
+				return ec.fieldContext_Game_tags(ctx, field)
+			case "categories":
+				return ec.fieldContext_Game_categories(ctx, field)
+			case "mobile":
+				return ec.fieldContext_Game_mobile(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Game_thumbnail(ctx, field)
+			case "video":
+				return ec.fieldContext_Game_video(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
 		},
 	}
 	return fc, nil
@@ -4585,11 +4849,14 @@ func (ec *executionContext) _Mutation_sendEmail(ctx context.Context, field graph
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*bool)
+	res := resTmp.(bool)
 	fc.Result = res
-	return ec.marshalOBoolean2ᚖbool(ctx, field.Selections, res)
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Mutation_sendEmail(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -4610,6 +4877,179 @@ func (ec *executionContext) fieldContext_Mutation_sendEmail(ctx context.Context,
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Mutation_sendEmail_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_createGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_createGame(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().CreateGame(rctx, fc.Args["request"].(model.CreateGameRequest))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.CreateGameResponse)
+	fc.Result = res
+	return ec.marshalNCreateGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCreateGameResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_createGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "game":
+				return ec.fieldContext_CreateGameResponse_game(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type CreateGameResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_createGame_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_updateGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_updateGame(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().UpdateGame(rctx, fc.Args["request"].(model.UpdateGameRequest))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.UpdateGameResponse)
+	fc.Result = res
+	return ec.marshalNUpdateGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐUpdateGameResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_updateGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "game":
+				return ec.fieldContext_UpdateGameResponse_game(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type UpdateGameResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_updateGame_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Mutation_deleteGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Mutation_deleteGame(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Mutation().DeleteGame(rctx, fc.Args["request"].(model.DeleteGameRequest))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(bool)
+	fc.Result = res
+	return ec.marshalNBoolean2bool(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Mutation_deleteGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Mutation",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Boolean does not have child fields")
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Mutation_deleteGame_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return
 	}
@@ -8633,6 +9073,102 @@ func (ec *executionContext) fieldContext_TagsResponse_tags(ctx context.Context, 
 	return fc, nil
 }
 
+func (ec *executionContext) _UpdateGameResponse_game(ctx context.Context, field graphql.CollectedField, obj *model.UpdateGameResponse) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_UpdateGameResponse_game(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Game, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Game)
+	fc.Result = res
+	return ec.marshalNGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGame(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_UpdateGameResponse_game(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "UpdateGameResponse",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Game_id(ctx, field)
+			case "language":
+				return ec.fieldContext_Game_language(ctx, field)
+			case "slug":
+				return ec.fieldContext_Game_slug(ctx, field)
+			case "name":
+				return ec.fieldContext_Game_name(ctx, field)
+			case "status":
+				return ec.fieldContext_Game_status(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Game_createdAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_Game_deletedAt(ctx, field)
+			case "publishedAt":
+				return ec.fieldContext_Game_publishedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_Game_url(ctx, field)
+			case "width":
+				return ec.fieldContext_Game_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Game_height(ctx, field)
+			case "shortDescription":
+				return ec.fieldContext_Game_shortDescription(ctx, field)
+			case "description":
+				return ec.fieldContext_Game_description(ctx, field)
+			case "content":
+				return ec.fieldContext_Game_content(ctx, field)
+			case "likes":
+				return ec.fieldContext_Game_likes(ctx, field)
+			case "dislikes":
+				return ec.fieldContext_Game_dislikes(ctx, field)
+			case "plays":
+				return ec.fieldContext_Game_plays(ctx, field)
+			case "weight":
+				return ec.fieldContext_Game_weight(ctx, field)
+			case "player1Controls":
+				return ec.fieldContext_Game_player1Controls(ctx, field)
+			case "player2Controls":
+				return ec.fieldContext_Game_player2Controls(ctx, field)
+			case "tags":
+				return ec.fieldContext_Game_tags(ctx, field)
+			case "categories":
+				return ec.fieldContext_Game_categories(ctx, field)
+			case "mobile":
+				return ec.fieldContext_Game_mobile(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Game_thumbnail(ctx, field)
+			case "video":
+				return ec.fieldContext_Game_video(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) __Service_sdl(ctx context.Context, field graphql.CollectedField, obj *fedruntime.Service) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext__Service_sdl(ctx, field)
 	if err != nil {
@@ -10551,6 +11087,182 @@ func (ec *executionContext) unmarshalInputCategoryRequest(ctx context.Context, o
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputCreateGameRequest(ctx context.Context, obj interface{}) (model.CreateGameRequest, error) {
+	var it model.CreateGameRequest
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"slug", "mobile", "tags", "categories", "status", "url", "width", "height", "weight", "name", "shortDescription", "description", "player1Controls", "content", "player2Controls"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "mobile":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mobile"))
+			it.Mobile, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "tags":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tags"))
+			it.Tags, err = ec.unmarshalNInt2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "categories":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categories"))
+			it.Categories, err = ec.unmarshalNInt2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			it.Status, err = ec.unmarshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "url":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
+			it.URL, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "width":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("width"))
+			it.Width, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "height":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
+			it.Height, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weight":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weight"))
+			it.Weight, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shortDescription":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shortDescription"))
+			it.ShortDescription, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "player1Controls":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("player1Controls"))
+			it.Player1Controls, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "content":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
+			it.Content, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "player2Controls":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("player2Controls"))
+			it.Player2Controls, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
+func (ec *executionContext) unmarshalInputDeleteGameRequest(ctx context.Context, obj interface{}) (model.DeleteGameRequest, error) {
+	var it model.DeleteGameRequest
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"slug", "id"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalOInt2ᚖint(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 func (ec *executionContext) unmarshalInputFreshGamesRequest(ctx context.Context, obj interface{}) (model.FreshGamesRequest, error) {
 	var it model.FreshGamesRequest
 	asMap := map[string]interface{}{}
@@ -11291,6 +12003,178 @@ func (ec *executionContext) unmarshalInputThumbnailRequest(ctx context.Context, 
 	return it, nil
 }
 
+func (ec *executionContext) unmarshalInputUpdateGameRequest(ctx context.Context, obj interface{}) (model.UpdateGameRequest, error) {
+	var it model.UpdateGameRequest
+	asMap := map[string]interface{}{}
+	for k, v := range obj.(map[string]interface{}) {
+		asMap[k] = v
+	}
+
+	fieldsInOrder := [...]string{"id", "slug", "mobile", "tags", "categories", "status", "url", "width", "height", "likes", "dislikes", "plays", "weight", "name", "shortDescription", "description", "player1Controls", "content", "player2Controls"}
+	for _, k := range fieldsInOrder {
+		v, ok := asMap[k]
+		if !ok {
+			continue
+		}
+		switch k {
+		case "id":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("id"))
+			it.ID, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "slug":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("slug"))
+			it.Slug, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "mobile":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("mobile"))
+			it.Mobile, err = ec.unmarshalNBoolean2bool(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "tags":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("tags"))
+			it.Tags, err = ec.unmarshalNInt2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "categories":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("categories"))
+			it.Categories, err = ec.unmarshalNInt2ᚕintᚄ(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "status":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("status"))
+			it.Status, err = ec.unmarshalNStatus2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐStatus(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "url":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("url"))
+			it.URL, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "width":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("width"))
+			it.Width, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "height":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("height"))
+			it.Height, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "likes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("likes"))
+			it.Likes, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "dislikes":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("dislikes"))
+			it.Dislikes, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "plays":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("plays"))
+			it.Plays, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "weight":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("weight"))
+			it.Weight, err = ec.unmarshalNInt2int(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "name":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
+			it.Name, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "shortDescription":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("shortDescription"))
+			it.ShortDescription, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "description":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("description"))
+			it.Description, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "player1Controls":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("player1Controls"))
+			it.Player1Controls, err = ec.unmarshalNString2string(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "content":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("content"))
+			it.Content, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		case "player2Controls":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("player2Controls"))
+			it.Player2Controls, err = ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+		}
+	}
+
+	return it, nil
+}
+
 // endregion **************************** input.gotpl *****************************
 
 // region    ************************** interface.gotpl ***************************
@@ -11525,6 +12409,34 @@ func (ec *executionContext) _CategoryResponse(ctx context.Context, sel ast.Selec
 		case "category":
 
 			out.Values[i] = ec._CategoryResponse_category(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
+var createGameResponseImplementors = []string{"CreateGameResponse"}
+
+func (ec *executionContext) _CreateGameResponse(ctx context.Context, sel ast.SelectionSet, obj *model.CreateGameResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, createGameResponseImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("CreateGameResponse")
+		case "game":
+
+			out.Values[i] = ec._CreateGameResponse_game(ctx, field, obj)
 
 			if out.Values[i] == graphql.Null {
 				invalids++
@@ -11939,6 +12851,36 @@ func (ec *executionContext) _Mutation(ctx context.Context, sel ast.SelectionSet)
 				return ec._Mutation_sendEmail(ctx, field)
 			})
 
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "createGame":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_createGame(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "updateGame":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_updateGame(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		case "deleteGame":
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Mutation_deleteGame(ctx, field)
+			})
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
 		default:
 			panic("unknown field " + strconv.Quote(field.Name))
 		}
@@ -13181,6 +14123,34 @@ func (ec *executionContext) _TagsResponse(ctx context.Context, sel ast.Selection
 	return out
 }
 
+var updateGameResponseImplementors = []string{"UpdateGameResponse"}
+
+func (ec *executionContext) _UpdateGameResponse(ctx context.Context, sel ast.SelectionSet, obj *model.UpdateGameResponse) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, updateGameResponseImplementors)
+	out := graphql.NewFieldSet(fields)
+	var invalids uint32
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("UpdateGameResponse")
+		case "game":
+
+			out.Values[i] = ec._UpdateGameResponse_game(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				invalids++
+			}
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch()
+	if invalids > 0 {
+		return graphql.Null
+	}
+	return out
+}
+
 var _ServiceImplementors = []string{"_Service"}
 
 func (ec *executionContext) __Service(ctx context.Context, sel ast.SelectionSet, obj *fedruntime.Service) graphql.Marshaler {
@@ -13669,6 +14639,30 @@ func (ec *executionContext) marshalNCategoryResponse2ᚖgithubᚗcomᚋvediagame
 	return ec._CategoryResponse(ctx, sel, v)
 }
 
+func (ec *executionContext) unmarshalNCreateGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCreateGameRequest(ctx context.Context, v interface{}) (model.CreateGameRequest, error) {
+	res, err := ec.unmarshalInputCreateGameRequest(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNCreateGameResponse2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCreateGameResponse(ctx context.Context, sel ast.SelectionSet, v model.CreateGameResponse) graphql.Marshaler {
+	return ec._CreateGameResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNCreateGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐCreateGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.CreateGameResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._CreateGameResponse(ctx, sel, v)
+}
+
+func (ec *executionContext) unmarshalNDeleteGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐDeleteGameRequest(ctx context.Context, v interface{}) (model.DeleteGameRequest, error) {
+	res, err := ec.unmarshalInputDeleteGameRequest(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
 func (ec *executionContext) unmarshalNFreshGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐFreshGamesRequest(ctx context.Context, v interface{}) (model.FreshGamesRequest, error) {
 	res, err := ec.unmarshalInputFreshGamesRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -13818,6 +14812,38 @@ func (ec *executionContext) marshalNInt2int(ctx context.Context, sel ast.Selecti
 		}
 	}
 	return res
+}
+
+func (ec *executionContext) unmarshalNInt2ᚕintᚄ(ctx context.Context, v interface{}) ([]int, error) {
+	var vSlice []interface{}
+	if v != nil {
+		vSlice = graphql.CoerceList(v)
+	}
+	var err error
+	res := make([]int, len(vSlice))
+	for i := range vSlice {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithIndex(i))
+		res[i], err = ec.unmarshalNInt2int(ctx, vSlice[i])
+		if err != nil {
+			return nil, err
+		}
+	}
+	return res, nil
+}
+
+func (ec *executionContext) marshalNInt2ᚕintᚄ(ctx context.Context, sel ast.SelectionSet, v []int) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	for i := range v {
+		ret[i] = ec.marshalNInt2int(ctx, sel, v[i])
+	}
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
 }
 
 func (ec *executionContext) unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx context.Context, v interface{}) (model.Language, error) {
@@ -14362,6 +15388,25 @@ func (ec *executionContext) marshalNTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋ
 func (ec *executionContext) unmarshalNThumbnailRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐThumbnailRequest(ctx context.Context, v interface{}) (model.ThumbnailRequest, error) {
 	res, err := ec.unmarshalInputThumbnailRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) unmarshalNUpdateGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐUpdateGameRequest(ctx context.Context, v interface{}) (model.UpdateGameRequest, error) {
+	res, err := ec.unmarshalInputUpdateGameRequest(ctx, v)
+	return res, graphql.ErrorOnPath(ctx, err)
+}
+
+func (ec *executionContext) marshalNUpdateGameResponse2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐUpdateGameResponse(ctx context.Context, sel ast.SelectionSet, v model.UpdateGameResponse) graphql.Marshaler {
+	return ec._UpdateGameResponse(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNUpdateGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐUpdateGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.UpdateGameResponse) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._UpdateGameResponse(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalN_FieldSet2string(ctx context.Context, v interface{}) (string, error) {

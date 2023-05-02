@@ -19,7 +19,7 @@ import (
 )
 
 // SendEmail is the resolver for the sendEmail field.
-func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmailRequest) (*bool, error) {
+func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmailRequest) (bool, error) {
 	err := r.emailClient.Email(ctx, notificationdomain.EmailRequest{
 		To: notificationdomain.User{
 			Email: "antonio.jelic@platform",
@@ -34,11 +34,58 @@ func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmai
 		Body:    request.Body,
 	})
 	if err != nil {
-		return nil, fmt.Errorf("failed to email: %w", err)
+		return false, fmt.Errorf("failed to email: %w", err)
 	}
 
-	v := true
-	return &v, nil
+	return true, nil
+}
+
+// CreateGame is the resolver for the createGame field.
+func (r *mutationResolver) CreateGame(ctx context.Context, request model.CreateGameRequest) (*model.CreateGameResponse, error) {
+	gameRes, err := r.gameService.Create(ctx, request.Domain())
+	if err != nil {
+		return nil, fmt.Errorf("failed to create: %w", err)
+	}
+
+	return &model.CreateGameResponse{
+		Game: model.Game{}.FromDomain(gameRes.Data),
+	}, nil
+}
+
+// UpdateGame is the resolver for the updateGame field.
+func (r *mutationResolver) UpdateGame(ctx context.Context, request model.UpdateGameRequest) (*model.UpdateGameResponse, error) {
+	gameRes, err := r.gameService.Edit(ctx, request.Domain())
+	if err != nil {
+		return nil, fmt.Errorf("failed to edit: %w", err)
+	}
+
+	return &model.UpdateGameResponse{
+		Game: model.Game{}.FromDomain(gameRes.Data),
+	}, nil
+}
+
+// DeleteGame is the resolver for the deleteGame field.
+func (r *mutationResolver) DeleteGame(ctx context.Context, request model.DeleteGameRequest) (bool, error) {
+	var (
+		err error
+	)
+
+	switch {
+	case request.ID != nil:
+		_, err = r.gameService.Remove(ctx, gamedomain.RemoveRequest{
+			ID: *request.ID,
+		})
+	case request.Slug != nil:
+		_, err = r.gameService.Remove(ctx, gamedomain.RemoveRequest{
+			Slug: *request.Slug,
+		})
+	}
+
+	if err != nil {
+		return false, fmt.Errorf("failed to remove: %w", err)
+	}
+
+	return true, nil
 }
 
 // MostPlayedGames is the resolver for the mostPlayedGames field.
@@ -248,7 +295,7 @@ func (r *queryResolver) Search(ctx context.Context, request model.SearchRequest)
 	}
 
 	return &model.SearchResponse{
-		SearchItems:  model.SearchItems{}.FromDomain(searchRes),
+		SearchItems: model.SearchItems{}.FromDomain(searchRes),
 	}, nil
 }
 

@@ -7,6 +7,7 @@ func (e Error) Error() string {
 }
 
 const (
+	ErrInvalidText                  = Error("invalid text")
 	ErrInvalidPage                  = Error("invalid page")
 	ErrInvalidLimit                 = Error("invalid limit")
 	ErrInvalidLanguage              = Error("invalid language")
@@ -38,4 +39,5 @@ const (
 	ErrInvalidMax                   = Error("invalid max")
 	ErrInvalidValue                 = Error("invalid value")
 	ErrInvalidData                  = Error("invalid data")
+	ErrEmptyShortDescription        = Error("empty short description")
 )
