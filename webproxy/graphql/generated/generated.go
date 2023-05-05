@@ -176,6 +176,7 @@ type ComplexityRoot struct {
 	}
 
 	SearchItem struct {
+		ID               func(childComplexity int) int
 		Name             func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
@@ -944,6 +945,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.__resolve__service(childComplexity), true
 
+	case "SearchItem.id":
+		if e.complexity.SearchItem.ID == nil {
+			break
+		}
+
+		return e.complexity.SearchItem.ID(childComplexity), true
+
 	case "SearchItem.name":
 		if e.complexity.SearchItem.Name == nil {
 			break
@@ -1697,6 +1705,7 @@ type SearchItems {
 }
 
 type SearchItem {
+    id: Int!
     shortDescription: String!
     name: String!
     slug: String!
@@ -6041,6 +6050,50 @@ func (ec *executionContext) fieldContext_Query___schema(ctx context.Context, fie
 	return fc, nil
 }
 
+func (ec *executionContext) _SearchItem_id(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SearchItem_id(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.ID, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(int)
+	fc.Result = res
+	return ec.marshalNInt2int(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SearchItem_id(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SearchItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type Int does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SearchItem_shortDescription(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SearchItem_shortDescription(ctx, field)
 	if err != nil {
@@ -6366,6 +6419,8 @@ func (ec *executionContext) fieldContext_SearchItems_data(ctx context.Context, f
 		IsResolver: false,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
+			case "id":
+				return ec.fieldContext_SearchItem_id(ctx, field)
 			case "shortDescription":
 				return ec.fieldContext_SearchItem_shortDescription(ctx, field)
 			case "name":
@@ -12063,6 +12118,13 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("SearchItem")
+		case "id":
+
+			out.Values[i] = ec._SearchItem_id(ctx, field, obj)
+
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&invalids, 1)
+			}
 		case "shortDescription":
 
 			out.Values[i] = ec._SearchItem_shortDescription(ctx, field, obj)
