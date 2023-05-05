@@ -244,6 +244,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) *SearchItems
 
 	for _, domainItem := range domain.Games {
 		searchResponse.Data = append(searchResponse.Data, &SearchItem{
+			ID:               domainItem.ID,
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
@@ -253,6 +254,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) *SearchItems
 
 	for _, domainItem := range domain.Tags {
 		searchResponse.Data = append(searchResponse.Data, &SearchItem{
+			ID:               domainItem.ID,
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,

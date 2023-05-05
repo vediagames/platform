@@ -161,6 +161,7 @@ type SearchItems {
 }
 
 type SearchItem {
+    id: Int!
     shortDescription: String!
     name: String!
     slug: String!

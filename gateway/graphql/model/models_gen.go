@@ -181,6 +181,7 @@ type RandomProviderGameResponse struct {
 }
 
 type SearchItem struct {
+	ID               int            `json:"id"`
 	ShortDescription string         `json:"shortDescription"`
 	Name             string         `json:"name"`
 	Slug             string         `json:"slug"`
