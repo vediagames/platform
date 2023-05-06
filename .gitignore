@@ -4,3 +4,4 @@ secret/
 
 config.yml
 .env
+my_env_test.go

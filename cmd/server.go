@@ -21,7 +21,7 @@ import (
 
 	authdomain "github.com/vediagames/platform/auth/domain"
 	authservice "github.com/vediagames/platform/auth/service"
-	"github.com/vediagames/platform/bucket/bunny"
+	"github.com/vediagames/platform/bucket/s3"
 	categorypostgresql "github.com/vediagames/platform/category/postgresql"
 	categoryservice "github.com/vediagames/platform/category/service"
 	"github.com/vediagames/platform/config"
@@ -133,13 +133,12 @@ func startServer(ctx context.Context) error {
 		},
 	})
 
-	bucketClient := bunny.New(bunny.Config{
-		URL:       cfg.BunnyStorage.URL,
-		AccessKey: cfg.BunnyStorage.AccessKey,
-		Zone:      cfg.BunnyStorage.Zone,
-		Client: &http.Client{
-			Timeout: 30 * time.Second,
-		},
+	bucketClient := s3.New(ctx, s3.Config{
+		Key:      cfg.S3.Key,
+		Secret:   cfg.S3.Secret,
+		Region:   cfg.S3.Region,
+		Endpoint: cfg.S3.Endpoint,
+		Bucket:   cfg.S3.Bucket,
 	})
 
 	imageProcessor := imagor.New(imagor.Config{

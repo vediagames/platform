@@ -42,11 +42,13 @@ type Config struct {
 		URL    string `mapstructure:"URL"`
 		Secret string `mapstructure:"secret"`
 	} `mapstructure:"imagor"`
-	BunnyStorage struct {
-		URL       string `mapstructure:"URL"`
-		Zone      string `mapstructure:"zone"`
-		AccessKey string `mapstructure:"accessKey"`
-	} `mapstructure:"bunnyStorage"`
+	S3 struct {
+		Key      string `mapstructure:"key"`
+		Secret   string `mapstructure:"secret"`
+		Region   string `mapstructure:"region"`
+		Endpoint string `mapstructure:"endpoint"`
+		Bucket   string `mapstructure:"bucket"`
+	}
 }
 
 func (c Config) Validate() error {
@@ -64,10 +66,12 @@ func (c Config) Validate() error {
 	err.AddIf(c.Auth.KratosURL == "", fmt.Errorf("auth.kratusURL is not set"))
 	err.AddIf(c.BigQuery.ProjectID == "", fmt.Errorf("bigquery.projectID is not set"))
 	err.AddIf(c.BigQuery.CredentialsPath == "", fmt.Errorf("bigquery.credentialsPath is not set"))
-	err.AddIf(c.BunnyStorage.URL == "", fmt.Errorf("bunnyStorage url key is not set"))
-	err.AddIf(c.BunnyStorage.AccessKey == "", fmt.Errorf("bunnyStorage.accessKey is not set"))
 	err.AddIf(c.Imagor.URL == "", fmt.Errorf("imagor.URL is not set"))
 	err.AddIf(c.Imagor.Secret == "", fmt.Errorf("imagor.secret is not set"))
+	err.AddIf(c.S3.Key == "", fmt.Errorf("s3.key is not set"))
+	err.AddIf(c.S3.Secret == "", fmt.Errorf("s3.secret is not set"))
+	err.AddIf(c.S3.Endpoint == "", fmt.Errorf("s3.endpoint is not set"))
+	err.AddIf(c.S3.Bucket == "", fmt.Errorf("s3.bucket is not set"))
 
 	for _, origin := range c.CORS.AllowedOrigins {
 		err.AddIf(origin == "", fmt.Errorf("cors.allowedOrigins includes empty origin"))

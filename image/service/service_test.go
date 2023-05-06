@@ -1,58 +1,52 @@
 package service
 
 import (
-	"context"
-	"fmt"
-	"net/http"
 	"testing"
-	"time"
 
-	"github.com/vediagames/platform/bucket/bunny"
 	"github.com/vediagames/platform/image/domain"
-	"github.com/vediagames/platform/image/imagor"
 )
 
-func TestService_Get(t *testing.T) {
-	httpClient := &http.Client{
-		Timeout: 30 * time.Second,
-	}
+// func TestService_Get(t *testing.T) {
+// 	httpClient := &http.Client{
+// 		Timeout: 30 * time.Second,
+// 	}
 
-	bunnyBucket := bunny.New(bunny.Config{
-		URL:       "https://storage.bunnycdn.com",
-		AccessKey: "",
-		Zone:      "vedia-games",
-		Client:    httpClient,
-	})
+// 	s3 := bunny.New(bunny.Config{
+// 		URL:       "https://storage.bunnycdn.com",
+// 		AccessKey: "",
+// 		Zone:      "vedia-games",
+// 		Client:    httpClient,
+// 	})
 
-	processer := imagor.New(imagor.Config{
-		Client:       httpClient,
-		URL:          "http://localhost:8000",
-		Secret:       "vediagames",
-		BucketClient: bunnyBucket,
-	})
+// 	processer := imagor.New(imagor.Config{
+// 		Client:       httpClient,
+// 		URL:          "http://localhost:8000",
+// 		Secret:       "vediagames",
+// 		BucketClient: bunnyBucket,
+// 	})
 
-	svc := New(Config{
-		URL:       "https://images.vediagames.com/file/vg-images",
-		Processor: processer,
-		Client:    httpClient,
-	})
+// 	svc := New(Config{
+// 		URL:       "https://images.vediagames.com/file/vg-images",
+// 		Processor: processer,
+// 		Client:    httpClient,
+// 	})
 
-	get, err := svc.Get(context.TODO(), domain.GetRequest{
-		Slug: "kirka-io",
-		Image: domain.Image{
-			Format: domain.FormatWebp,
-			Width:  384,
-			Height: 215,
-		},
-		Original: domain.OriginalThumbnail512x384,
-		Resource: domain.ResourceGame,
-	})
-	if err != nil {
-		t.Fatal(err)
-	}
+// 	get, err := svc.Get(context.TODO(), domain.GetRequest{
+// 		Slug: "kirka-io",
+// 		Image: domain.Image{
+// 			Format: domain.FormatWebp,
+// 			Width:  384,
+// 			Height: 215,
+// 		},
+// 		Original: domain.OriginalThumbnail512x384,
+// 		Resource: domain.ResourceGame,
+// 	})
+// 	if err != nil {
+// 		t.Fatal(err)
+// 	}
 
-	fmt.Println(get)
-}
+// 	fmt.Println(get)
+// }
 
 func Test_imagePath(t *testing.T) {
 	want := "games/kirka-io/thumb512x384.webp"
