@@ -13430,15 +13430,14 @@ INSERT INTO public.tag_texts VALUES (58, 2, 'Ajedrez', '', '', '');
 -- Data for Name: website_sections_placement; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO public.website_sections_placement VALUES (5, 3);
-INSERT INTO public.website_sections_placement VALUES (7, 2);
-INSERT INTO public.website_sections_placement VALUES (1, 1);
-INSERT INTO public.website_sections_placement VALUES (8, 5);
-INSERT INTO public.website_sections_placement VALUES (9, 6);
-INSERT INTO public.website_sections_placement VALUES (10, 7);
-INSERT INTO public.website_sections_placement VALUES (11, 8);
-INSERT INTO public.website_sections_placement VALUES (12, 9);
-INSERT INTO public.website_sections_placement VALUES (13, 10);
+INSERT INTO public.website_sections_placement VALUES (5, 2);
+INSERT INTO public.website_sections_placement VALUES (7, 1);
+INSERT INTO public.website_sections_placement VALUES (8, 3);
+INSERT INTO public.website_sections_placement VALUES (9, 4);
+INSERT INTO public.website_sections_placement VALUES (10, 5);
+INSERT INTO public.website_sections_placement VALUES (11, 6);
+INSERT INTO public.website_sections_placement VALUES (12, 7);
+INSERT INTO public.website_sections_placement VALUES (13, 8);
 
 
 --
