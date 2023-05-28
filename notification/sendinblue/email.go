@@ -58,7 +58,7 @@ func (s service) Email(ctx context.Context, req domain.EmailRequest) error {
 		return fmt.Errorf("failed to marshal email body: %w", err)
 	}
 
-	httpReq, err := http.NewRequest(http.MethodPost, "https://api.sendinblue.com/v3/smtp/email", bytes.NewReader(b))
+	httpReq, err := http.NewRequest(http.MethodPost, "https://api.brevo.com/v3/smtp/email", bytes.NewReader(b))
 	if err != nil {
 		return fmt.Errorf("failed to create request: %w", err)
 	}

@@ -22,7 +22,7 @@ import (
 func (r *mutationResolver) SendEmail(ctx context.Context, request model.SendEmailRequest) (bool, error) {
 	err := r.emailClient.Email(ctx, notificationdomain.EmailRequest{
 		To: notificationdomain.User{
-			Email: "antonio.jelic@platform",
+			Email: "antonio.jelic@vedia.si",
 			Name:  "Antonio Jelic",
 		},
 		From: notificationdomain.User{
