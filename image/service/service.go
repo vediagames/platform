@@ -2,9 +2,11 @@ package service
 
 import (
 	"context"
+	"crypto/tls"
 	"fmt"
 	"net/http"
 
+	"github.com/rs/zerolog"
 	"github.com/vediagames/zeroerror"
 
 	"github.com/vediagames/platform/image/domain"
@@ -61,9 +63,28 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 		}, nil
 	}
 
-	headRes, err := http.Head(imgURL)
+	if isSupportedImage(req.Image) {
+		return domain.GetResponse{
+			URL: imgURL,
+		}, nil
+	}
+
+	client := &http.Client{
+		Transport: &http.Transport{
+			TLSNextProto: map[string]func(string, *tls.Conn) http.RoundTripper{},
+		},
+	}
+
+	headRes, err := client.Head(imgURL)
 	if err != nil {
-		return domain.GetResponse{}, fmt.Errorf("failed to head: %w", err)
+		zerolog.Ctx(ctx).
+			Error().
+			Err(fmt.Errorf("failed to head: %w", err)).
+			Send()
+
+		return domain.GetResponse{
+			URL: ogImgURL,
+		}, nil
 	}
 
 	if headRes.StatusCode == http.StatusOK {
@@ -78,7 +99,16 @@ func (s service) Get(ctx context.Context, req domain.GetRequest) (domain.GetResp
 		Image:            req.Image,
 	})
 	if err != nil {
-		return domain.GetResponse{}, fmt.Errorf("failed to process: %w", err)
+		zerolog.Ctx(ctx).
+			Error().
+			Str("original", ogImgURL).
+			Str("path", imgPath).
+			Err(fmt.Errorf("failed to process: %w", err)).
+			Send()
+
+		return domain.GetResponse{
+			URL: ogImgURL,
+		}, nil
 	}
 
 	res := domain.GetResponse{
@@ -132,4 +162,27 @@ func resourceToPath(r domain.Resource) string {
 	}
 
 	return ""
+}
+
+var supportedImages = []domain.Image{
+	{Format: domain.FormatJpg, Width: 264, Height: 198},
+	{Format: domain.FormatJpg, Width: 180, Height: 135},
+	{Format: domain.FormatJpg, Width: 224, Height: 168},
+	{Format: domain.FormatJpg, Width: 360, Height: 270},
+	{Format: domain.FormatJpg, Width: 464, Height: 368},
+	{Format: domain.FormatJpg, Width: 512, Height: 384},
+	{Format: domain.FormatJpg, Width: 512, Height: 512},
+	{Format: domain.FormatJpg, Width: 64, Height: 64},
+	{Format: domain.FormatJpg, Width: 88, Height: 88},
+	{Format: domain.FormatJpg, Width: 24, Height: 24},
+}
+
+func isSupportedImage(img domain.Image) bool {
+	for _, supportedImage := range supportedImages {
+		if img == supportedImage {
+			return true
+		}
+	}
+
+	return false
 }
