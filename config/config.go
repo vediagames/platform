@@ -49,6 +49,7 @@ type Config struct {
 		Endpoint string `mapstructure:"endpoint"`
 		Bucket   string `mapstructure:"bucket"`
 	}
+	QuotesCSV string `mapstructure:"quotesCSV"`
 }
 
 func (c Config) Validate() error {
@@ -72,6 +73,7 @@ func (c Config) Validate() error {
 	err.AddIf(c.S3.Secret == "", fmt.Errorf("s3.secret is not set"))
 	err.AddIf(c.S3.Endpoint == "", fmt.Errorf("s3.endpoint is not set"))
 	err.AddIf(c.S3.Bucket == "", fmt.Errorf("s3.bucket is not set"))
+	err.AddIf(c.QuotesCSV == "", fmt.Errorf("quotesCSV is not set"))
 
 	for _, origin := range c.CORS.AllowedOrigins {
 		err.AddIf(origin == "", fmt.Errorf("cors.allowedOrigins includes empty origin"))
