@@ -1,0 +1,12 @@
+BEGIN;
+
+CREATE TABLE quotes (
+    id SERIAL PRIMARY KEY,
+    author VARCHAR(255) NOT NULL,
+    quote TEXT NOT NULL,
+    displayed BOOLEAN DEFAULT FALSE,
+    expiresAt TIMESTAMP WITH TIME ZONE
+);
+
+
+COMMIT;
