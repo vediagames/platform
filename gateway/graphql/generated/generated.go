@@ -191,9 +191,9 @@ type ComplexityRoot struct {
 	}
 
 	Quote struct {
-		Author   func(childComplexity int) int
-		ExpireAt func(childComplexity int) int
-		Message  func(childComplexity int) int
+		Author    func(childComplexity int) int
+		ExpiresAt func(childComplexity int) int
+		Message   func(childComplexity int) int
 	}
 
 	RandomProviderGameResponse struct {
@@ -1086,12 +1086,12 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Quote.Author(childComplexity), true
 
-	case "Quote.expireAt":
-		if e.complexity.Quote.ExpireAt == nil {
+	case "Quote.expiresAt":
+		if e.complexity.Quote.ExpiresAt == nil {
 			break
 		}
 
-		return e.complexity.Quote.ExpireAt(childComplexity), true
+		return e.complexity.Quote.ExpiresAt(childComplexity), true
 
 	case "Quote.message":
 		if e.complexity.Quote.Message == nil {
@@ -1957,7 +1957,7 @@ type PromotedTag {
 type Quote {
     message: String!
     author: String!
-    expireAt: String!
+    expiresAt: String!
 }
 
 input UpdateGameRequest {
@@ -6907,8 +6907,8 @@ func (ec *executionContext) fieldContext_Query_quote(ctx context.Context, field 
 				return ec.fieldContext_Quote_message(ctx, field)
 			case "author":
 				return ec.fieldContext_Quote_author(ctx, field)
-			case "expireAt":
-				return ec.fieldContext_Quote_expireAt(ctx, field)
+			case "expiresAt":
+				return ec.fieldContext_Quote_expiresAt(ctx, field)
 			}
 			return nil, fmt.Errorf("no field named %q was found under type Quote", field.Name)
 		},
@@ -7192,8 +7192,8 @@ func (ec *executionContext) fieldContext_Quote_author(ctx context.Context, field
 	return fc, nil
 }
 
-func (ec *executionContext) _Quote_expireAt(ctx context.Context, field graphql.CollectedField, obj *model.Quote) (ret graphql.Marshaler) {
-	fc, err := ec.fieldContext_Quote_expireAt(ctx, field)
+func (ec *executionContext) _Quote_expiresAt(ctx context.Context, field graphql.CollectedField, obj *model.Quote) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Quote_expiresAt(ctx, field)
 	if err != nil {
 		return graphql.Null
 	}
@@ -7206,7 +7206,7 @@ func (ec *executionContext) _Quote_expireAt(ctx context.Context, field graphql.C
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return obj.ExpireAt, nil
+		return obj.ExpiresAt, nil
 	})
 	if err != nil {
 		ec.Error(ctx, err)
@@ -7223,7 +7223,7 @@ func (ec *executionContext) _Quote_expireAt(ctx context.Context, field graphql.C
 	return ec.marshalNString2string(ctx, field.Selections, res)
 }
 
-func (ec *executionContext) fieldContext_Quote_expireAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+func (ec *executionContext) fieldContext_Quote_expiresAt(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
 	fc = &graphql.FieldContext{
 		Object:     "Quote",
 		Field:      field,
@@ -15003,8 +15003,8 @@ func (ec *executionContext) _Quote(ctx context.Context, sel ast.SelectionSet, ob
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}
-		case "expireAt":
-			out.Values[i] = ec._Quote_expireAt(ctx, field, obj)
+		case "expiresAt":
+			out.Values[i] = ec._Quote_expiresAt(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				out.Invalids++
 			}

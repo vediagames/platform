@@ -409,9 +409,9 @@ func (r *queryResolver) Quote(ctx context.Context, language model.Language) (*mo
 	}
 
 	return &model.Quote{
-		Message:  res.Quote,
-		Author:   res.Quote,
-		ExpireAt: res.ExpiresAt.UTC().String(),
+		Message:   res.Quote,
+		Author:    res.Author,
+		ExpiresAt: res.ExpiresAt.UTC().String(),
 	}, nil
 }
 

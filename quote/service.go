@@ -1,6 +1,8 @@
 package quote
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 	"time"
 
@@ -34,26 +36,33 @@ func (s service) Get() (Quote, error) {
 	err := s.db.Get(
 		&result,
 		`
-			SELECT * FROM quotes
-			WHERE displayed = TRUE AND expiresAt > NOW()
+			SELECT
+				id,
+				author,
+				quote,
+				displayed,
+				"expiresAt"
+			FROM quotes
+			WHERE displayed = TRUE AND "expiresAt" > NOW()
 			ORDER BY id LIMIT 1
 		`,
 	)
-	if err != nil {
+	if err != nil && !errors.Is(err, sql.ErrNoRows) {
 		return Quote{}, fmt.Errorf("failed to get existing quote: %w", err)
 	}
 
 	if err == nil {
 		return Quote{
-			Author: result.Author,
-			Quote:  result.Quote,
+			Author:    result.Author,
+			Quote:     result.Quote,
+			ExpiresAt: result.ExpiresAt.Time,
 		}, nil
 	}
 
 	err = s.db.Get(
 		&result,
 		`
-			SELECT * FROM quotes
+			SELECT id, author, quote, displayed, "expiresAt"  FROM quotes
 			WHERE displayed = FALSE
 			ORDER BY id LIMIT 1
 		`,
@@ -65,7 +74,7 @@ func (s service) Get() (Quote, error) {
 	_, err = s.db.Exec(`
 			UPDATE quotes
 			SET displayed = TRUE,
-				expiresAt = NOW() + INTERVAL '24 hours'
+				"expiresAt" = NOW() + INTERVAL '24 hours'
 			WHERE id = $1
 		`,
 		result.ID,
@@ -77,7 +86,7 @@ func (s service) Get() (Quote, error) {
 	return Quote{
 		Author:    result.Author,
 		Quote:     result.Quote,
-		ExpiresAt: result.ExpiresAt,
+		ExpiresAt: result.ExpiresAt.Time,
 	}, nil
 }
 
@@ -102,9 +111,9 @@ func (s service) Insert(quotes []Quote) error {
 }
 
 type postgresqlQuote struct {
-	ID        int       `db:"id"`
-	Author    string    `db:"author"`
-	Quote     string    `db:"quote"`
-	Displayed bool      `db:"displayed"`
-	ExpiresAt time.Time `db:"expiresAt"`
+	ID        int          `db:"id"`
+	Author    string       `db:"author"`
+	Quote     string       `db:"quote"`
+	Displayed bool         `db:"displayed"`
+	ExpiresAt sql.NullTime `db:"expiresAt"`
 }

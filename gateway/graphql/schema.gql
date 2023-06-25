@@ -52,7 +52,7 @@ type PromotedTag {
 type Quote {
     message: String!
     author: String!
-    expireAt: String!
+    expiresAt: String!
 }
 
 input UpdateGameRequest {

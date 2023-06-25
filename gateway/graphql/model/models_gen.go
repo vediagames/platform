@@ -176,9 +176,9 @@ type PromotedTag struct {
 }
 
 type Quote struct {
-	Message  string `json:"message"`
-	Author   string `json:"author"`
-	ExpireAt string `json:"expireAt"`
+	Message   string `json:"message"`
+	Author    string `json:"author"`
+	ExpiresAt string `json:"expiresAt"`
 }
 
 type RandomProviderGameResponse struct {
