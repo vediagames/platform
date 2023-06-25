@@ -140,7 +140,7 @@ func startServer(ctx context.Context) error {
 		Client: ory.NewAPIClient(c),
 	})
 
-	quoteService := quote.New(vediaGamesDB)
+	quoteService := quote.New(mommaGamesDB)
 
 	vediaGamesGatewayResolver, vediaGamesGatewayHandler := createGateway(
 		vediaGamesDB,
