@@ -7,9 +7,11 @@ package graphql
 import (
 	"context"
 	"fmt"
+	"math/rand"
 	"strconv"
 
 	"github.com/rs/zerolog"
+
 	gamedomain "github.com/vediagames/platform/game/domain"
 	model1 "github.com/vediagames/platform/gateway/graphql/model"
 	"github.com/vediagames/platform/webproxy/graphql/generated"
@@ -164,7 +166,23 @@ func (r *homePageResponseResolver) GamesAddedInLast7Days(ctx context.Context, ob
 		return nil, fmt.Errorf("failed to query: %w", err)
 	}
 
-	return gatewayRes.Games, nil
+	if len(gatewayRes.Games.Data) != 0 {
+		return gatewayRes.Games, nil
+	}
+
+	newestGames, err := r.gatewayResolver.Query().Games(ctx, model1.GamesRequest{
+		Language: obj.Language,
+		Page:     1,
+		Limit:    4,
+		Sort:     sortingMethodToPointer(model1.SortingMethodNewest),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to query newest: %w", err)
+	}
+
+	newestGames.Games.Total = 8 + rand.Intn(20-8)
+
+	return newestGames.Games, nil
 }
 
 // MostPlayedGames is the resolver for the mostPlayedGames field.

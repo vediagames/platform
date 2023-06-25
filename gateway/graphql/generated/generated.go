@@ -344,7 +344,7 @@ type QueryResolver interface {
 	RandomProviderGame(ctx context.Context) (*model.RandomProviderGameResponse, error)
 	AvailableLanguages(ctx context.Context) (*model.AvailableLanguagesResponse, error)
 	PromotedTags(ctx context.Context, language model.Language) ([]*model.PromotedTag, error)
-	TopTags(ctx context.Context, language model.Language) ([]*model.TopTag, error)
+	TopTags(ctx context.Context, language model.Language) (*model.TagsResponse, error)
 	WhatOthersPlay(ctx context.Context, language model.Language) (*model.GamesResponse, error)
 	Quote(ctx context.Context, language model.Language) (*model.Quote, error)
 }
@@ -1926,7 +1926,7 @@ enum OriginalVideo {
     availableLanguages: AvailableLanguagesResponse!
 
     promotedTags(language: Language!): [PromotedTag!]!
-    topTags(language: Language!): [TopTag!]!
+    topTags(language: Language!): TagsResponse!
     whatOthersPlay(language: Language!): GamesResponse!
     quote(language: Language!): Quote!
 }
@@ -6764,9 +6764,9 @@ func (ec *executionContext) _Query_topTags(ctx context.Context, field graphql.Co
 		}
 		return graphql.Null
 	}
-	res := resTmp.([]*model.TopTag)
+	res := resTmp.(*model.TagsResponse)
 	fc.Result = res
-	return ec.marshalNTopTag2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTopTagᚄ(ctx, field.Selections, res)
+	return ec.marshalNTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTagsResponse(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_topTags(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6777,18 +6777,10 @@ func (ec *executionContext) fieldContext_Query_topTags(ctx context.Context, fiel
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "id":
-				return ec.fieldContext_TopTag_id(ctx, field)
-			case "slug":
-				return ec.fieldContext_TopTag_slug(ctx, field)
-			case "name":
-				return ec.fieldContext_TopTag_name(ctx, field)
-			case "thumbnail":
-				return ec.fieldContext_TopTag_thumbnail(ctx, field)
-			case "category":
-				return ec.fieldContext_TopTag_category(ctx, field)
+			case "tags":
+				return ec.fieldContext_TagsResponse_tags(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type TopTag", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type TagsResponse", field.Name)
 		},
 	}
 	defer func() {
@@ -17365,60 +17357,6 @@ func (ec *executionContext) marshalNTagsResponse2ᚖgithubᚗcomᚋvediagamesᚋ
 func (ec *executionContext) unmarshalNThumbnailRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐThumbnailRequest(ctx context.Context, v interface{}) (model.ThumbnailRequest, error) {
 	res, err := ec.unmarshalInputThumbnailRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
-}
-
-func (ec *executionContext) marshalNTopTag2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTopTagᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.TopTag) graphql.Marshaler {
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := len(v) == 1
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNTopTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTopTag(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
-}
-
-func (ec *executionContext) marshalNTopTag2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐTopTag(ctx context.Context, sel ast.SelectionSet, v *model.TopTag) graphql.Marshaler {
-	if v == nil {
-		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
-			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
-		}
-		return graphql.Null
-	}
-	return ec._TopTag(ctx, sel, v)
 }
 
 func (ec *executionContext) unmarshalNUpdateGameRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐUpdateGameRequest(ctx context.Context, v interface{}) (model.UpdateGameRequest, error) {

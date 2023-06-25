@@ -21,7 +21,7 @@ type Query {
     availableLanguages: AvailableLanguagesResponse!
 
     promotedTags(language: Language!): [PromotedTag!]!
-    topTags(language: Language!): [TopTag!]!
+    topTags(language: Language!): TagsResponse!
     whatOthersPlay(language: Language!): GamesResponse!
     quote(language: Language!): Quote!
 }

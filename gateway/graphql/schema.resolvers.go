@@ -345,41 +345,60 @@ func (r *queryResolver) AvailableLanguages(ctx context.Context) (*model.Availabl
 
 // PromotedTags is the resolver for the promotedTags field.
 func (r *queryResolver) PromotedTags(ctx context.Context, language model.Language) ([]*model.PromotedTag, error) {
-	// brain
-	// match-3
-	// word
-	// time management
-
-	// we need 4 tags here
 	return []*model.PromotedTag{
 		{
-			ID:        0,
-			Slug:      "",
-			Name:      "",
-			Icon:      "",
-			Thumbnail: "",
+			ID:        4,
+			Slug:      "brain",
+			Name:      "Brain",
+			Icon:      "https://content.vediagames.com/tag/brain/icon.svg",
+			Thumbnail: "https://content.vediagames.com/tag/brain/512x384.jpg",
+		},
+		{
+			ID:        18,
+			Slug:      "match-3",
+			Name:      "Match-3",
+			Icon:      "https://content.vediagames.com/tag/match-3/icon.svg",
+			Thumbnail: "https://content.vediagames.com/tag/match-3/512x384.jpg",
+		},
+		{
+			ID:        24,
+			Slug:      "word",
+			Name:      "Word",
+			Icon:      "https://content.vediagames.com/tag/word/icon.svg",
+			Thumbnail: "https://content.vediagames.com/tag/word/512x384.jpg",
+		},
+		{
+			ID:        22,
+			Slug:      "time-management",
+			Name:      "Time management",
+			Icon:      "https://content.vediagames.com/tag/time-management/icon.svg",
+			Thumbnail: "https://content.vediagames.com/tag/time-management/512x384.jpg",
 		},
 	}, nil
 }
 
 // TopTags is the resolver for the topTags field.
-func (r *queryResolver) TopTags(ctx context.Context, language model.Language) ([]*model.TopTag, error) {
-	// Cooking
-	// Match-3
-	// Brain
-	// Time Management
-	// Puzzle
-	// Educational
-	// Solitaire
-
-	// we need 7 tags here
-	return []*model.TopTag{
-		{
-			ID:        0,
-			Slug:      "",
-			Name:      "",
-			Thumbnail: "",
+func (r *queryResolver) TopTags(ctx context.Context, language model.Language) (*model.TagsResponse, error) {
+	res, err := r.tagService.List(ctx, tagdomain.ListRequest{
+		Language: tagdomain.LanguageEnglish,
+		Page:     1,
+		Limit:    7,
+		IDRefs: []int{
+			11, // cooking
+			18, // match-3
+			4,  // brain
+			22, // time-management
+			17, // mahjong
+			12, // educational
+			25, // solitaire
 		},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list: %w", err)
+	}
+
+	return &model.TagsResponse{
+		Tags: model.Tags{}.FromDomain(res.Data),
 	}, nil
 }
 
@@ -396,8 +415,24 @@ func (r *queryResolver) WhatOthersPlay(ctx context.Context, language model.Langu
 		return nil, fmt.Errorf("failed to get most played games: %w", err)
 	}
 
+	if len(res.Data.Data) != 0 {
+		return &model.GamesResponse{
+			Games: model.Games{}.FromDomain(res.Data),
+		}, nil
+	}
+
+	topRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
+		Page:     1,
+		Limit:    10,
+		Language: gamedomain.LanguageEnglish,
+		Sort:     gamedomain.SortingMethodMostPopular,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to list: %w", err)
+	}
+
 	return &model.GamesResponse{
-		Games: model.Games{}.FromDomain(res.Data),
+		Games: model.Games{}.FromDomain(topRes.Data),
 	}, nil
 }
 
