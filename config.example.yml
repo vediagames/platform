@@ -3,7 +3,8 @@ logLevel: "debug"
 port: 3000
 
 postgresql:
-  connectionString: "host=localhost user=vedia password=123 dbname=vediagames port=5432 sslmode=disable"
+  vediaGamesConnectionString: "host=localhost user=vedia password=123 dbname=vediagames port=5432 sslmode=disable"
+  mommaGamesConnectionString: "host=localhost user=vedia password=123 dbname=vediagames port=5432 sslmode=disable"
   path:
     migration: "db/schema"
     stub: "db/data"

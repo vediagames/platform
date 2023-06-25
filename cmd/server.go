@@ -21,6 +21,7 @@ import (
 
 	authdomain "github.com/vediagames/platform/auth/domain"
 	authservice "github.com/vediagames/platform/auth/service"
+	bucketdomain "github.com/vediagames/platform/bucket/domain"
 	"github.com/vediagames/platform/bucket/s3"
 	categorypostgresql "github.com/vediagames/platform/category/postgresql"
 	categoryservice "github.com/vediagames/platform/category/service"
@@ -32,8 +33,10 @@ import (
 	gamepostgresql "github.com/vediagames/platform/game/postgresql"
 	gameservice "github.com/vediagames/platform/game/service"
 	gatewaygraphql "github.com/vediagames/platform/gateway/graphql"
+	imagedomain "github.com/vediagames/platform/image/domain"
 	"github.com/vediagames/platform/image/imagor"
 	imageservice "github.com/vediagames/platform/image/service"
+	notificationdomain "github.com/vediagames/platform/notification/domain"
 	"github.com/vediagames/platform/notification/sendinblue"
 	"github.com/vediagames/platform/quote"
 	searchservice "github.com/vediagames/platform/search/service"
@@ -46,7 +49,7 @@ import (
 	sessionservice "github.com/vediagames/platform/session/service"
 	tagpostgresql "github.com/vediagames/platform/tag/postgresql"
 	tagservice "github.com/vediagames/platform/tag/service"
-	vediagamesgraphql "github.com/vediagames/platform/webproxy/graphql"
+	webproxygraphql "github.com/vediagames/platform/webproxy/graphql"
 )
 
 func ServerCmd() *cobra.Command {
@@ -62,47 +65,15 @@ func ServerCmd() *cobra.Command {
 func startServer(ctx context.Context) error {
 	cfg := ctx.Value(config.ContextKey).(config.Config)
 
-	db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
+	vediaGamesDB, err := sqlx.Open("postgres", cfg.PostgreSQL.VediaGamesConnectionString)
 	if err != nil {
-		return fmt.Errorf("failed to open: %w", err)
+		return fmt.Errorf("failed to open vedia games: %w", err)
 	}
 
-	gameService := gameservice.New(gameservice.Config{
-		Repository: gamepostgresql.New(gamepostgresql.Config{
-			DB: db,
-		}),
-		EventRepository: gamepostgresql.NewEvent(gamepostgresql.Config{
-			DB: db,
-		}),
-	})
-
-	categoryService := categoryservice.New(categoryservice.Config{
-		Repository: categorypostgresql.New(categorypostgresql.Config{
-			DB: db,
-		}),
-	})
-
-	sectionService := sectionservice.New(sectionservice.Config{
-		Repository: sectionpostgresql.New(sectionpostgresql.Config{
-			DB: db,
-		}),
-		PlacedRepository: sectionpostgresql.NewPlaced(sectionpostgresql.Config{
-			DB: db,
-		}),
-	})
-
-	sectionService = sectionvalidationrequest.New(sectionvalidationdata.New(sectionService))
-
-	tagService := tagservice.New(tagservice.Config{
-		Repository: tagpostgresql.New(tagpostgresql.Config{
-			DB: db,
-		}),
-	})
-
-	searchService := searchservice.New(searchservice.Config{
-		TagService:  tagService,
-		GameService: gameService,
-	})
+	mommaGamesDB, err := sqlx.Open("postgres", cfg.PostgreSQL.MommaGamesConnectionString)
+	if err != nil {
+		return fmt.Errorf("failed to open momma games: %w", err)
+	}
 
 	client, err := bigquery.NewClient(ctx, cfg.BigQuery.ProjectID,
 		option.WithCredentialsFile(cfg.BigQuery.CredentialsPath),
@@ -169,44 +140,29 @@ func startServer(ctx context.Context) error {
 		Client: ory.NewAPIClient(c),
 	})
 
-	quoteService := quote.New(db)
+	quoteService := quote.New(vediaGamesDB)
 
-	gatewayResolver := gatewaygraphql.NewResolver(gatewaygraphql.Config{
-		GameService:     gameService,
-		CategoryService: categoryService,
-		SectionService:  sectionService,
-		TagService:      tagService,
-		SearchService:   searchService,
-		EmailClient:     emailClient,
-		BucketClient:    bucketClient,
-		FetcherClient:   fetcherClient,
-		AuthService:     authService,
-		ImageService:    imageService,
-		ContentURL:      "https://content.vediagames.com",
-		QuoteService:    quoteService,
-	})
+	vediaGamesGatewayResolver, vediaGamesGatewayHandler := createGateway(
+		vediaGamesDB,
+		emailClient,
+		bucketClient,
+		fetcherClient,
+		authService,
+		imageService,
+		quoteService,
+	)
+	_, vediagamesWebproxyHandler := createWebproxy(vediaGamesGatewayResolver)
 
-	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))
-	gatewayHandler.AddTransport(transport.Websocket{
-		KeepAlivePingInterval: 10 * time.Second,
-	})
-	gatewayHandler.AddTransport(transport.Options{})
-	gatewayHandler.AddTransport(transport.GET{})
-	gatewayHandler.AddTransport(transport.POST{})
-	gatewayHandler.AddTransport(transport.MultipartForm{})
-	gatewayHandler.Use(extension.Introspection{})
-
-	vediagamesResolver := vediagamesgraphql.NewResolver(vediagamesgraphql.Config{
-		GatewayResolver: gatewayResolver,
-	})
-
-	vediagamesHandler := handler.New(vediagamesgraphql.NewSchema(&vediagamesResolver))
-	vediagamesHandler.AddTransport(transport.Options{})
-	vediagamesHandler.AddTransport(transport.GET{})
-	vediagamesHandler.AddTransport(transport.POST{})
-	vediagamesHandler.AddTransport(transport.MultipartForm{})
-	vediagamesHandler.Use(extension.Introspection{})
-	vediagamesHandler.Use(extension.FixedComplexityLimit(290))
+	mommaGamesGatewayResolver, mommaGamesGatewayHandler := createGateway(
+		mommaGamesDB,
+		emailClient,
+		bucketClient,
+		fetcherClient,
+		authService,
+		imageService,
+		quoteService,
+	)
+	_, mommaGamesWebproxyHandler := createWebproxy(mommaGamesGatewayResolver)
 
 	httpCors := cors.New(cors.Options{
 		AllowedOrigins:   cfg.CORS.AllowedOrigins,
@@ -222,9 +178,14 @@ func startServer(ctx context.Context) error {
 	router.Use(loggerMiddleware(&logger))
 	//router.Use(authMiddleware(authService))
 
-	router.Handle("/gateway/graph", gatewayHandler)
-	router.Handle("/vediagames/graph", vediagamesHandler)
+	router.Handle("/vediagames/gateway/graph", vediaGamesGatewayHandler)
+	router.Handle("/vediagames/webproxy/graph", vediagamesWebproxyHandler)
+
+	router.Handle("/mommagames/gateway/graph", mommaGamesGatewayHandler)
+	router.Handle("/mommagames/webproxy/graph", mommaGamesWebproxyHandler)
+
 	router.Handle("/session/new", createSessionHandler(sessionService))
+
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
 		w.WriteHeader(http.StatusOK)
@@ -365,4 +326,94 @@ func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 		}
 	}
+}
+
+func createGateway(
+	db *sqlx.DB,
+	emailClient notificationdomain.EmailClient,
+	bucketClient bucketdomain.Client,
+	fetcherClient fetcherdomain.Client,
+	authService authdomain.Service,
+	imageService imagedomain.Service,
+	quoteService quote.Service,
+) (*gatewaygraphql.Resolver, *handler.Server) {
+	gameService := gameservice.New(gameservice.Config{
+		Repository: gamepostgresql.New(gamepostgresql.Config{
+			DB: db,
+		}),
+		EventRepository: gamepostgresql.NewEvent(gamepostgresql.Config{
+			DB: db,
+		}),
+	})
+
+	categoryService := categoryservice.New(categoryservice.Config{
+		Repository: categorypostgresql.New(categorypostgresql.Config{
+			DB: db,
+		}),
+	})
+
+	sectionService := sectionservice.New(sectionservice.Config{
+		Repository: sectionpostgresql.New(sectionpostgresql.Config{
+			DB: db,
+		}),
+		PlacedRepository: sectionpostgresql.NewPlaced(sectionpostgresql.Config{
+			DB: db,
+		}),
+	})
+
+	sectionService = sectionvalidationrequest.New(sectionvalidationdata.New(sectionService))
+
+	tagService := tagservice.New(tagservice.Config{
+		Repository: tagpostgresql.New(tagpostgresql.Config{
+			DB: db,
+		}),
+	})
+
+	searchService := searchservice.New(searchservice.Config{
+		TagService:  tagService,
+		GameService: gameService,
+	})
+
+	gatewayResolver := gatewaygraphql.NewResolver(gatewaygraphql.Config{
+		GameService:     gameService,
+		CategoryService: categoryService,
+		SectionService:  sectionService,
+		TagService:      tagService,
+		SearchService:   searchService,
+		EmailClient:     emailClient,
+		BucketClient:    bucketClient,
+		FetcherClient:   fetcherClient,
+		AuthService:     authService,
+		ImageService:    imageService,
+		ContentURL:      "https://content.vediagames.com",
+		QuoteService:    quoteService,
+	})
+
+	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))
+	gatewayHandler.AddTransport(transport.Websocket{
+		KeepAlivePingInterval: 10 * time.Second,
+	})
+	gatewayHandler.AddTransport(transport.Options{})
+	gatewayHandler.AddTransport(transport.GET{})
+	gatewayHandler.AddTransport(transport.POST{})
+	gatewayHandler.AddTransport(transport.MultipartForm{})
+	gatewayHandler.Use(extension.Introspection{})
+
+	return gatewayResolver, gatewayHandler
+}
+
+func createWebproxy(gatewayResolver *gatewaygraphql.Resolver) (*webproxygraphql.Resolver, *handler.Server) {
+	webproxyResolver := webproxygraphql.NewResolver(webproxygraphql.Config{
+		GatewayResolver: gatewayResolver,
+	})
+
+	webproxyHandler := handler.New(webproxygraphql.NewSchema(&webproxyResolver))
+	webproxyHandler.AddTransport(transport.Options{})
+	webproxyHandler.AddTransport(transport.GET{})
+	webproxyHandler.AddTransport(transport.POST{})
+	webproxyHandler.AddTransport(transport.MultipartForm{})
+	webproxyHandler.Use(extension.Introspection{})
+	webproxyHandler.Use(extension.FixedComplexityLimit(290))
+
+	return &webproxyResolver, webproxyHandler
 }

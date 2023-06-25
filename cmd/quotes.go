@@ -27,7 +27,7 @@ func QuotesCmd() *cobra.Command {
 
 			cfg := cmd.Context().Value(config.ContextKey).(config.Config)
 
-			db, err := sqlx.Open("postgres", cfg.PostgreSQL.ConnectionString)
+			db, err := sqlx.Open("postgres", cfg.PostgreSQL.VediaGamesConnectionString)
 			if err != nil {
 				return fmt.Errorf("failed to open db connection: %w", err)
 			}

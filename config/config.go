@@ -18,8 +18,9 @@ type Config struct {
 	LogLevel    string `mapstructure:"logLevel"`
 	Port        int    `mapstructure:"port"`
 	PostgreSQL  struct {
-		ConnectionString string `mapstructure:"connectionString"`
-		Path             struct {
+		VediaGamesConnectionString string `mapstructure:"vediaGamesConnectionString"`
+		MommaGamesConnectionString string `mapstructure:"mommaGamesConnectionString"`
+		Path                       struct {
 			Migration string `mapstructure:"migration"`
 			Stub      string `mapstructure:"stub"`
 		} `mapstructure:"path"`
@@ -58,7 +59,8 @@ func (c Config) Validate() error {
 	err.AddIf(c.Environment == "", fmt.Errorf("environment is not set"))
 	err.AddIf(c.LogLevel == "", fmt.Errorf("logLevel is not set"))
 	err.AddIf(c.Port == 0, fmt.Errorf("port is not set"))
-	err.AddIf(c.PostgreSQL.ConnectionString == "", fmt.Errorf("postgresql.connectionString is not set"))
+	err.AddIf(c.PostgreSQL.VediaGamesConnectionString == "", fmt.Errorf("postgresql.vediaGamesConnectionString is not set"))
+	err.AddIf(c.PostgreSQL.MommaGamesConnectionString == "", fmt.Errorf("postgresql.mommaGamesConnectionString is not set"))
 	err.AddIf(c.SendInBlue.Key == "", fmt.Errorf("sendinblue.key is not set"))
 	err.AddIf(len(c.CORS.AllowedOrigins) == 0, fmt.Errorf("cors.allowedOrigins is not set"))
 	err.AddIf(c.PostgreSQL.Path.Migration == "", fmt.Errorf("postgresql.path.migration is not set"))
