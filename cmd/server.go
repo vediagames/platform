@@ -35,6 +35,7 @@ import (
 	"github.com/vediagames/platform/image/imagor"
 	imageservice "github.com/vediagames/platform/image/service"
 	"github.com/vediagames/platform/notification/sendinblue"
+	"github.com/vediagames/platform/quote"
 	searchservice "github.com/vediagames/platform/search/service"
 	sectionpostgresql "github.com/vediagames/platform/section/postgresql"
 	sectionservice "github.com/vediagames/platform/section/service"
@@ -168,6 +169,8 @@ func startServer(ctx context.Context) error {
 		Client: ory.NewAPIClient(c),
 	})
 
+	quoteService := quote.New(db)
+
 	gatewayResolver := gatewaygraphql.NewResolver(gatewaygraphql.Config{
 		GameService:     gameService,
 		CategoryService: categoryService,
@@ -180,6 +183,7 @@ func startServer(ctx context.Context) error {
 		AuthService:     authService,
 		ImageService:    imageService,
 		ContentURL:      "https://content.vediagames.com",
+		QuoteService:    quoteService,
 	})
 
 	gatewayHandler := handler.New(gatewaygraphql.NewSchema(gatewayResolver))
