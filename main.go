@@ -26,6 +26,7 @@ func main() {
 	rootCmd.AddCommand(cmd.ServerCmd())
 	rootCmd.AddCommand(cmd.MigrateCmd())
 	rootCmd.AddCommand(cmd.StubCmd())
+	rootCmd.AddCommand(cmd.QuotesCmd())
 
 	zerolog.TimestampFieldName = "t"
 	zerolog.LevelFieldName = "l"

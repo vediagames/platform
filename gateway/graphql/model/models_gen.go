@@ -167,6 +167,20 @@ type PlacedSectionsResponse struct {
 	PlacedSections *PlacedSections `json:"placedSections"`
 }
 
+type PromotedTag struct {
+	ID        int    `json:"id"`
+	Slug      string `json:"slug"`
+	Name      string `json:"name"`
+	Icon      string `json:"icon"`
+	Thumbnail string `json:"thumbnail"`
+}
+
+type Quote struct {
+	Message  string `json:"message"`
+	Author   string `json:"author"`
+	ExpireAt string `json:"expireAt"`
+}
+
 type RandomProviderGameResponse struct {
 	Name        string   `json:"name"`
 	URL         string   `json:"url"`
@@ -301,6 +315,14 @@ type ThumbnailRequest struct {
 	Width    *int              `json:"width,omitempty"`
 	Height   *int              `json:"height,omitempty"`
 	Format   *ImageFormat      `json:"format,omitempty"`
+}
+
+type TopTag struct {
+	ID        int    `json:"id"`
+	Slug      string `json:"slug"`
+	Name      string `json:"name"`
+	Thumbnail string `json:"thumbnail"`
+	Category  string `json:"category"`
 }
 
 type UpdateGameRequest struct {

@@ -48,3 +48,13 @@ var CategoryPageLayouts = map[int][]string{
 		"runner",
 	},
 }
+
+var MommaCategoryPageLayouts = map[int][]string{
+	// casual
+	// relaxing
+	// board
+	// puzzle
+	// card
+	// trivia
+	// multiplayer
+}

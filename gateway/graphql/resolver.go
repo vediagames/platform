@@ -14,6 +14,7 @@ import (
 	"github.com/vediagames/platform/gateway/graphql/generated"
 	imagedomain "github.com/vediagames/platform/image/domain"
 	notificationdomain "github.com/vediagames/platform/notification/domain"
+	"github.com/vediagames/platform/quote"
 	searchdomain "github.com/vediagames/platform/search/domain"
 	sectiondomain "github.com/vediagames/platform/section/domain"
 	tagdomain "github.com/vediagames/platform/tag/domain"
@@ -35,6 +36,7 @@ type Resolver struct {
 	authService     authdomain.Service
 	imageService    imagedomain.Service
 	contentURL      string
+	quoteService    quote.Service
 }
 
 type Config struct {
@@ -49,6 +51,7 @@ type Config struct {
 	AuthService     authdomain.Service
 	ImageService    imagedomain.Service
 	ContentURL      string
+	QuoteService    quote.Service
 }
 
 func (c Config) Validate() error {
@@ -65,6 +68,7 @@ func (c Config) Validate() error {
 	err.AddIf(c.AuthService == nil, fmt.Errorf("auth service is required"))
 	err.AddIf(c.ImageService == nil, fmt.Errorf("image service is required"))
 	err.AddIf(c.ContentURL == "", fmt.Errorf("content URL is required"))
+	err.AddIf(c.QuoteService == nil, fmt.Errorf("quote service is required"))
 
 	return err.Err()
 }
@@ -86,6 +90,7 @@ func NewResolver(cfg Config) *Resolver {
 		authService:     cfg.AuthService,
 		imageService:    cfg.ImageService,
 		contentURL:      cfg.ContentURL,
+		quoteService:    cfg.QuoteService,
 	}
 }
 
