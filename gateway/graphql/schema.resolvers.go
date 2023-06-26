@@ -351,28 +351,28 @@ func (r *queryResolver) PromotedTags(ctx context.Context, language model.Languag
 			Slug:      "brain",
 			Name:      "Brain",
 			Icon:      fmt.Sprintf("%s/tag/brain/icon.svg", r.contentURL),
-			Thumbnail: fmt.Sprintf("%s/tag/brain/512x384.jpg", r.contentURL),
+			Thumbnail: fmt.Sprintf("%s/tag/brain/promo_thumb.png", r.contentURL),
 		},
 		{
 			ID:        18,
 			Slug:      "match-3",
 			Name:      "Match-3",
 			Icon:      fmt.Sprintf("%s/tag/match-3/icon.svg", r.contentURL),
-			Thumbnail: fmt.Sprintf("%s/tag/match-3/512x384.jpg", r.contentURL),
+			Thumbnail: fmt.Sprintf("%s/tag/match-3/promo_thumb.png", r.contentURL),
 		},
 		{
 			ID:        24,
 			Slug:      "word",
 			Name:      "Word",
 			Icon:      fmt.Sprintf("%s/tag/word/icon.svg", r.contentURL),
-			Thumbnail: fmt.Sprintf("%s/tag/word/512x384.jpg", r.contentURL),
+			Thumbnail: fmt.Sprintf("%s/tag/word/promo_thumb.png", r.contentURL),
 		},
 		{
 			ID:        22,
 			Slug:      "time-management",
 			Name:      "Time management",
 			Icon:      fmt.Sprintf("%s/tag/time-management/icon.svg", r.contentURL),
-			Thumbnail: fmt.Sprintf("%s/tag/time-management/512x384.jpg", r.contentURL),
+			Thumbnail: fmt.Sprintf("%s/tag/time-management/promo_thumb.png", r.contentURL),
 		},
 	}, nil
 }
