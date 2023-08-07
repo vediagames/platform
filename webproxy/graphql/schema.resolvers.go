@@ -191,7 +191,7 @@ func (r *homePageResponseResolver) MostPlayedGames(ctx context.Context, obj *mod
 		Language: obj.Language,
 		Page:     1,
 		Limit:    40,
-		Sort:     sortingMethodToPointer(model1.SortingMethodName),
+		Sort:     sortingMethodToPointer(model1.SortingMethodMostPopular),
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to query: %w", err)
