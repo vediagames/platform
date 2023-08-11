@@ -175,8 +175,11 @@ type ComplexityRoot struct {
 		FullSearch         func(childComplexity int, request model.FullSearchRequest) int
 		Game               func(childComplexity int, request model.GameRequest) int
 		Games              func(childComplexity int, request model.GamesRequest) int
+		MostPlayedGame     func(childComplexity int, language model.Language) int
 		MostPlayedGames    func(childComplexity int, request model.MostPlayedGamesRequest) int
+		PickedByEditor     func(childComplexity int, language model.Language) int
 		PlacedSections     func(childComplexity int, request model.PlacedSectionsRequest) int
+		PopularGames       func(childComplexity int, language model.Language) int
 		PromotedTags       func(childComplexity int, language model.Language) int
 		Quote              func(childComplexity int, language model.Language) int
 		RandomProviderGame func(childComplexity int) int
@@ -186,6 +189,7 @@ type ComplexityRoot struct {
 		Tag                func(childComplexity int, request model.TagRequest) int
 		Tags               func(childComplexity int, request model.TagsRequest) int
 		TopTags            func(childComplexity int, language model.Language) int
+		TrendingGames      func(childComplexity int, language model.Language) int
 		WhatOthersPlay     func(childComplexity int, language model.Language) int
 		__resolve__service func(childComplexity int) int
 	}
@@ -332,6 +336,10 @@ type QueryResolver interface {
 	FreshGames(ctx context.Context, request model.FreshGamesRequest) (*model.FreshGamesResponse, error)
 	Games(ctx context.Context, request model.GamesRequest) (*model.GamesResponse, error)
 	Game(ctx context.Context, request model.GameRequest) (*model.GameResponse, error)
+	TrendingGames(ctx context.Context, language model.Language) (*model.GamesResponse, error)
+	MostPlayedGame(ctx context.Context, language model.Language) (*model.GameResponse, error)
+	PopularGames(ctx context.Context, language model.Language) (*model.GamesResponse, error)
+	PickedByEditor(ctx context.Context, language model.Language) (*model.GameResponse, error)
 	Categories(ctx context.Context, request model.CategoriesRequest) (*model.CategoriesResponse, error)
 	Category(ctx context.Context, request model.CategoryRequest) (*model.CategoryResponse, error)
 	Tags(ctx context.Context, request model.TagsRequest) (*model.TagsResponse, error)
@@ -933,6 +941,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.Games(childComplexity, args["request"].(model.GamesRequest)), true
 
+	case "Query.mostPlayedGame":
+		if e.complexity.Query.MostPlayedGame == nil {
+			break
+		}
+
+		args, err := ec.field_Query_mostPlayedGame_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.MostPlayedGame(childComplexity, args["language"].(model.Language)), true
+
 	case "Query.mostPlayedGames":
 		if e.complexity.Query.MostPlayedGames == nil {
 			break
@@ -945,6 +965,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.Query.MostPlayedGames(childComplexity, args["request"].(model.MostPlayedGamesRequest)), true
 
+	case "Query.pickedByEditor":
+		if e.complexity.Query.PickedByEditor == nil {
+			break
+		}
+
+		args, err := ec.field_Query_pickedByEditor_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PickedByEditor(childComplexity, args["language"].(model.Language)), true
+
 	case "Query.placedSections":
 		if e.complexity.Query.PlacedSections == nil {
 			break
@@ -956,6 +988,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.PlacedSections(childComplexity, args["request"].(model.PlacedSectionsRequest)), true
+
+	case "Query.popularGames":
+		if e.complexity.Query.PopularGames == nil {
+			break
+		}
+
+		args, err := ec.field_Query_popularGames_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.PopularGames(childComplexity, args["language"].(model.Language)), true
 
 	case "Query.promotedTags":
 		if e.complexity.Query.PromotedTags == nil {
@@ -1059,6 +1103,18 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.TopTags(childComplexity, args["language"].(model.Language)), true
+
+	case "Query.trendingGames":
+		if e.complexity.Query.TrendingGames == nil {
+			break
+		}
+
+		args, err := ec.field_Query_trendingGames_args(context.TODO(), rawArgs)
+		if err != nil {
+			return 0, false
+		}
+
+		return e.complexity.Query.TrendingGames(childComplexity, args["language"].(model.Language)), true
 
 	case "Query.whatOthersPlay":
 		if e.complexity.Query.WhatOthersPlay == nil {
@@ -1908,6 +1964,10 @@ enum OriginalVideo {
     freshGames(request: FreshGamesRequest!): FreshGamesResponse!
     games(request: GamesRequest!): GamesResponse!
     game(request: GameRequest!): GameResponse!
+    trendingGames(language: Language!): GamesResponse!
+    mostPlayedGame(language: Language!): GameResponse!
+    popularGames(language: Language!): GamesResponse!
+    pickedByEditor(language: Language!): GameResponse
 
     categories(request: CategoriesRequest!): CategoriesResponse!
     category(request: CategoryRequest!): CategoryResponse!
@@ -2404,6 +2464,21 @@ func (ec *executionContext) field_Query_games_args(ctx context.Context, rawArgs 
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_mostPlayedGame_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.Language
+	if tmp, ok := rawArgs["language"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["language"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_mostPlayedGames_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2419,6 +2494,21 @@ func (ec *executionContext) field_Query_mostPlayedGames_args(ctx context.Context
 	return args, nil
 }
 
+func (ec *executionContext) field_Query_pickedByEditor_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.Language
+	if tmp, ok := rawArgs["language"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["language"] = arg0
+	return args, nil
+}
+
 func (ec *executionContext) field_Query_placedSections_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
@@ -2431,6 +2521,21 @@ func (ec *executionContext) field_Query_placedSections_args(ctx context.Context,
 		}
 	}
 	args["request"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_popularGames_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.Language
+	if tmp, ok := rawArgs["language"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["language"] = arg0
 	return args, nil
 }
 
@@ -2540,6 +2645,21 @@ func (ec *executionContext) field_Query_tags_args(ctx context.Context, rawArgs m
 }
 
 func (ec *executionContext) field_Query_topTags_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
+	var err error
+	args := map[string]interface{}{}
+	var arg0 model.Language
+	if tmp, ok := rawArgs["language"]; ok {
+		ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("language"))
+		arg0, err = ec.unmarshalNLanguage2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐLanguage(ctx, tmp)
+		if err != nil {
+			return nil, err
+		}
+	}
+	args["language"] = arg0
+	return args, nil
+}
+
+func (ec *executionContext) field_Query_trendingGames_args(ctx context.Context, rawArgs map[string]interface{}) (map[string]interface{}, error) {
 	var err error
 	args := map[string]interface{}{}
 	var arg0 model.Language
@@ -6023,6 +6143,239 @@ func (ec *executionContext) fieldContext_Query_game(ctx context.Context, field g
 	}()
 	ctx = graphql.WithFieldContext(ctx, fc)
 	if fc.Args, err = ec.field_Query_game_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_trendingGames(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_trendingGames(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().TrendingGames(rctx, fc.Args["language"].(model.Language))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.GamesResponse)
+	fc.Result = res
+	return ec.marshalNGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGamesResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_trendingGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "games":
+				return ec.fieldContext_GamesResponse_games(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GamesResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_trendingGames_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_mostPlayedGame(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_mostPlayedGame(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().MostPlayedGame(rctx, fc.Args["language"].(model.Language))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.GameResponse)
+	fc.Result = res
+	return ec.marshalNGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGameResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_mostPlayedGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "game":
+				return ec.fieldContext_GameResponse_game(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GameResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_mostPlayedGame_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_popularGames(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_popularGames(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PopularGames(rctx, fc.Args["language"].(model.Language))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.GamesResponse)
+	fc.Result = res
+	return ec.marshalNGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGamesResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_popularGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "games":
+				return ec.fieldContext_GamesResponse_games(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GamesResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_popularGames_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
+		ec.Error(ctx, err)
+		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_pickedByEditor(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_pickedByEditor(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().PickedByEditor(rctx, fc.Args["language"].(model.Language))
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*model.GameResponse)
+	fc.Result = res
+	return ec.marshalOGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGameResponse(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_pickedByEditor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "game":
+				return ec.fieldContext_GameResponse_game(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type GameResponse", field.Name)
+		},
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			err = ec.Recover(ctx, r)
+			ec.Error(ctx, err)
+		}
+	}()
+	ctx = graphql.WithFieldContext(ctx, fc)
+	if fc.Args, err = ec.field_Query_pickedByEditor_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
 	}
@@ -14594,6 +14947,91 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			}
 
 			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "trendingGames":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_trendingGames(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "mostPlayedGame":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_mostPlayedGame(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "popularGames":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_popularGames(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
+		case "pickedByEditor":
+			field := field
+
+			innerFunc := func(ctx context.Context, fs *graphql.FieldSet) (res graphql.Marshaler) {
+				defer func() {
+					if r := recover(); r != nil {
+						ec.Error(ctx, ec.Recover(ctx, r))
+					}
+				}()
+				res = ec._Query_pickedByEditor(ctx, field)
+				return res
+			}
+
+			rrm := func(ctx context.Context) graphql.Marshaler {
+				return ec.OperationContext.RootResolverMiddleware(ctx,
+					func(ctx context.Context) graphql.Marshaler { return innerFunc(ctx, out) })
+			}
+
+			out.Concurrently(i, func(ctx context.Context) graphql.Marshaler { return rrm(innerCtx) })
 		case "categories":
 			field := field
 
@@ -17728,6 +18166,13 @@ func (ec *executionContext) marshalOCategories2ᚖgithubᚗcomᚋvediagamesᚋpl
 		return graphql.Null
 	}
 	return ec._Categories(ctx, sel, v)
+}
+
+func (ec *executionContext) marshalOGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.GameResponse) graphql.Marshaler {
+	if v == nil {
+		return graphql.Null
+	}
+	return ec._GameResponse(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOGames2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGames(ctx context.Context, sel ast.SelectionSet, v *model.Games) graphql.Marshaler {

@@ -3,6 +3,10 @@ type Query {
     freshGames(request: FreshGamesRequest!): FreshGamesResponse!
     games(request: GamesRequest!): GamesResponse!
     game(request: GameRequest!): GameResponse!
+    trendingGames(language: Language!): GamesResponse!
+    mostPlayedGame(language: Language!): GameResponse!
+    popularGames(language: Language!): GamesResponse!
+    pickedByEditor(language: Language!): GameResponse
 
     categories(request: CategoriesRequest!): CategoriesResponse!
     category(request: CategoryRequest!): CategoryResponse!

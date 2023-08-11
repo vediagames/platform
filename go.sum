@@ -68,6 +68,8 @@ dmitri.shuralyov.com/gpu/mtl v0.0.0-20190408044501-666a987793e9/go.mod h1:H6x//7
 gioui.org v0.0.0-20210308172011-57750fc8a0a6/go.mod h1:RSH6KIUZ0p2xy5zHDxgAM4zumjgTw83q2ge/PI+yyw8=
 github.com/99designs/gqlgen v0.17.34 h1:5cS5/OKFguQt+Ws56uj9FlG2xm1IlcJWNF2jrMIKYFQ=
 github.com/99designs/gqlgen v0.17.34/go.mod h1:Axcd3jIFHBVcqzixujJQr1wGqE+lGTpz6u4iZBZg1G8=
+github.com/99designs/gqlgen v0.17.36 h1:u/o/rv2SZ9s5280dyUOOrkpIIkr/7kITMXYD3rkJ9go=
+github.com/99designs/gqlgen v0.17.36/go.mod h1:6RdyY8puhCoWAQVr2qzF2OMVfudQzc8ACxzpzluoQm4=
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20210715213245-6c3934b029d8/go.mod h1:CzsSbkDixRphAF5hS6wbMKq0eI6ccJRb7/A0M6JBnwg=
 github.com/Azure/azure-pipeline-go v0.2.3/go.mod h1:x841ezTBIMG6O3lAcl8ATHnsOPVl2bqk7S3ta6S6u4k=
 github.com/Azure/azure-sdk-for-go v16.2.1+incompatible/go.mod h1:9XXNKU+eRnpl9moKnB4QOLf1HestfXbmab5FXxiDBjc=
@@ -1213,6 +1215,8 @@ github.com/vediagames/zeroerror v0.0.0-20221102064040-bcc45e6f9ff5 h1:ZxGllib88P
 github.com/vediagames/zeroerror v0.0.0-20221102064040-bcc45e6f9ff5/go.mod h1:Dk2WM26PCQqgE3WSLiorjfOKc4/7HNU3WlWV6/a9jyI=
 github.com/vektah/gqlparser/v2 v2.5.4 h1:TKZYLje269xipIHcoHPR0eRE40ONGjEXrbiN2SvurgY=
 github.com/vektah/gqlparser/v2 v2.5.4/go.mod h1:z8xXUff237NntSuH8mLFijZ+1tjV1swDbpDqjJmk6ME=
+github.com/vektah/gqlparser/v2 v2.5.8 h1:pm6WOnGdzFOCfcQo9L3+xzW51mKrlwTEg4Wr7AH1JW4=
+github.com/vektah/gqlparser/v2 v2.5.8/go.mod h1:z8xXUff237NntSuH8mLFijZ+1tjV1swDbpDqjJmk6ME=
 github.com/vishvananda/netlink v0.0.0-20181108222139-023a6dafdcdf/go.mod h1:+SR5DhBJrl6ZM7CoCKvpw5BKroDKQ+PJqOg65H/2ktk=
 github.com/vishvananda/netlink v1.1.0/go.mod h1:cTgwzPIzzgDAYoQrMm0EdrjRUBkTqKYppBueQtXaqoE=
 github.com/vishvananda/netlink v1.1.1-0.20201029203352-d40f9887b852/go.mod h1:twkDnbuQxJYemMlGd4JFIcuhgX83tXhKS2B/PRMpOho=
