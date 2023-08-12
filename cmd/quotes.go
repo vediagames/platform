@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"net/http"
 
 	"github.com/jmoiron/sqlx"
@@ -76,7 +75,7 @@ func QuotesCmd() *cobra.Command {
 				}
 			} else {
 				fmt.Println("Error:", resp.StatusCode)
-				body, err := ioutil.ReadAll(resp.Body)
+				body, err := io.ReadAll(resp.Body)
 				if err != nil {
 					return err
 				}

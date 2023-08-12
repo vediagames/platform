@@ -11,6 +11,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
+
 	"github.com/vediagames/platform/bucket/domain"
 )
 
@@ -53,7 +54,7 @@ func New(ctx context.Context, c Config) domain.Client {
 		panic(fmt.Errorf("invalid config: %w", err))
 	}
 
-	resolver := aws.EndpointResolverFunc(func(service, region string) (aws.Endpoint, error) {
+	resolver := aws.EndpointResolverWithOptionsFunc(func(service, region string, options ...interface{}) (aws.Endpoint, error) {
 		return aws.Endpoint{
 			URL: c.Endpoint,
 		}, nil
@@ -61,7 +62,7 @@ func New(ctx context.Context, c Config) domain.Client {
 
 	cfg, err := config.LoadDefaultConfig(
 		ctx,
-		config.WithEndpointResolver(resolver),
+		config.WithEndpointResolverWithOptions(resolver),
 		config.WithCredentialsProvider(credentials.NewStaticCredentialsProvider(c.Key, c.Secret, "")),
 	)
 	if err != nil {
