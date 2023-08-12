@@ -11,6 +11,7 @@ import (
 
 	"github.com/jmoiron/sqlx"
 	"github.com/lib/pq"
+	"github.com/rs/zerolog"
 	"github.com/vediagames/zeroerror"
 
 	"github.com/vediagames/platform/game/domain"
@@ -131,9 +132,7 @@ func (r repository) Insert(ctx context.Context, q domain.InsertQuery) (domain.In
 		return domain.InsertResult{}, fmt.Errorf("failed to find one: %w", err)
 	}
 
-	return domain.InsertResult{
-		Data: repoRes.Data,
-	}, nil
+	return domain.InsertResult(repoRes), nil
 }
 
 func (r repository) Update(ctx context.Context, q domain.UpdateQuery) (domain.UpdateResult, error) {
@@ -141,7 +140,11 @@ func (r repository) Update(ctx context.Context, q domain.UpdateQuery) (domain.Up
 	if err != nil {
 		return domain.UpdateResult{}, fmt.Errorf("failed to begin tx: %w", err)
 	}
-	defer tx.Rollback()
+	defer func() {
+		if err := tx.Rollback(); err != nil {
+			zerolog.Ctx(ctx).Error().Err(fmt.Errorf("failed to rollback: %w", err)).Send()
+		}
+	}()
 
 	_, err = tx.ExecContext(ctx, `
 		UPDATE games
@@ -216,9 +219,7 @@ func (r repository) Update(ctx context.Context, q domain.UpdateQuery) (domain.Up
 		return domain.UpdateResult{}, fmt.Errorf("failed to find one: %w", err)
 	}
 
-	return domain.UpdateResult{
-		Data: repoRes.Data,
-	}, nil
+	return domain.UpdateResult(repoRes), nil
 
 }
 

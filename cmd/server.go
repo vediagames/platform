@@ -239,26 +239,26 @@ func loggerMiddleware(logger *zerolog.Logger) func(h http.Handler) http.Handler 
 	}
 }
 
-func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-			cookies := r.Header.Get("Cookie")
+// func authMiddleware(s authdomain.Service) func(h http.Handler) http.Handler {
+// 	return func(next http.Handler) http.Handler {
+// 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+// 			cookies := r.Header.Get("Cookie")
 
-			res, err := s.Authenticate(r.Context(), authdomain.AuthenticateRequest{
-				Cookies: cookies,
-			})
-			if err != nil {
-				zerolog.Ctx(r.Context()).Error().Msgf("failed to authenticate: %s", err)
-				next.ServeHTTP(w, r)
-				return
-			}
+// 			res, err := s.Authenticate(r.Context(), authdomain.AuthenticateRequest{
+// 				Cookies: cookies,
+// 			})
+// 			if err != nil {
+// 				zerolog.Ctx(r.Context()).Error().Msgf("failed to authenticate: %s", err)
+// 				next.ServeHTTP(w, r)
+// 				return
+// 			}
 
-			next.ServeHTTP(w, r.WithContext(
-				s.ToContext(r.Context(), res.User),
-			))
-		})
-	}
-}
+// 			next.ServeHTTP(w, r.WithContext(
+// 				s.ToContext(r.Context(), res.User),
+// 			))
+// 		})
+// 	}
+// }
 
 type sessionNewResponse struct {
 	ID         string    `json:"id"`
