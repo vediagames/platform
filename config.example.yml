@@ -18,9 +18,6 @@ cors:
 
 redisAddress: "localhost:6379"
 
-auth:
-  kratosURL: "http://localhost:4433"
-
 bigquery:
   projectID: "your-project-id"
   credentialsPath: "path/to/your/credentials.json"

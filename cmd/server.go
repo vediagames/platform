@@ -13,7 +13,6 @@ import (
 	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/go-chi/chi/v5"
 	"github.com/jmoiron/sqlx"
-	ory "github.com/ory/kratos-client-go"
 	"github.com/rs/cors"
 	"github.com/rs/zerolog"
 	"github.com/spf13/cobra"
@@ -129,18 +128,8 @@ func startServer(ctx context.Context) error {
 		},
 	})
 
-	c := ory.NewConfiguration()
-	c.Servers = ory.ServerConfigurations{
-		{
-			URL: cfg.Auth.KratosURL,
-		},
-	}
-
-	authService := authservice.NewOry(authservice.OryConfig{
-		Client: ory.NewAPIClient(c),
-	})
-
 	quoteService := quote.New(mommaGamesDB)
+	authService := authservice.NewZero()
 
 	vediaGamesGatewayResolver, vediaGamesGatewayHandler := createGateway(
 		vediaGamesDB,

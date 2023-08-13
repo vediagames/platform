@@ -31,9 +31,6 @@ type Config struct {
 	CORS struct {
 		AllowedOrigins []string `mapstructure:"allowedOrigins"`
 	} `mapstructure:"cors"`
-	Auth struct {
-		KratosURL string `mapstructure:"kratosURL"`
-	} `mapstructure:"auth"`
 	RedisAddress string `mapstructure:"redisAddress"`
 	BigQuery     struct {
 		ProjectID       string `mapstructure:"projectID"`
@@ -66,7 +63,6 @@ func (c Config) Validate() error {
 	err.AddIf(c.PostgreSQL.Path.Migration == "", fmt.Errorf("postgresql.path.migration is not set"))
 	err.AddIf(c.PostgreSQL.Path.Stub == "", fmt.Errorf("postgresql.path.stub is not set"))
 	err.AddIf(c.RedisAddress == "", fmt.Errorf("redisAddress is not set"))
-	err.AddIf(c.Auth.KratosURL == "", fmt.Errorf("auth.kratusURL is not set"))
 	err.AddIf(c.BigQuery.ProjectID == "", fmt.Errorf("bigquery.projectID is not set"))
 	err.AddIf(c.BigQuery.CredentialsPath == "", fmt.Errorf("bigquery.credentialsPath is not set"))
 	err.AddIf(c.Imagor.URL == "", fmt.Errorf("imagor.URL is not set"))
