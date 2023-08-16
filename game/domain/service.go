@@ -407,6 +407,7 @@ type ListRequest struct {
 	IDRefs         IDs
 	ExcludedIDRefs IDs
 	MobileOnly     bool
+	Query          string
 }
 
 func (r ListRequest) Validate() error {

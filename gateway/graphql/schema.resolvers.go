@@ -124,6 +124,12 @@ func (r *queryResolver) FreshGames(ctx context.Context, request model.FreshGames
 
 // Games is the resolver for the games field.
 func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (*model.GamesResponse, error) {
+	query := ""
+
+	if request.Query != nil {
+		query = *request.Query
+	}
+
 	gameRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
 		Language:       gamedomain.Language(request.Language),
 		Page:           request.Page,
@@ -135,6 +141,7 @@ func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (
 		TagIDRefs:      request.Tags,
 		IDRefs:         request.Ids,
 		ExcludedIDRefs: request.ExcludedGameIDs,
+		Query:          query,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list: %w", err)

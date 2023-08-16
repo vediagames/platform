@@ -180,6 +180,7 @@ type ComplexityRoot struct {
 		Name             func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
+		Status           func(childComplexity int) int
 		Thumbnail        func(childComplexity int, request model.ThumbnailRequest) int
 		Type             func(childComplexity int) int
 		Video            func(childComplexity int, original model.OriginalVideo) int
@@ -973,6 +974,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 
 		return e.complexity.SearchItem.Slug(childComplexity), true
 
+	case "SearchItem.status":
+		if e.complexity.SearchItem.Status == nil {
+			break
+		}
+
+		return e.complexity.SearchItem.Status(childComplexity), true
+
 	case "SearchItem.thumbnail":
 		if e.complexity.SearchItem.Thumbnail == nil {
 			break
@@ -1746,6 +1754,7 @@ type SearchItem {
     shortDescription: String!
     name: String!
     slug: String!
+    status: String!
     type: SearchItemType!
     thumbnail(request: ThumbnailRequest!): String!
     video(original: OriginalVideo!): String!
@@ -6262,6 +6271,50 @@ func (ec *executionContext) fieldContext_SearchItem_slug(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _SearchItem_status(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SearchItem_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SearchItem_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SearchItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SearchItem_type(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SearchItem_type(ctx, field)
 	if err != nil {
@@ -6463,6 +6516,8 @@ func (ec *executionContext) fieldContext_SearchItems_data(ctx context.Context, f
 				return ec.fieldContext_SearchItem_name(ctx, field)
 			case "slug":
 				return ec.fieldContext_SearchItem_slug(ctx, field)
+			case "status":
+				return ec.fieldContext_SearchItem_status(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
 			case "thumbnail":
@@ -12508,6 +12563,11 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 			}
 		case "slug":
 			out.Values[i] = ec._SearchItem_slug(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "status":
+			out.Values[i] = ec._SearchItem_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}

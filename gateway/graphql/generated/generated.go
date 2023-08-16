@@ -2149,6 +2149,7 @@ input GamesRequest {
     tags: [Int!]
     ids: [Int!]
     excludedGameIDs: [Int!]
+    query: String
 }
 
 type GamesResponse {
@@ -13287,7 +13288,7 @@ func (ec *executionContext) unmarshalInputGamesRequest(ctx context.Context, obj 
 		asMap[k] = v
 	}
 
-	fieldsInOrder := [...]string{"language", "page", "limit", "allowDeleted", "allowInvisible", "sort", "categories", "tags", "ids", "excludedGameIDs"}
+	fieldsInOrder := [...]string{"language", "page", "limit", "allowDeleted", "allowInvisible", "sort", "categories", "tags", "ids", "excludedGameIDs", "query"}
 	for _, k := range fieldsInOrder {
 		v, ok := asMap[k]
 		if !ok {
@@ -13384,6 +13385,15 @@ func (ec *executionContext) unmarshalInputGamesRequest(ctx context.Context, obj 
 				return it, err
 			}
 			it.ExcludedGameIDs = data
+		case "query":
+			var err error
+
+			ctx := graphql.WithPathContext(ctx, graphql.NewPathWithField("query"))
+			data, err := ec.unmarshalOString2ᚖstring(ctx, v)
+			if err != nil {
+				return it, err
+			}
+			it.Query = data
 		}
 	}
 

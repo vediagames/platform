@@ -99,24 +99,47 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 		return domain.ListResponse{}, fmt.Errorf("invalid request: %w", ve)
 	}
 
-	repoRes, err := s.repository.Find(ctx, domain.FindQuery{
-		Language:       req.Language,
-		Page:           req.Page,
-		Limit:          req.Limit,
-		AllowDeleted:   req.AllowDeleted,
-		AllowInvisible: req.AllowInvisible,
-		CategoryIDRefs: req.CategoryIDRefs,
-		TagIDRefs:      req.TagIDRefs,
-		Sort:           req.Sort,
-		IDRefs:         req.IDRefs,
-		ExcludedIDRefs: req.ExcludedIDRefs,
-		MobileOnly:     req.MobileOnly,
-	})
-	if err != nil {
-		return domain.ListResponse{}, fmt.Errorf("failed to find: %w", err)
+	var (
+		res domain.ListResponse
+	)
+
+	switch {
+	case req.Query != "":
+		repoRes, err := s.repository.FullSearch(ctx, domain.FullSearchQuery{
+			Language:       req.Language,
+			Page:           req.Page,
+			Limit:          req.Limit,
+			AllowDeleted:   req.AllowDeleted,
+			AllowInvisible: req.AllowInvisible,
+			Sort:           req.Sort,
+			Query:          req.Query,
+		})
+		if err != nil {
+			return domain.ListResponse{}, fmt.Errorf("failed to search: %w", err)
+		}
+
+		res = domain.ListResponse(repoRes)
+	default:
+		repoRes, err := s.repository.Find(ctx, domain.FindQuery{
+			Language:       req.Language,
+			Page:           req.Page,
+			Limit:          req.Limit,
+			AllowDeleted:   req.AllowDeleted,
+			AllowInvisible: req.AllowInvisible,
+			CategoryIDRefs: req.CategoryIDRefs,
+			TagIDRefs:      req.TagIDRefs,
+			Sort:           req.Sort,
+			IDRefs:         req.IDRefs,
+			ExcludedIDRefs: req.ExcludedIDRefs,
+			MobileOnly:     req.MobileOnly,
+		})
+		if err != nil {
+			return domain.ListResponse{}, fmt.Errorf("failed to find: %w", err)
+		}
+
+		res = domain.ListResponse(repoRes)
 	}
 
-	res := domain.ListResponse(repoRes)
 	if err := res.Validate(); err != nil {
 		return domain.ListResponse{}, fmt.Errorf("invalid response: %w", err)
 	}
