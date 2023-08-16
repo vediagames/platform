@@ -165,6 +165,7 @@ type SearchItem {
     shortDescription: String!
     name: String!
     slug: String!
+    status: String!
     type: SearchItemType!
     thumbnail(request: ThumbnailRequest!): String!
     video(original: OriginalVideo!): String!

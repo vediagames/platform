@@ -139,6 +139,12 @@ type GamesResponse struct {
 	Games *Games `json:"games"`
 }
 
+type ListGame struct {
+	Game        *Game   `json:"game"`
+	Label       *string `json:"label,omitempty"`
+	Description *string `json:"description,omitempty"`
+}
+
 type MostPlayedGamesRequest struct {
 	Language Language `json:"language"`
 	Page     int      `json:"page"`
@@ -199,6 +205,7 @@ type SearchItem struct {
 	ShortDescription string         `json:"shortDescription"`
 	Name             string         `json:"name"`
 	Slug             string         `json:"slug"`
+	Status           string         `json:"status"`
 	Type             SearchItemType `json:"type"`
 	Thumbnail        string         `json:"thumbnail"`
 	Video            string         `json:"video"`

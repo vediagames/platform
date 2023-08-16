@@ -162,46 +162,23 @@ func (r *queryResolver) Game(ctx context.Context, request model.GameRequest) (*m
 }
 
 // TrendingGames is the resolver for the trendingGames field.
-func (r *queryResolver) TrendingGames(ctx context.Context, language model.Language) (*model.GamesResponse, error) {
-	sort := model.SortingMethodMostPopular
-
-	return r.Games(ctx, model.GamesRequest{
-		Language: language,
-		Page:     1,
-		Limit:    10,
-		Sort:     &sort,
-		// Ids:             []int{},
-	})
+func (r *queryResolver) TrendingGames(ctx context.Context, language model.Language) ([]*model.ListGame, error) {
+	panic("todo")
 }
 
 // MostPlayedGame is the resolver for the mostPlayedGame field.
-func (r *queryResolver) MostPlayedGame(ctx context.Context, language model.Language) (*model.GameResponse, error) {
-	return r.Game(ctx, model.GameRequest{
-		Field:    model.GetByFieldSlug,
-		Value:    "kirka-io",
-		Language: language,
-	})
+func (r *queryResolver) MostPlayedGame(ctx context.Context, language model.Language) (*model.ListGame, error) {
+	panic("todo")
 }
 
 // PopularGames is the resolver for the popularGames field.
-func (r *queryResolver) PopularGames(ctx context.Context, language model.Language) (*model.GamesResponse, error) {
-	return r.Games(ctx, model.GamesRequest{
-		Language:       language,
-		Page:           1,
-		Limit:          4,
-		AllowDeleted:   false,
-		AllowInvisible: false,
-		Ids:            []int{190, 47, 279, 236, 424, 221},
-	})
+func (r *queryResolver) PopularGames(ctx context.Context, language model.Language) ([]*model.ListGame, error) {
+	panic("todo")
 }
 
 // PickedByEditor is the resolver for the pickedByEditor field.
-func (r *queryResolver) PickedByEditor(ctx context.Context, language model.Language) (*model.GameResponse, error) {
-	return r.Game(ctx, model.GameRequest{
-		Field:    model.GetByFieldSlug,
-		Value:    "kirka-io",
-		Language: language,
-	})
+func (r *queryResolver) PickedByEditor(ctx context.Context, language model.Language) (*model.ListGame, error) {
+	panic("todo")
 }
 
 // Categories is the resolver for the categories field.

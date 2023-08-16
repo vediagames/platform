@@ -248,6 +248,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) *SearchItems
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
+			Status:           domainItem.Status,
 			Type:             SearchItemTypeGame,
 		})
 	}
@@ -258,6 +259,7 @@ func (s SearchItems) FromDomain(domain searchdomain.SearchResponse) *SearchItems
 			ShortDescription: domainItem.ShortDescription,
 			Name:             domainItem.Name,
 			Slug:             domainItem.Slug,
+			Status:           domainItem.Status,
 			Type:             SearchItemTypeTag,
 		})
 	}

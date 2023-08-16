@@ -94,6 +94,7 @@ type SearchItem struct {
 	Slug             string
 	Name             string
 	ShortDescription string
+	Status           string
 }
 
 type Language string

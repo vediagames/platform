@@ -118,6 +118,7 @@ func populateSearchItemsFromImplementations(games []gamedomain.Game, tag []tagdo
 			Slug:             game.Slug,
 			Name:             game.Name,
 			ShortDescription: game.ShortDescription,
+			Status:           game.Status.String(),
 		})
 	}
 
@@ -127,6 +128,7 @@ func populateSearchItemsFromImplementations(games []gamedomain.Game, tag []tagdo
 			Slug:             tag.Slug,
 			Name:             tag.Name,
 			ShortDescription: tag.Description,
+			Status:           tag.Status.String(),
 		})
 	}
 

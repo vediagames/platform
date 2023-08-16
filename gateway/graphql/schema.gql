@@ -3,10 +3,11 @@ type Query {
     freshGames(request: FreshGamesRequest!): FreshGamesResponse!
     games(request: GamesRequest!): GamesResponse!
     game(request: GameRequest!): GameResponse!
-    trendingGames(language: Language!): GamesResponse!
-    mostPlayedGame(language: Language!): GameResponse!
-    popularGames(language: Language!): GamesResponse!
-    pickedByEditor(language: Language!): GameResponse
+
+    trendingGames(language: Language!): [ListGame!]!
+    mostPlayedGame(language: Language!): ListGame!
+    popularGames(language: Language!): [ListGame!]!
+    pickedByEditor(language: Language!): ListGame!
 
     categories(request: CategoriesRequest!): CategoriesResponse!
     category(request: CategoryRequest!): CategoryResponse!
@@ -51,6 +52,12 @@ type PromotedTag {
     name: String!
     icon: String!
     thumbnail: String!
+}
+
+type ListGame {
+    game: Game!
+    label: String
+    description: String
 }
 
 type Quote {

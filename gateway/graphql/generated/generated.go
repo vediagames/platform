@@ -135,6 +135,12 @@ type ComplexityRoot struct {
 		Games func(childComplexity int) int
 	}
 
+	ListGame struct {
+		Description func(childComplexity int) int
+		Game        func(childComplexity int) int
+		Label       func(childComplexity int) int
+	}
+
 	MostPlayedGamesResponse struct {
 		Games func(childComplexity int) int
 	}
@@ -218,6 +224,7 @@ type ComplexityRoot struct {
 		Name             func(childComplexity int) int
 		ShortDescription func(childComplexity int) int
 		Slug             func(childComplexity int) int
+		Status           func(childComplexity int) int
 		Thumbnail        func(childComplexity int, request model.ThumbnailRequest) int
 		Type             func(childComplexity int) int
 		Video            func(childComplexity int, original model.OriginalVideo) int
@@ -336,10 +343,10 @@ type QueryResolver interface {
 	FreshGames(ctx context.Context, request model.FreshGamesRequest) (*model.FreshGamesResponse, error)
 	Games(ctx context.Context, request model.GamesRequest) (*model.GamesResponse, error)
 	Game(ctx context.Context, request model.GameRequest) (*model.GameResponse, error)
-	TrendingGames(ctx context.Context, language model.Language) (*model.GamesResponse, error)
-	MostPlayedGame(ctx context.Context, language model.Language) (*model.GameResponse, error)
-	PopularGames(ctx context.Context, language model.Language) (*model.GamesResponse, error)
-	PickedByEditor(ctx context.Context, language model.Language) (*model.GameResponse, error)
+	TrendingGames(ctx context.Context, language model.Language) ([]*model.ListGame, error)
+	MostPlayedGame(ctx context.Context, language model.Language) (*model.ListGame, error)
+	PopularGames(ctx context.Context, language model.Language) ([]*model.ListGame, error)
+	PickedByEditor(ctx context.Context, language model.Language) (*model.ListGame, error)
 	Categories(ctx context.Context, request model.CategoriesRequest) (*model.CategoriesResponse, error)
 	Category(ctx context.Context, request model.CategoryRequest) (*model.CategoryResponse, error)
 	Tags(ctx context.Context, request model.TagsRequest) (*model.TagsResponse, error)
@@ -743,6 +750,27 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.GamesResponse.Games(childComplexity), true
+
+	case "ListGame.description":
+		if e.complexity.ListGame.Description == nil {
+			break
+		}
+
+		return e.complexity.ListGame.Description(childComplexity), true
+
+	case "ListGame.game":
+		if e.complexity.ListGame.Game == nil {
+			break
+		}
+
+		return e.complexity.ListGame.Game(childComplexity), true
+
+	case "ListGame.label":
+		if e.complexity.ListGame.Label == nil {
+			break
+		}
+
+		return e.complexity.ListGame.Label(childComplexity), true
 
 	case "MostPlayedGamesResponse.games":
 		if e.complexity.MostPlayedGamesResponse.Games == nil {
@@ -1253,6 +1281,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.SearchItem.Slug(childComplexity), true
+
+	case "SearchItem.status":
+		if e.complexity.SearchItem.Status == nil {
+			break
+		}
+
+		return e.complexity.SearchItem.Status(childComplexity), true
 
 	case "SearchItem.thumbnail":
 		if e.complexity.SearchItem.Thumbnail == nil {
@@ -1923,6 +1958,7 @@ type SearchItem {
     shortDescription: String!
     name: String!
     slug: String!
+    status: String!
     type: SearchItemType!
     thumbnail(request: ThumbnailRequest!): String!
     video(original: OriginalVideo!): String!
@@ -1964,10 +2000,11 @@ enum OriginalVideo {
     freshGames(request: FreshGamesRequest!): FreshGamesResponse!
     games(request: GamesRequest!): GamesResponse!
     game(request: GameRequest!): GameResponse!
-    trendingGames(language: Language!): GamesResponse!
-    mostPlayedGame(language: Language!): GameResponse!
-    popularGames(language: Language!): GamesResponse!
-    pickedByEditor(language: Language!): GameResponse
+
+    trendingGames(language: Language!): [ListGame!]!
+    mostPlayedGame(language: Language!): ListGame!
+    popularGames(language: Language!): [ListGame!]!
+    pickedByEditor(language: Language!): ListGame!
 
     categories(request: CategoriesRequest!): CategoriesResponse!
     category(request: CategoryRequest!): CategoryResponse!
@@ -2012,6 +2049,12 @@ type PromotedTag {
     name: String!
     icon: String!
     thumbnail: String!
+}
+
+type ListGame {
+    game: Game!
+    label: String
+    description: String
 }
 
 type Quote {
@@ -5199,6 +5242,184 @@ func (ec *executionContext) fieldContext_GamesResponse_games(ctx context.Context
 	return fc, nil
 }
 
+func (ec *executionContext) _ListGame_game(ctx context.Context, field graphql.CollectedField, obj *model.ListGame) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ListGame_game(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Game, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(*model.Game)
+	fc.Result = res
+	return ec.marshalNGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGame(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ListGame_game(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ListGame",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			switch field.Name {
+			case "id":
+				return ec.fieldContext_Game_id(ctx, field)
+			case "language":
+				return ec.fieldContext_Game_language(ctx, field)
+			case "slug":
+				return ec.fieldContext_Game_slug(ctx, field)
+			case "name":
+				return ec.fieldContext_Game_name(ctx, field)
+			case "status":
+				return ec.fieldContext_Game_status(ctx, field)
+			case "createdAt":
+				return ec.fieldContext_Game_createdAt(ctx, field)
+			case "deletedAt":
+				return ec.fieldContext_Game_deletedAt(ctx, field)
+			case "publishedAt":
+				return ec.fieldContext_Game_publishedAt(ctx, field)
+			case "url":
+				return ec.fieldContext_Game_url(ctx, field)
+			case "width":
+				return ec.fieldContext_Game_width(ctx, field)
+			case "height":
+				return ec.fieldContext_Game_height(ctx, field)
+			case "shortDescription":
+				return ec.fieldContext_Game_shortDescription(ctx, field)
+			case "description":
+				return ec.fieldContext_Game_description(ctx, field)
+			case "content":
+				return ec.fieldContext_Game_content(ctx, field)
+			case "likes":
+				return ec.fieldContext_Game_likes(ctx, field)
+			case "dislikes":
+				return ec.fieldContext_Game_dislikes(ctx, field)
+			case "plays":
+				return ec.fieldContext_Game_plays(ctx, field)
+			case "weight":
+				return ec.fieldContext_Game_weight(ctx, field)
+			case "player1Controls":
+				return ec.fieldContext_Game_player1Controls(ctx, field)
+			case "player2Controls":
+				return ec.fieldContext_Game_player2Controls(ctx, field)
+			case "tags":
+				return ec.fieldContext_Game_tags(ctx, field)
+			case "categories":
+				return ec.fieldContext_Game_categories(ctx, field)
+			case "mobile":
+				return ec.fieldContext_Game_mobile(ctx, field)
+			case "thumbnail":
+				return ec.fieldContext_Game_thumbnail(ctx, field)
+			case "video":
+				return ec.fieldContext_Game_video(ctx, field)
+			}
+			return nil, fmt.Errorf("no field named %q was found under type Game", field.Name)
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ListGame_label(ctx context.Context, field graphql.CollectedField, obj *model.ListGame) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ListGame_label(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Label, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ListGame_label(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ListGame",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _ListGame_description(ctx context.Context, field graphql.CollectedField, obj *model.ListGame) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_ListGame_description(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Description, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		return graphql.Null
+	}
+	res := resTmp.(*string)
+	fc.Result = res
+	return ec.marshalOString2ᚖstring(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_ListGame_description(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "ListGame",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _MostPlayedGamesResponse_games(ctx context.Context, field graphql.CollectedField, obj *model.MostPlayedGamesResponse) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_MostPlayedGamesResponse_games(ctx, field)
 	if err != nil {
@@ -6175,9 +6396,9 @@ func (ec *executionContext) _Query_trendingGames(ctx context.Context, field grap
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.GamesResponse)
+	res := resTmp.([]*model.ListGame)
 	fc.Result = res
-	return ec.marshalNGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGame2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGameᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_trendingGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6188,10 +6409,14 @@ func (ec *executionContext) fieldContext_Query_trendingGames(ctx context.Context
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "games":
-				return ec.fieldContext_GamesResponse_games(ctx, field)
+			case "game":
+				return ec.fieldContext_ListGame_game(ctx, field)
+			case "label":
+				return ec.fieldContext_ListGame_label(ctx, field)
+			case "description":
+				return ec.fieldContext_ListGame_description(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type GamesResponse", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type ListGame", field.Name)
 		},
 	}
 	defer func() {
@@ -6234,9 +6459,9 @@ func (ec *executionContext) _Query_mostPlayedGame(ctx context.Context, field gra
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.GameResponse)
+	res := resTmp.(*model.ListGame)
 	fc.Result = res
-	return ec.marshalNGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGameResponse(ctx, field.Selections, res)
+	return ec.marshalNListGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_mostPlayedGame(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6248,9 +6473,13 @@ func (ec *executionContext) fieldContext_Query_mostPlayedGame(ctx context.Contex
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "game":
-				return ec.fieldContext_GameResponse_game(ctx, field)
+				return ec.fieldContext_ListGame_game(ctx, field)
+			case "label":
+				return ec.fieldContext_ListGame_label(ctx, field)
+			case "description":
+				return ec.fieldContext_ListGame_description(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type GameResponse", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type ListGame", field.Name)
 		},
 	}
 	defer func() {
@@ -6293,9 +6522,9 @@ func (ec *executionContext) _Query_popularGames(ctx context.Context, field graph
 		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.GamesResponse)
+	res := resTmp.([]*model.ListGame)
 	fc.Result = res
-	return ec.marshalNGamesResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGamesResponse(ctx, field.Selections, res)
+	return ec.marshalNListGame2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGameᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_popularGames(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6306,10 +6535,14 @@ func (ec *executionContext) fieldContext_Query_popularGames(ctx context.Context,
 		IsResolver: true,
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
-			case "games":
-				return ec.fieldContext_GamesResponse_games(ctx, field)
+			case "game":
+				return ec.fieldContext_ListGame_game(ctx, field)
+			case "label":
+				return ec.fieldContext_ListGame_label(ctx, field)
+			case "description":
+				return ec.fieldContext_ListGame_description(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type GamesResponse", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type ListGame", field.Name)
 		},
 	}
 	defer func() {
@@ -6347,11 +6580,14 @@ func (ec *executionContext) _Query_pickedByEditor(ctx context.Context, field gra
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
-	res := resTmp.(*model.GameResponse)
+	res := resTmp.(*model.ListGame)
 	fc.Result = res
-	return ec.marshalOGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGameResponse(ctx, field.Selections, res)
+	return ec.marshalNListGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGame(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_pickedByEditor(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -6363,9 +6599,13 @@ func (ec *executionContext) fieldContext_Query_pickedByEditor(ctx context.Contex
 		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
 			switch field.Name {
 			case "game":
-				return ec.fieldContext_GameResponse_game(ctx, field)
+				return ec.fieldContext_ListGame_game(ctx, field)
+			case "label":
+				return ec.fieldContext_ListGame_label(ctx, field)
+			case "description":
+				return ec.fieldContext_ListGame_description(ctx, field)
 			}
-			return nil, fmt.Errorf("no field named %q was found under type GameResponse", field.Name)
+			return nil, fmt.Errorf("no field named %q was found under type ListGame", field.Name)
 		},
 	}
 	defer func() {
@@ -8197,6 +8437,50 @@ func (ec *executionContext) fieldContext_SearchItem_slug(ctx context.Context, fi
 	return fc, nil
 }
 
+func (ec *executionContext) _SearchItem_status(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_SearchItem_status(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return obj.Status, nil
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_SearchItem_status(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "SearchItem",
+		Field:      field,
+		IsMethod:   false,
+		IsResolver: false,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
+	}
+	return fc, nil
+}
+
 func (ec *executionContext) _SearchItem_type(ctx context.Context, field graphql.CollectedField, obj *model.SearchItem) (ret graphql.Marshaler) {
 	fc, err := ec.fieldContext_SearchItem_type(ctx, field)
 	if err != nil {
@@ -8398,6 +8682,8 @@ func (ec *executionContext) fieldContext_SearchItems_data(ctx context.Context, f
 				return ec.fieldContext_SearchItem_name(ctx, field)
 			case "slug":
 				return ec.fieldContext_SearchItem_slug(ctx, field)
+			case "status":
+				return ec.fieldContext_SearchItem_status(ctx, field)
 			case "type":
 				return ec.fieldContext_SearchItem_type(ctx, field)
 			case "thumbnail":
@@ -14550,6 +14836,49 @@ func (ec *executionContext) _GamesResponse(ctx context.Context, sel ast.Selectio
 	return out
 }
 
+var listGameImplementors = []string{"ListGame"}
+
+func (ec *executionContext) _ListGame(ctx context.Context, sel ast.SelectionSet, obj *model.ListGame) graphql.Marshaler {
+	fields := graphql.CollectFields(ec.OperationContext, sel, listGameImplementors)
+
+	out := graphql.NewFieldSet(fields)
+	deferred := make(map[string]*graphql.FieldSet)
+	for i, field := range fields {
+		switch field.Name {
+		case "__typename":
+			out.Values[i] = graphql.MarshalString("ListGame")
+		case "game":
+			out.Values[i] = ec._ListGame_game(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
+		case "label":
+			out.Values[i] = ec._ListGame_label(ctx, field, obj)
+		case "description":
+			out.Values[i] = ec._ListGame_description(ctx, field, obj)
+		default:
+			panic("unknown field " + strconv.Quote(field.Name))
+		}
+	}
+	out.Dispatch(ctx)
+	if out.Invalids > 0 {
+		return graphql.Null
+	}
+
+	atomic.AddInt32(&ec.deferred, int32(len(deferred)))
+
+	for label, dfs := range deferred {
+		ec.processDeferredGroup(graphql.DeferredGroup{
+			Label:    label,
+			Path:     graphql.GetPath(ctx),
+			FieldSet: dfs,
+			Context:  ctx,
+		})
+	}
+
+	return out
+}
+
 var mostPlayedGamesResponseImplementors = []string{"MostPlayedGamesResponse"}
 
 func (ec *executionContext) _MostPlayedGamesResponse(ctx context.Context, sel ast.SelectionSet, obj *model.MostPlayedGamesResponse) graphql.Marshaler {
@@ -15023,6 +15352,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 					}
 				}()
 				res = ec._Query_pickedByEditor(ctx, field)
+				if res == graphql.Null {
+					atomic.AddUint32(&fs.Invalids, 1)
+				}
 				return res
 			}
 
@@ -15573,6 +15905,11 @@ func (ec *executionContext) _SearchItem(ctx context.Context, sel ast.SelectionSe
 			}
 		case "slug":
 			out.Values[i] = ec._SearchItem_slug(ctx, field, obj)
+			if out.Values[i] == graphql.Null {
+				atomic.AddUint32(&out.Invalids, 1)
+			}
+		case "status":
+			out.Values[i] = ec._SearchItem_status(ctx, field, obj)
 			if out.Values[i] == graphql.Null {
 				atomic.AddUint32(&out.Invalids, 1)
 			}
@@ -17195,6 +17532,64 @@ func (ec *executionContext) marshalNLanguage2githubᚗcomᚋvediagamesᚋplatfor
 	return v
 }
 
+func (ec *executionContext) marshalNListGame2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGame(ctx context.Context, sel ast.SelectionSet, v model.ListGame) graphql.Marshaler {
+	return ec._ListGame(ctx, sel, &v)
+}
+
+func (ec *executionContext) marshalNListGame2ᚕᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGameᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.ListGame) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := len(v) == 1
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNListGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGame(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
+func (ec *executionContext) marshalNListGame2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐListGame(ctx context.Context, sel ast.SelectionSet, v *model.ListGame) graphql.Marshaler {
+	if v == nil {
+		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
+			ec.Errorf(ctx, "the requested element is null which the schema does not allow")
+		}
+		return graphql.Null
+	}
+	return ec._ListGame(ctx, sel, v)
+}
+
 func (ec *executionContext) unmarshalNMostPlayedGamesRequest2githubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐMostPlayedGamesRequest(ctx context.Context, v interface{}) (model.MostPlayedGamesRequest, error) {
 	res, err := ec.unmarshalInputMostPlayedGamesRequest(ctx, v)
 	return res, graphql.ErrorOnPath(ctx, err)
@@ -18166,13 +18561,6 @@ func (ec *executionContext) marshalOCategories2ᚖgithubᚗcomᚋvediagamesᚋpl
 		return graphql.Null
 	}
 	return ec._Categories(ctx, sel, v)
-}
-
-func (ec *executionContext) marshalOGameResponse2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGameResponse(ctx context.Context, sel ast.SelectionSet, v *model.GameResponse) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	return ec._GameResponse(ctx, sel, v)
 }
 
 func (ec *executionContext) marshalOGames2ᚖgithubᚗcomᚋvediagamesᚋplatformᚋgatewayᚋgraphqlᚋmodelᚐGames(ctx context.Context, sel ast.SelectionSet, v *model.Games) graphql.Marshaler {
