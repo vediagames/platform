@@ -48,6 +48,16 @@ func (g Games) Validate() error {
 	return err.Err()
 }
 
+func (g Games) IDs() []int {
+	ids := make([]int, len(g.Data))
+
+	for i, game := range g.Data {
+		ids[i] = game.ID
+	}
+
+	return ids
+}
+
 type Game struct {
 	ID               int
 	Language         Language

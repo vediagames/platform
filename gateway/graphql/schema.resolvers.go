@@ -8,6 +8,8 @@ import (
 	"context"
 	"fmt"
 
+	"github.com/rs/zerolog"
+
 	categorydomain "github.com/vediagames/platform/category/domain"
 	gamedomain "github.com/vediagames/platform/game/domain"
 	"github.com/vediagames/platform/gateway/graphql/generated"
@@ -142,6 +144,7 @@ func (r *queryResolver) Games(ctx context.Context, request model.GamesRequest) (
 		IDRefs:         request.Ids,
 		ExcludedIDRefs: request.ExcludedGameIDs,
 		Query:          query,
+		Slugs:          request.Slugs,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("failed to list: %w", err)
@@ -170,22 +173,161 @@ func (r *queryResolver) Game(ctx context.Context, request model.GameRequest) (*m
 
 // TrendingGames is the resolver for the trendingGames field.
 func (r *queryResolver) TrendingGames(ctx context.Context, language model.Language) ([]*model.ListGame, error) {
-	panic("todo")
+	// TODO: BL logic should be in game service.
+	const amountOfGamesNeeded = 15
+
+	res := make([]*model.ListGame, 0, amountOfGamesNeeded)
+
+	selectedGamesRes, err := r.gameService.List(ctx, gamedomain.ListRequest{
+		Language: gamedomain.Language(language),
+		Page:     1,
+		Limit:    len(trendingGames),
+		Sort:     gamedomain.SortingMethodMostPopular,
+		Slugs:    trendingGames.Slugs(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get games: %w", err)
+	}
+
+	// Second batch of games, if the amount needed is not fulfilled.
+	var randomGamesRes gamedomain.ListResponse
+	if len(selectedGamesRes.Data.Data) < amountOfGamesNeeded {
+		amountToFetch := amountOfGamesNeeded - len(selectedGamesRes.Data.Data)
+
+		randomGamesRes, err = r.gameService.List(ctx, gamedomain.ListRequest{
+			Language:       gamedomain.Language(language),
+			Page:           1,
+			Limit:          amountToFetch,
+			Sort:           gamedomain.SortingMethodRandom,
+			ExcludedIDRefs: selectedGamesRes.Data.IDs(),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to get more games: %w", err)
+		}
+	}
+
+	for _, game := range selectedGamesRes.Data.Data {
+		trendingGame := trendingGames.FindBySlug(game.Slug)
+		if trendingGame.IsZero() {
+			zerolog.Ctx(ctx).Warn().Str("slug", game.Slug).Msg("trending game not found")
+			continue
+		}
+
+		res = append(res, &model.ListGame{
+			Game:        model.Game{}.FromDomain(game),
+			Label:       &trendingGame.Label,
+			Description: &trendingGame.Description,
+		})
+	}
+
+	for _, game := range randomGamesRes.Data.Data {
+		res = append(res, &model.ListGame{
+			Game: model.Game{}.FromDomain(game),
+		})
+	}
+
+	return res, nil
 }
 
-// MostPlayedGame is the resolver for the mostPlayedGame field.
-func (r *queryResolver) MostPlayedGame(ctx context.Context, language model.Language) (*model.ListGame, error) {
-	panic("todo")
+// PromotedGame is the resolver for the promotedGame field.
+func (r *queryResolver) PromotedGame(ctx context.Context, language model.Language) (*model.ListGame, error) {
+	gamesRes, err := r.Games(ctx, model.GamesRequest{
+		Language: language,
+		Page:     1,
+		Limit:    1,
+		Slugs:    []string{promotedGame.Slug},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get games: %w", err)
+	}
+
+	if len(gamesRes.Games.Data) == 0 {
+		return nil, fmt.Errorf("promoted game with slug %q not found", promotedGame.Slug)
+	}
+
+	return &model.ListGame{
+		Game:        gamesRes.Games.Data[0],
+		Label:       &promotedGame.Label,
+		Description: &promotedGame.Description,
+	}, nil
 }
 
 // PopularGames is the resolver for the popularGames field.
 func (r *queryResolver) PopularGames(ctx context.Context, language model.Language) ([]*model.ListGame, error) {
-	panic("todo")
+	const amountOfGamesNeeded = 4
+
+	sort := model.SortingMethodMostPopular
+	res := make([]*model.ListGame, 0, amountOfGamesNeeded)
+	fullGames := make([]*model.Game, 0, amountOfGamesNeeded)
+
+	gamesRes, err := r.Games(ctx, model.GamesRequest{
+		Language: language,
+		Page:     1,
+		Limit:    4,
+		Sort:     &sort,
+		Slugs:    popularGames.Slugs(),
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get games: %w", err)
+	}
+
+	fullGames = append(fullGames, gamesRes.Games.Data...)
+
+	if len(fullGames) < amountOfGamesNeeded {
+		amountToFetch := amountOfGamesNeeded - len(gamesRes.Games.Data)
+
+		gamesRes, err = r.Games(ctx, model.GamesRequest{
+			Language:        language,
+			Page:            1,
+			Limit:           amountToFetch,
+			Sort:            &sort,
+			ExcludedGameIDs: gamesRes.Games.IDs(),
+		})
+		if err != nil {
+			return nil, fmt.Errorf("failed to get more games: %w", err)
+		}
+
+		fullGames = append(fullGames, gamesRes.Games.Data...)
+	}
+
+	for _, game := range fullGames {
+		popularGame := popularGames.FindBySlug(game.Slug)
+		if popularGame.IsZero() {
+			zerolog.Ctx(ctx).Warn().Str("slug", game.Slug).Msg("popular game not found")
+			continue
+		}
+
+		res = append(res, &model.ListGame{
+			Game:        game,
+			Label:       &popularGame.Label,
+			Description: &popularGame.Description,
+		})
+	}
+
+	return res, nil
 }
 
 // PickedByEditor is the resolver for the pickedByEditor field.
 func (r *queryResolver) PickedByEditor(ctx context.Context, language model.Language) (*model.ListGame, error) {
-	panic("todo")
+	gamesRes, err := r.Games(ctx, model.GamesRequest{
+		Language: language,
+		Page:     1,
+		Limit:    1,
+		Slugs:    []string{pickedByEditor.Slug},
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get games: %w", err)
+	}
+
+	if len(gamesRes.Games.Data) == 0 {
+		return nil, fmt.Errorf("picked by editor game with slug %q not found", pickedByEditor.Slug)
+	}
+
+	return &model.ListGame{
+		Game:        gamesRes.Games.Data[0],
+		Label:       &pickedByEditor.Label,
+		Description: &pickedByEditor.Description,
+	}, nil
 }
 
 // Categories is the resolver for the categories field.
@@ -485,3 +627,29 @@ func (r *Resolver) Query() generated.QueryResolver { return &queryResolver{r} }
 
 type mutationResolver struct{ *Resolver }
 type queryResolver struct{ *Resolver }
+
+// !!! WARNING !!!
+// The code below was going to be deleted when updating resolvers. It has been copied here so you have
+// one last chance to move it out of harms way if you want. There are two reasons this happens:
+//   - When renaming or deleting a resolver the old code will be put in here. You can safely delete
+//     it when you're done.
+//   - You have helper methods in this file. Move them out to keep these resolver files clean.
+func (r *queryResolver) MostPlayedGame(ctx context.Context, language model.Language) (*model.ListGame, error) {
+	gamesRes, err := r.MostPlayedGames(ctx, model.MostPlayedGamesRequest{
+		Page:     1,
+		Limit:    1,
+		MaxDays:  14,
+		Language: language,
+	})
+	if err != nil {
+		return nil, fmt.Errorf("failed to get most played games: %w", err)
+	}
+
+	if len(gamesRes.Games.Data) == 0 {
+		return nil, nil
+	}
+
+	return &model.ListGame{
+		Game: gamesRes.Games.Data[0],
+	}, nil
+}

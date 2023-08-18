@@ -127,6 +127,7 @@ type FindQuery struct {
 	IDRefs          []int
 	ExcludedIDRefs  []int
 	MobileOnly      bool
+	Slugs           []string
 }
 
 type FindResult struct {

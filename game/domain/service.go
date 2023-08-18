@@ -406,6 +406,7 @@ type ListRequest struct {
 	TagIDRefs      IDs
 	IDRefs         IDs
 	ExcludedIDRefs IDs
+	Slugs          []string
 	MobileOnly     bool
 	Query          string
 }
@@ -443,6 +444,12 @@ func (r ListRequest) Validate() error {
 
 	if ve := r.ExcludedIDRefs.Validate(); ve != nil {
 		err.Add(fmt.Errorf("%w: %w", ErrInvalidExcludedIDRefs, ve))
+	}
+
+	for i, slug := range r.Slugs {
+		if slug == "" {
+			err.Add(fmt.Errorf("%w at index %d", ErrEmptySlug, i))
+		}
 	}
 
 	return err.Err()

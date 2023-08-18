@@ -103,6 +103,7 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 		res domain.ListResponse
 	)
 
+	fmt.Println(req.Slugs)
 	switch {
 	case req.Query != "":
 		repoRes, err := s.repository.FullSearch(ctx, domain.FullSearchQuery{
@@ -132,6 +133,7 @@ func (s service) List(ctx context.Context, req domain.ListRequest) (domain.ListR
 			IDRefs:         req.IDRefs,
 			ExcludedIDRefs: req.ExcludedIDRefs,
 			MobileOnly:     req.MobileOnly,
+			Slugs:          req.Slugs,
 		})
 		if err != nil {
 			return domain.ListResponse{}, fmt.Errorf("failed to find: %w", err)

@@ -270,6 +270,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 			"AllowDeleted":           q.AllowDeleted,
 			"AllowInvisible":         q.AllowInvisible,
 			"MobileOnly":             q.MobileOnly,
+			"FilterBySlugs":          len(q.Slugs) > 0,
 		},
 		`
 				SELECT
@@ -308,6 +309,9 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 				{{ if .FilterByIDRefs }}
 					AND id IN (:id_refs)
 				{{ end }}
+				{{ if .FilterBySlugs }}
+				   	AND slug IN (:slugs)
+				{{ end }}
 				{{ if .ExcludeByIDRefs }}
 					AND id NOT IN (:excluded_id_refs)
 				{{ end }}
@@ -340,6 +344,7 @@ func (r repository) Find(ctx context.Context, q domain.FindQuery) (domain.FindRe
 		"id_refs":           q.IDRefs,
 		"excluded_id_refs":  q.ExcludedIDRefs,
 		"create_date_limit": q.CreateDateLimit,
+		"slugs":             q.Slugs,
 	})
 	if err != nil {
 		return domain.FindResult{}, fmt.Errorf("failed to generate named: %w", err)

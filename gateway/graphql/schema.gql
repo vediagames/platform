@@ -5,7 +5,7 @@ type Query {
     game(request: GameRequest!): GameResponse!
 
     trendingGames(language: Language!): [ListGame!]!
-    mostPlayedGame(language: Language!): ListGame!
+    promotedGame(language: Language!): ListGame!
     popularGames(language: Language!): [ListGame!]!
     pickedByEditor(language: Language!): ListGame!
 
@@ -153,6 +153,7 @@ input GamesRequest {
     ids: [Int!]
     excludedGameIDs: [Int!]
     query: String
+    slugs: [String!]
 }
 
 type GamesResponse {

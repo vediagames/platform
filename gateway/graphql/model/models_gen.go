@@ -134,6 +134,7 @@ type GamesRequest struct {
 	Ids             []int          `json:"ids,omitempty"`
 	ExcludedGameIDs []int          `json:"excludedGameIDs,omitempty"`
 	Query           *string        `json:"query,omitempty"`
+	Slugs           []string       `json:"slugs,omitempty"`
 }
 
 type GamesResponse struct {
