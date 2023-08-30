@@ -31,9 +31,9 @@ func (g listGames) FindBySlug(slug string) listGame {
 }
 
 var promotedGame = listGame{
-	Slug:        "wizard-school",
-	Label:       "THIS WEEK",
-	Description: "Hooked for Hours",
+	Slug:        "tennis-masters",
+	Label:       "#5 TODAY",
+	Description: "Hard to Master",
 }
 
 var pickedByEditor = listGame{
@@ -43,11 +43,11 @@ var pickedByEditor = listGame{
 }
 
 var trendingGames = listGames{
-	{Slug: "time-shooter-3-swat", Label: "FAST PACED", Description: ""},
+	{Slug: "pool-club", Label: "ONLINE POOL", Description: ""},
 	{Slug: "fps-shooting-survival-sim", Label: "", Description: ""},
-	{Slug: "gangster-hero-grand-simulator", Label: "OPEN WORLD", Description: ""},
-	{Slug: "mx-offroad-master", Label: "", Description: ""},
-	{Slug: "rally-champ", Label: "", Description: ""},
+	{Slug: "falling-blocks", Label: "PUZZLE", Description: ""},
+	{Slug: "basketball-legends", Label: "LEBRON", Description: ""},
+	{Slug: "one-escape", Label: "", Description: ""},
 	{Slug: "wizard-school", Label: "", Description: ""},
 	{Slug: "top-guns-io", Label: "HOT", Description: ""},
 	{Slug: "vex-3", Label: "MEH", Description: ""},
@@ -55,8 +55,8 @@ var trendingGames = listGames{
 }
 
 var popularGames = listGames{
+	{Slug: "top-guns-io", Label: "", Description: ""},
 	{Slug: "kirka-io", Label: "", Description: ""},
 	{Slug: "krunker-io", Label: "", Description: ""},
-	{Slug: "traffic-jam-3d", Label: "", Description: ""},
-	{Slug: "parkour-block-3d", Label: "", Description: ""},
+	{Slug: "moto-x3m-halloween", Label: "", Description: ""},
 }
