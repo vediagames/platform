@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -44,7 +43,7 @@ import (
 	sectionvalidationdata "github.com/vediagames/platform/section/service/validation/data"
 	sectionvalidationrequest "github.com/vediagames/platform/section/service/validation/request"
 	sessionbigquery "github.com/vediagames/platform/session/bigquery"
-	sessiondomain "github.com/vediagames/platform/session/domain"
+	sessionhttp "github.com/vediagames/platform/session/http"
 	sessionservice "github.com/vediagames/platform/session/service"
 	tagpostgresql "github.com/vediagames/platform/tag/postgresql"
 	tagservice "github.com/vediagames/platform/tag/service"
@@ -173,7 +172,7 @@ func startServer(ctx context.Context) error {
 	router.Handle("/mommagames/gateway/graph", mommaGamesGatewayHandler)
 	router.Handle("/mommagames/webproxy/graph", mommaGamesWebproxyHandler)
 
-	router.Handle("/session/new", createSessionHandler(sessionService))
+	router.Handle("/session/create", sessionhttp.CreateHandler(sessionService))
 
 	router.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
 		zerolog.Ctx(r.Context()).Log().Msg("HELLO")
@@ -248,74 +247,6 @@ func loggerMiddleware(logger *zerolog.Logger) func(h http.Handler) http.Handler 
 // 		})
 // 	}
 // }
-
-type sessionNewResponse struct {
-	ID         string    `json:"id"`
-	IP         string    `json:"ip"`
-	Device     string    `json:"device"`
-	PageURL    string    `json:"page_url"`
-	CreatedAt  time.Time `json:"created_at"`
-	InsertedAt time.Time `json:"inserted_at"`
-}
-
-type sessionNewRequest struct {
-	IP        string `json:"ip"`
-	Device    string `json:"device"`
-	PageURL   string `json:"page_url"`
-	CreatedAt string `json:"created_at"`
-}
-
-func createSessionHandler(s sessiondomain.Service) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		var req sessionNewRequest
-
-		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to decode: %s", err)
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-
-		createdAt, err := time.Parse(time.RFC3339, req.CreatedAt)
-		if err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to parse: %s", err)
-			http.Error(w, sessiondomain.ErrInvalidCreatedAt.Error(), http.StatusBadRequest)
-			return
-		}
-
-		res, err := s.Create(r.Context(), sessiondomain.CreateRequest{
-			IP:        sessiondomain.IP(req.IP),
-			Device:    sessiondomain.Device(req.Device),
-			PageURL:   req.PageURL,
-			CreatedAt: createdAt,
-		})
-		if err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to create: %s", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		jsonRes, err := json.Marshal(sessionNewResponse{
-			ID:         res.Session.ID,
-			IP:         res.Session.IP.String(),
-			Device:     res.Session.Device.String(),
-			PageURL:    res.Session.PageURL,
-			CreatedAt:  res.Session.CreatedAt,
-			InsertedAt: res.Session.InsertedAt,
-		})
-		if err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to marshal: %s", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(http.StatusCreated)
-		if _, err = w.Write(jsonRes); err != nil {
-			zerolog.Ctx(r.Context()).Error().Msgf("failed to write: %s", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-	}
-}
 
 func createGateway(
 	db *sqlx.DB,
