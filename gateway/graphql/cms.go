@@ -31,9 +31,9 @@ func (g listGames) FindBySlug(slug string) listGame {
 }
 
 var promotedGame = listGame{
-	Slug:        "tennis-masters",
-	Label:       "#5 TODAY",
-	Description: "Hard to Master",
+	Slug:        "moto-x3m-halloween",
+	Label:       "Halloween 🎃!",
+	Description: "Spooky season soon!",
 }
 
 var pickedByEditor = listGame{
@@ -44,19 +44,19 @@ var pickedByEditor = listGame{
 
 var trendingGames = listGames{
 	{Slug: "pool-club", Label: "ONLINE POOL", Description: ""},
-	{Slug: "fps-shooting-survival-sim", Label: "", Description: ""},
+	{Slug: "worms-zone-a-slithery-snake", Label: "", Description: ""},
 	{Slug: "falling-blocks", Label: "PUZZLE", Description: ""},
-	{Slug: "basketball-legends", Label: "LEBRON", Description: ""},
-	{Slug: "one-escape", Label: "", Description: ""},
-	{Slug: "wizard-school", Label: "", Description: ""},
-	{Slug: "top-guns-io", Label: "HOT", Description: ""},
-	{Slug: "vex-3", Label: "MEH", Description: ""},
-	{Slug: "pill-soccer", Label: "SUUIII", Description: ""},
+	{Slug: "parkour-block-2?", Label: "PARKOUR", Description: ""},
+	{Slug: "paperio-2", Label: "CLASSIC", Description: ""},
+	{Slug: "rabbids-volcano-panic", Label: "ONLINE", Description: ""},
+	{Slug: "heavy-combat", Label: "PEW PEW", Description: ""},
+	{Slug: "mahjong-pirate-plunder-journey", Label: "MAHJONG", Description: ""},
+	{Slug: "falling-lovers", Label: "ROMANCE", Description: ""},
 }
 
 var popularGames = listGames{
-	{Slug: "top-guns-io", Label: "", Description: ""},
+	{Slug: "fps-shooting-survival-sim", Label: "", Description: ""},
 	{Slug: "kirka-io", Label: "", Description: ""},
-	{Slug: "krunker-io", Label: "", Description: ""},
-	{Slug: "moto-x3m-halloween", Label: "", Description: ""},
+	{Slug: "assassins-creed-freerunners", Label: "", Description: ""},
+	{Slug: "warfare-area", Label: "", Description: ""},
 }
