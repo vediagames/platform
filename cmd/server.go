@@ -27,7 +27,6 @@ import (
 	"github.com/vediagames/platform/fetcher"
 	fetcherdomain "github.com/vediagames/platform/fetcher/domain"
 	"github.com/vediagames/platform/fetcher/gamedistribution"
-	"github.com/vediagames/platform/fetcher/gamemonetize"
 	gamepostgresql "github.com/vediagames/platform/game/postgresql"
 	gameservice "github.com/vediagames/platform/game/service"
 	gatewaygraphql "github.com/vediagames/platform/gateway/graphql"
@@ -98,7 +97,7 @@ func startServer(ctx context.Context) error {
 	fetcherClient := fetcher.New(fetcher.Config{
 		Clients: []fetcherdomain.Client{
 			gamedistribution.New(10),
-			gamemonetize.New(10),
+			//gamemonetize.New(10),
 		},
 	})
 

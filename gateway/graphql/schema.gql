@@ -279,6 +279,7 @@ type RandomProviderGameResponse {
     categories: [String!]!
     tags: [String!]!
     images: [String!]!
+    slug: String!
 }
 
 type AvailableLanguagesResponse {

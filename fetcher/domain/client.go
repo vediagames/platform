@@ -15,4 +15,5 @@ type FetchedGame struct {
 	Categories  []string
 	Tags        []string
 	Images      []string
+	Slug        string
 }

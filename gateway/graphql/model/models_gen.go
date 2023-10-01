@@ -200,6 +200,7 @@ type RandomProviderGameResponse struct {
 	Categories  []string `json:"categories"`
 	Tags        []string `json:"tags"`
 	Images      []string `json:"images"`
+	Slug        string   `json:"slug"`
 }
 
 type SearchItem struct {

@@ -6,6 +6,8 @@ import (
 	"math/rand"
 	"net/http"
 
+	"github.com/gosimple/slug"
+
 	"github.com/vediagames/platform/fetcher/domain"
 )
 
@@ -34,9 +36,11 @@ type game struct {
 }
 
 func (g game) domain() domain.FetchedGame {
+	slug := slug.Make(g.Title)
+
 	return domain.FetchedGame{
 		Name:        g.Title,
-		URL:         fmt.Sprintf("%s?gd_sdk_referrer_url=https://vediagames.com/game/REPLACE-ME", g.URL),
+		URL:         fmt.Sprintf("%s?gd_sdk_referrer_url=https://vedia.games/game/%s", g.URL, slug),
 		Description: g.Description,
 		Controls:    g.Instructions,
 		Mobile:      g.Mobile == "true",
@@ -45,6 +49,7 @@ func (g game) domain() domain.FetchedGame {
 		Categories:  g.Category,
 		Tags:        g.Tag,
 		Images:      g.Asset,
+		Slug:        slug,
 	}
 }
 
