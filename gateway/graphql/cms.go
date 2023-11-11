@@ -31,9 +31,9 @@ func (g listGames) FindBySlug(slug string) listGame {
 }
 
 var promotedGame = listGame{
-	Slug:        "moto-x3m-halloween",
-	Label:       "Halloween 🎃!",
-	Description: "Spooky season soon!",
+	Slug:        "moto-x3m-original",
+	Label:       "THE OG 🚲",
+	Description: "Crazy daring stunts!",
 }
 
 var pickedByEditor = listGame{
@@ -43,20 +43,20 @@ var pickedByEditor = listGame{
 }
 
 var trendingGames = listGames{
-	{Slug: "pool-club", Label: "ONLINE POOL", Description: ""},
-	{Slug: "worms-zone-a-slithery-snake", Label: "", Description: ""},
-	{Slug: "falling-blocks", Label: "PUZZLE", Description: ""},
-	{Slug: "parkour-block-2?", Label: "PARKOUR", Description: ""},
-	{Slug: "paperio-2", Label: "CLASSIC", Description: ""},
-	{Slug: "rabbids-volcano-panic", Label: "ONLINE", Description: ""},
-	{Slug: "heavy-combat", Label: "PEW PEW", Description: ""},
+	{Slug: "warfare-area", Label: "HARD", Description: ""},
+	{Slug: "traffic-jam-3d", Label: "", Description: ""},
+	{Slug: "stick-duel-shadow-fight", Label: "STICKY", Description: ""},
+	{Slug: "zombie-shooter-3d", Label: "PARKOUR", Description: ""},
+	{Slug: "xmas-wheelie", Label: "", Description: ""},
+	{Slug: "moto-x3m-winter", Label: "SOON 🎄❄️🎅", Description: ""},
+	{Slug: "head-soccer-2022", Label: "", Description: ""},
 	{Slug: "mahjong-pirate-plunder-journey", Label: "MAHJONG", Description: ""},
-	{Slug: "falling-lovers", Label: "ROMANCE", Description: ""},
+	{Slug: "4-colors-classic", Label: "", Description: ""},
 }
 
 var popularGames = listGames{
-	{Slug: "fps-shooting-survival-sim", Label: "", Description: ""},
 	{Slug: "kirka-io", Label: "", Description: ""},
-	{Slug: "assassins-creed-freerunners", Label: "", Description: ""},
-	{Slug: "warfare-area", Label: "", Description: ""},
+	{Slug: "traffic-jam-3d", Label: "", Description: ""},
+	{Slug: "moto-x3m-halloween", Label: "", Description: ""},
+	{Slug: "football-legends-2021", Label: "", Description: ""},
 }
