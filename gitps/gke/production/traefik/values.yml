@@ -1,0 +1,52 @@
+resources:
+  requests:
+    cpu: "100m"
+    memory: "150Mi"
+
+service:
+  spec:
+    loadBalancerIP: 34.27.194.67
+    externalTrafficPolicy: Local
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations: { }
+  path: /data
+
+certResolvers:
+  letsencrypt:
+    dnsChallenge:
+      provider: cloudflare
+    storage: /data/acme.json
+
+env:
+  - name: CF_DNS_API_TOKEN
+    valueFrom:
+      secretKeyRef:
+        name: cloudflare-acc
+        key: edit-zone-dns-gke-production-traefik
+
+deployment:
+  initContainers:
+    - name: volume-permissions
+      image: busybox:latest
+      command: [ "sh", "-c", "id; touch /data/acme.json; chmod -v 600 /data/acme.json" ]
+      volumeMounts:
+        - mountPath: /data
+          name: data
+
+podSecurityContext:
+  runAsUser: 0
+  runAsGroup: 0
+  runAsNonRoot: false
+
+# debug log level
+logs:
+  general:
+    level: DEBUG
+  access:
+    # -- To enable access logs
+    enabled: false

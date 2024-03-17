@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: api
+  namespace: observer
+  labels:
+    app: api
+spec:
+  revisionHistoryLimit: 3
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api
+  template:
+    metadata:
+      labels:
+        app: api
+    spec:
+      containers:
+        - name: api
+          image: europe-southwest1-docker.pkg.dev/platform-373114/primary/observer:v1.5.0
+          resources:
+            requests:
+              memory: "250Mi"
+              cpu: "250m"
+          command:
+            - "./server"
+          args:
+            - "server"
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: config.yml
+              subPath: config.yaml
+            - name: gcp-service-account-volume
+              mountPath: pubsub-svc-acc.json
+              subPath: pubsub-svc-acc.json
+          envFrom:
+            - configMapRef:
+                name: api
+      imagePullSecrets:
+        - name: docker-config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: api
+        - name: gcp-service-account-volume
+          secret:
+            secretName: gcp-service-account
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: api
+  namespace: observer
+  labels:
+    app: api
+spec:
+  ports:
+    - port: 3000
+      targetPort: http
+      name: http
+  selector:
+    app: api
+  type: ClusterIP
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: Middleware
+metadata:
+  name: api
+  namespace: observer
+spec:
+  compress: { }
+---
+apiVersion: traefik.containo.us/v1alpha1
+kind: IngressRoute
+metadata:
+  name: api
+  namespace: observer
+spec:
+  entryPoints:
+    - web
+    - websecure
+  routes:
+    - match: Host(`api.observer.vediagames.com`)
+      middlewares:
+        - name: api
+          namespace: observer
+      kind: Rule
+      services:
+        - name: api
+          port: 3000
+  tls:
+    certResolver: letsencrypt
+    domains:
+      - main: api.observer.vediagames.com

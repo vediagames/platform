@@ -1,12 +1,9 @@
 tmp/
 .idea/
-secret/
-
-config.yml
-.env
-my_env_test.go
-
 node_modules/
+config.yml
+secret/
+.env
 deploy/terraform/.terraform
 deploy/terraform/.infracost
 *.tfstate
