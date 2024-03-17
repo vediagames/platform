@@ -31,9 +31,9 @@ func (g listGames) FindBySlug(slug string) listGame {
 }
 
 var promotedGame = listGame{
-	Slug:        "moto-x3m-original",
-	Label:       "THE OG 🚲",
-	Description: "Crazy daring stunts!",
+	Slug:        "time-shooter-3-swat",
+	Label:       "SLOW MO 🕰️🔫",
+	Description: "Shoot the bad guys in slow motion.",
 }
 
 var pickedByEditor = listGame{
@@ -43,20 +43,20 @@ var pickedByEditor = listGame{
 }
 
 var trendingGames = listGames{
-	{Slug: "warfare-area", Label: "HARD", Description: ""},
-	{Slug: "traffic-jam-3d", Label: "", Description: ""},
-	{Slug: "stick-duel-shadow-fight", Label: "STICKY", Description: ""},
-	{Slug: "zombie-shooter-3d", Label: "PARKOUR", Description: ""},
-	{Slug: "xmas-wheelie", Label: "", Description: ""},
-	{Slug: "moto-x3m-winter", Label: "SOON 🎄❄️🎅", Description: ""},
-	{Slug: "head-soccer-2022", Label: "", Description: ""},
-	{Slug: "mahjong-pirate-plunder-journey", Label: "MAHJONG", Description: ""},
-	{Slug: "4-colors-classic", Label: "", Description: ""},
+	{Slug: "stick-man", Label: "", Description: ""},
+	{Slug: "basketball-legends", Label: "CLASSIC", Description: ""},
+	{Slug: "kirka-io", Label: "FPS", Description: ""},
+	{Slug: "god-simulator", Label: "PLAY GOD", Description: ""},
+	{Slug: "hole-io", Label: "", Description: ""},
+	{Slug: "minegame", Label: "", Description: ""},
+	{Slug: "smartphone-tycoon", Label: "TYCOON", Description: ""},
+	{Slug: "the-mergest-kingdom", Label: "MERGE", Description: ""},
+	{Slug: "beauty-run-run", Label: "", Description: ""},
 }
 
 var popularGames = listGames{
-	{Slug: "kirka-io", Label: "", Description: ""},
-	{Slug: "traffic-jam-3d", Label: "", Description: ""},
-	{Slug: "moto-x3m-halloween", Label: "", Description: ""},
+	{Slug: "skribbl-io", Label: "", Description: ""},
 	{Slug: "football-legends-2021", Label: "", Description: ""},
+	{Slug: "paperio-2", Label: "", Description: ""},
+	{Slug: "soccer-masters", Label: "", Description: ""},
 }
